@@ -1,10 +1,10 @@
-# CH9 -- Regex 
+# CH14 -- Regex 
 ##  objectives
 You will learn how to 
 
   + defines a Regex.
 
-## CH9-1 -- symbol of Regex
+## CH14-1 -- symbol of Regex
 
 | regex symbol | meaing |
 | :-- | :-- |
@@ -40,7 +40,7 @@ You will learn how to
 | :-- | :-- |
 | `|` | `OR` logical operator |
 
-## CH9-2 -- matching patterns with Regex
+## CH14-2 -- matching patterns with Regex
 To match patterns with Regex, 
 
 use `=~`.
@@ -51,7 +51,7 @@ syntax:
 <target-patterns> =~ <regular-expression-to-match-patterns>
 ```
 
-## CH9-3 -- accessing the matching patterns
+## CH14-3 -- accessing the matching patterns
 When matching patterns with Regex successfully, they will be stored into `BASH_REMATCH` special variable
 
 `${BASH_REMATCH[0]}` returns a string of all matching patterns.
