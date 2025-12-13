@@ -19,3 +19,9 @@ You will learn how to
 | `$` | end from specified characters |
 | `/<` | the end point |
 | `>/` | the start point |
+
+| regex symbol | meaing |
+| :-- | :-- |
+| `[]` | matchs one of these characters inside `[]`|
+| `-` (inside `[]`) | matchs one of these characters that ranges from left-hand side of `-` to right-hand side of `-` inside `[]` |
+| `[^ ]` | NOT match one of these characters inside `[]` |
