@@ -11,9 +11,9 @@ Like C#,
 
 | logical operator | meaning | description |
 | :-- | :-- | :-- |
-| `AND` | and | iff all expressions are evaluated to true, it will return true |
-| `OR` | or | iff one of expressions are evaluated to true, it will return true |
-| `NOT` | negate | iff the expression will be evaluated to false it will return true |
+| `&&` | and | iff all expressions are evaluated to true, it will return true |
+| `||` | or | iff one of expressions are evaluated to true, it will return true |
+| `!` | negate | iff the expression will be evaluated to false it will return true |
   
 ## CH13-2 short-circuit feature
 
@@ -31,7 +31,7 @@ The feature is so-called short-circuit.
 In 
 
 ```
-$left_hand_side_returned_value AND $right_hand_side_returned_value
+$left_hand_side_returned_value && $right_hand_side_returned_value
 ```
 
 if `$left_hand_side_returned_value` is evaluated to false,
@@ -45,7 +45,7 @@ And it returns `false`.
 In 
 
 ```
-$left_hand_side_returned_value OR $right_hand_side_returned_value
+$left_hand_side_returned_value || $right_hand_side_returned_value
 ```
 
 if `$left_hand_side_returned_value` is evaluated to true,
