@@ -11,7 +11,7 @@ An expression contains math operation, string operation.
 {expression_part} := ( ${variable} | {returned_value_by_function}| {expression_part} )
 {expression} := {expression_part} {operator} {expression_part}
 
-# ...
+# ... etc
 ```
 
 ### Examples
@@ -129,4 +129,46 @@ or equivalently (RECOMMENDED)
 if [[ "$need_to_display" -eq "$TRUE" ]]; then
   echo "$displayed_message"
 fi
+```
+
+#### Example 3
+To match patterns by Regex,
+
+You MUST place `=~` inside `[[]]` rather than inside `[]`
+
+```
+# 匹配版本的函式 (version number format:`v<主要版本>.<次要版本>.<修訂版本>`)
+matching_version() {
+
+    if [[ "$#" -ne 1 ]]; then
+            echo "Error: $func_name requires exactly 1 argument (version number)." >&2
+            return 1
+    fi
+        
+    # 匹配 v<主要版本>.<次要版本>.<修訂版本>
+    local version_regex="^v([0-9]+)\.([0-9]+)\.([0-9]+)"
+    
+    if [[ $VERSION_TAG =~ $version_regex ]]; then
+        echo "整個匹配: ${BASH_REMATCH[0]}"  # 輸出: v1.2.3
+        echo "主要版本: ${BASH_REMATCH[1]}"  # 輸出: 1
+        echo "次要版本: ${BASH_REMATCH[2]}"  # 輸出: 2
+        echo "修訂版本: ${BASH_REMATCH[3]}"  # 輸出: 3
+    else
+        echo "this is NOT a version number"
+    fi
+    
+    return 0
+}
+```
+
+In 
+
+```
+[[ $VERSION_TAG =~ $version_regex ]]
+```
+
+you can't write it instead
+
+```
+[ $VERSION_TAG =~ $version_regex ]
 ```
