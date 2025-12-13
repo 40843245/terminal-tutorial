@@ -66,6 +66,7 @@ etc
 
 ## Examples 
 ### Example 1
+`!/bin/bash/matching_version.bash`
 
 ```
 #!/bin/bash
@@ -86,79 +87,96 @@ usage() {
     exit 0
 }
 
-# 檢查依賴
-check_dependencies() {
-    if ! command -v "grep" &> /dev/null; then
-        echo "Error: Required command 'grep' is not installed." >&2
-        exit 1
-    fi
-}
+# 匹配版本的函式 (version number format:`v<主要版本>.<次要版本>.<修訂版本>`)
+matching_version() {
 
-# 執行主要動作
-perform_action() {
-    local input_file="$1"
+    if [[ "$#" -ne 1 ]]; then
+            echo "Error: $func_name requires exactly 1 argument (version number)." >&2
+            return 1
+    fi
+        
+    # 匹配 v<主要版本>.<次要版本>.<修訂版本>
+    local version_regex="^v([0-9]+)\.([0-9]+)\.([0-9]+)"
     
-    echo "--- Processing: $input_file ---"
-    # 範例：計算檔案中的行數
-    local line_count=$(wc -l < "$input_file")
-    echo "Total lines found: $line_count"
-    
-    # 範例：尋找關鍵字
-    echo "Lines containing 'TODO':"
-    grep -i "TODO" "$input_file" || true # 使用 || true 避免 grep 找不到時觸發 set -e 退出
+    if [[ $VERSION_TAG =~ $version_regex ]]; then
+        echo "整個匹配: ${BASH_REMATCH[0]}"  # 輸出: v1.2.3
+        echo "主要版本: ${BASH_REMATCH[1]}"  # 輸出: 1
+        echo "次要版本: ${BASH_REMATCH[2]}"  # 輸出: 2
+        echo "修訂版本: ${BASH_REMATCH[3]}"  # 輸出: 3
+    else
+        echo "this is NOT a version number"
+    fi
     
     return 0
 }
 
-# --- 參數處理 ---
+parse_args() {
+    # 修正賦值語法
+    local version_tag="" 
 
-VERSION_TAG=""
+    # 重設 OPTIND，確保函數可以被多次呼叫 (雖然此腳本中不需要)
+    OPTIND=1 
 
-while getopts "v:h" opt; do
-    case "${opt}" in
-        i)
-            VERSION_TAG="${OPTARG}"
-            ;;
-        h)
-            usage
-            ;;
-        *)
-            echo "Invalid option: -${OPTARG}" >&2
-            usage
-            ;;
-    esac
-done
-shift $((OPTIND-1))
+    while getopts "v:h" opt; do
+        case "${opt}" in
+            v)
+                # 這裡不需要 option_code，直接設置 version_tag
+                version_tag="${OPTARG}"
+                ;;
+            h)
+                usage # usage 函數會退出
+                ;;
+            *)
+                echo "Invalid option: -${OPTARG}" >&2
+                usage
+                ;;
+        esac
+    done
+    
+    # 清理已處理的選項，但這次不需要
+    # shift $((OPTIND-1)) 
+    
+    # 執行必要的參數驗證和主要功能呼叫
+    if [[ -z "$version_tag" ]]; then
+        echo "Error: The required option -v <version_number> is missing." >&2
+        usage # 缺少參數時顯示 usage 並退出
+    fi
 
-# 驗證輸入
-if [[ -z "$VERSION_TAG" ]]; then
-    echo "Error: Missing required option -v <input_file>." >&2
-    usage
-fi
-
-if [[ ! -f "$INPUT_FILE" ]]; then
-    echo "Error: Input file '$INPUT_FILE' not found or is not a regular file." >&2
-    exit 2
-fi
-
-
-# --- 主程序執行區塊 ---
-main() {
-VERSION_TAG="v1.2.3-beta"
-
-# 匹配 v<主要版本>.<次要版本>.<修訂版本>
-REGEX="^v([0-9]+)\.([0-9]+)\.([0-9]+)"
-
-if [[ $VERSION_TAG =~ $REGEX ]]; then
-    echo "整個匹配: ${BASH_REMATCH[0]}"  # 輸出: v1.2.3
-    echo "主要版本: ${BASH_REMATCH[1]}"  # 輸出: 1
-    echo "次要版本: ${BASH_REMATCH[2]}"  # 輸出: 2
-    echo "修訂版本: ${BASH_REMATCH[3]}"  # 輸出: 3
-else
-    echo "no"
-fi
+    # 呼叫主要功能，並傳遞 version_tag 區域變數的值
+    matching_version "$version_tag"
+}
 ```
 
+Then, in Bash terminal, the output will be in these interactions.
 
+```
+# grant it for permission
+chmod +x matching_version.bash
+```
 
+enter
 
+```
+./matching_version.bash -v v1.2.3
+```
+
+output
+
+```
+整個匹配: v1.2.3
+主要版本: 1
+次要版本: 2
+修訂版本: 3
+```
+
+enter
+
+```
+./matching_version.bash -v 1.2.3
+```
+
+ouput
+
+```
+this is NOT a version number
+```
