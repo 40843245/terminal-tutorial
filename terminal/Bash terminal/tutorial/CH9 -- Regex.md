@@ -12,3 +12,10 @@ You will learn how to
 | `+` | zero or more times (of previous one character or group) |
 | `*` | one or more times (of previous one character or group) |
 | `?` | zero or one time (of previous one character or group) |
+
+| regex symbol | meaing |
+| :-- | :-- |
+| `^` | starting from specified characters |
+| `$` | end from specified characters |
+| `/<` | the end point |
+| `>/` | the start point |
