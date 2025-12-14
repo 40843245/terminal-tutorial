@@ -63,7 +63,7 @@ This example illustrate read the input from terminal.
 `case_example_1.bash`
 
 ```
-# !/bin/bash
+#!/bin/bash
 # case_example_1.bash
 echo "請輸入 (y/Y/n/N):"
 read answer
@@ -119,4 +119,107 @@ esac
 ./case_example_1.bash
 請輸入 (y/Y/n/N):x
 無效的輸入。
+```
+
+#### Example 2
+
+`case_example_2.bash`
+
+```
+#!/bin/bash
+# case_example_2.bash
+
+read STATUS
+
+echo "--- 開始執行 Case ---"
+
+case $STATUS in
+    "critical")
+        echo "1. 發現嚴重錯誤！ (CRITICAL)"
+        # 這裡使用 ;; 終止
+        ;;
+
+    "warning")
+        echo "2. 發現一般警告，需要修復。 (WARNING)"
+        # *** 關鍵點：使用 ;& 穿透到下一子句 ***
+        ;&
+
+    "error")
+        echo "3. 發生任何錯誤或警告，記錄到日誌。 (ERROR/WARNING)"
+        # *** 關鍵點：使用 ;;& 繼續測試下一子句 ***
+        ;;&
+
+    "ok" | "default")
+        echo "4. 狀態 OK，執行預設清理。 (OK/DEFAULT)"
+        ;;
+
+    *)
+        echo "5. 未知狀態。"
+        ;;
+esac
+
+echo "--- Case 執行結束 ---"
+```
+
+1th interaction
+
+```
+./case_example_2.bash
+warning
+--- 開始執行 Case ---
+2. 發現一般警告，需要修復。 (WARNING)
+3. 發生任何錯誤或警告，記錄到日誌。 (ERROR/WARNING)
+5. 未知狀態。
+--- Case 執行結束 ---
+```
+
+2th interaction
+
+```
+./case_example_2.bash
+critical
+--- 開始執行 Case ---
+1. 發現嚴重錯誤！ (CRITICAL)
+--- Case 執行結束 ---
+```
+
+3th interaction
+
+```
+./case_example_2.bash
+error
+--- 開始執行 Case ---
+3. 發生任何錯誤或警告，記錄到日誌。 (ERROR/WARNING)
+5. 未知狀態。
+--- Case 執行結束 ---
+```
+
+4th interaction
+
+```
+./case_example_2.bash
+ok
+--- 開始執行 Case ---
+4. 狀態 OK，執行預設清理。 (OK/DEFAULT)
+--- Case 執行結束 ---
+```
+
+5th interaction
+
+```
+./case_example_2.bash
+default
+--- 開始執行 Case ---
+4. 狀態 OK，執行預設清理。 (OK/DEFAULT)
+--- Case 執行結束 ---
+```
+
+5th interaction
+
+```
+./case_example_2.bash
+w
+--- 開始執行 Case ---
+5. 未知狀態。
+--- Case 執行結束 ---
 ```
