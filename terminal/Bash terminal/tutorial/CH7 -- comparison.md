@@ -6,7 +6,7 @@ You will know how to
   + compare two strings
   + check a file
 
-## CH7-1 -- comparetwo integers
+## CH7-1 -- compare two integers
 > [!NOTE]
 > You can't compare two numbers using symbol (such as `!=`) inside `[[]]`.
 >
