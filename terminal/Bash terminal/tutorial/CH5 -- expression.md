@@ -1,11 +1,12 @@
-# CH4 -- expression
+# CH5 -- expression
 ## objectives
 You will know how to
 
   + express an expression
   + perform an arithmetic operation
+  + get length of string
 
-## CH4-1 -- introduction of an expression
+## CH5-1 -- introduction of an expression
 An expression contains math operation, string operation.
 
 ```
@@ -174,7 +175,7 @@ you can't write it instead
 [ $VERSION_TAG =~ $version_regex ]
 ```
 
-## CH4-2 -- arithmetic operation
+## CH5-2 -- arithmetic operation
 
 To do an arithmetic operation,
 
@@ -204,3 +205,32 @@ also, you can use `let` built-in command
 also, you can use `$(( ... ))` arithmetically spread operator.
 
     COUNT=(($COUNT+1))
+
+## CH5-3 -- get length of string
+To get length of string, just simply use `#` followed by a varible then wrapped with `${}`
+
+
+### Examples
+
+#### Example 1
+To get length of `STR` global variable,
+
+you can 
+
+```
+${#"STR"}
+```
+
+or 
+
+```
+$(( ${#VARIABLE} ))
+```
+
+> [!IMPORTANT]
+> `${#"STR"}` returns the length of string `STR` and string type.
+
+> [!IMPORTANT]
+> `$(( ${#VARIABLE} ))` returns the length of string `STR` and number type.
+
+
