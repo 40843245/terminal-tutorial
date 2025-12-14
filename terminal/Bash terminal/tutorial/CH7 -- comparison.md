@@ -69,7 +69,7 @@ if (($STATUS_CODE == 0));
 ```
 
 ## CH7-2 -- compare two strings
-`see [bash的string testing](https://docs.google.com/spreadsheets/d/1_lipmlEwKus0CVZgdS93Zda5gASe4g2bqrd4JsmQZM4/edit?gid=1895558629#gid=1895558629)
+see [bash的string testing](https://docs.google.com/spreadsheets/d/1_lipmlEwKus0CVZgdS93Zda5gASe4g2bqrd4JsmQZM4/edit?gid=1895558629#gid=1895558629)
 
 ## CH7-3 -- check a file
 see [bash的File Testing](https://docs.google.com/spreadsheets/d/1sSjh6nQffVeyuqQo4JFjFje6DZ7LzkrtOl_s688bUEM/edit?gid=1954033718#gid=1954033718)
