@@ -58,7 +58,13 @@ where
 
 #### Examples
 ##### Example 1
+This example illustrate read the input from terminal.
+
+`case_example_1.bash`
+
 ```
+# !/bin/bash
+# case_example_1.bash
 echo "請輸入 (y/Y/n/N):"
 read answer
 
@@ -73,4 +79,44 @@ case "$answer" in
         echo "無效的輸入。"
         ;;
 esac
+```
+
+1th interaction
+
+```
+./case_example_1.bash
+請輸入 (y/Y/n/N):y
+您選擇了 Yes。
+```
+
+2th interaction
+
+```
+./case_example_1.bash
+請輸入 (y/Y/n/N):Y
+您選擇了 Yes。
+```
+
+3th interaction
+
+```
+./case_example_1.bash
+請輸入 (y/Y/n/N):n
+您選擇了 No。
+```
+
+4th interaction
+
+```
+./case_example_1.bash
+請輸入 (y/Y/n/N):N
+您選擇了 No。
+```
+
+5th interaction
+
+```
+./case_example_1.bash
+請輸入 (y/Y/n/N):x
+無效的輸入。
 ```
