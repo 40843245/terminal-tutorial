@@ -33,3 +33,33 @@ if(<condition>); then
   <executed_when_condition_is_true_statments> # executed iff `<condition>` is evaluated to true
 fi
 ```
+
+### case
+
+syntax:
+
+```
+case <variable> in
+    <expression>) <statement>;;
+    *) <statement>;;
+esac
+```
+
+#### Examples
+##### Example 1
+```
+echo "請輸入 (y/Y/n/N):"
+read answer
+
+case "$answer" in
+    y|Y)
+        echo "您選擇了 Yes。"
+        ;;
+    n|N)
+        echo "您選擇了 No。"
+        ;;
+    *) # 匹配所有其他輸入
+        echo "無效的輸入。"
+        ;;
+esac
+```
