@@ -3,6 +3,7 @@
 You will know how to
 
   + express an expression
+  + perform an arithmetic operation
 
 ## CH4-1 -- introduction of an expression
 An expression contains math operation, string operation.
@@ -15,7 +16,7 @@ An expression contains math operation, string operation.
 ```
 
 ### Examples
-### Example 1
+#### Example 1
 ```
 integer1 = 2
 integer2 = 3
@@ -172,3 +173,34 @@ you can't write it instead
 ```
 [ $VERSION_TAG =~ $version_regex ]
 ```
+
+## CH4-2 -- arithmetic operation
+
+To do an arithmetic operation,
+
+you can simply use exteneded C++ style (if it is an unary expression), or
+
+use `let` built-in command, or
+
+use `$(( ... ))` arithmetically spread operator.
+
+### Examples
+
+#### Example 1
+
+To increase `COUNT` global variable by 1,
+
+you can use extended C++ style
+
+
+    ((COUNT++))
+ 
+
+also, you can use `let` built-in command
+
+    let COUNT++
+    
+
+also, you can use `$(( ... ))` arithmetically spread operator.
+
+    COUNT=(($COUNT+1))
