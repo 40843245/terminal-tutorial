@@ -8,11 +8,14 @@ You will know how to
 ## CH3-1 -- arithmetic operation
 To do an arithmetic operation,
 
-you can simply use exteneded C++ style (if it is an unary expression), or 
+you can simply use exteneded C style spread opeator (if it is an unary expression), or 
 
 use `let` built-in command, or 
 
-use `$(( ... ))` arithmetically spread operator.
+use `$(( ... ))` spread operator.
+
+> [!IMPORTANT]
+> The obsolete of `$(( ... ))` is `$[]`
 
 ### Examples
 #### Example 1
