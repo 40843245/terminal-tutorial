@@ -73,13 +73,11 @@ syntax:
 select <element> in <list>; do
     {cases}
 done
+```
 
 where
 
-```
-{case} := case {expression_for_true} in \n({available_expression} \) {expression}; ;; \n)+(\* \) {expression}; ;; \n) easc
-{available_expression} := ({variable} | {constant})
-```
+{cases} is shown in case section in CH4-1. 
 
 ### Examples
 #### Example 1
