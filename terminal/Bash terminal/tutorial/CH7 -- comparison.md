@@ -64,7 +64,7 @@ if [[ $STATUS_CODE -eq 0 ]];
 
 or equivalently
 
-``
+```
 if (($STATUS_CODE == 0)); 
 ```
 
