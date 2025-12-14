@@ -40,10 +40,21 @@ syntax:
 
 ```
 case <variable> in
-    <expression>) <statement>;;
-    *) <statement>;;
+    <pattern>) <statements> {termination_operator}
+    # more clause
 esac
 ```
+
+where
+
+`{termination_operator}` MUST be one of following
+
++ `;;`: terminates the `case` block.
++ `;&`: executes the statements `<statements>` of next clause.
++ `;;&`: matches the pattern `<pattern>` starting from next clause until the pattern is matched successfully or no patterns can be matched.
+
+  If one of patterns is matched successfully, then it executes the corresponding statements `<statements>`  
+
 
 #### Examples
 ##### Example 1
