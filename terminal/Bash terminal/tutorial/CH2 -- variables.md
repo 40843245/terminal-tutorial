@@ -64,14 +64,17 @@ func2()
 }
 
 var=global
-
+echo "At top level, before invoking func1, var = $var"
 func1
+echo "At top level, after invoking func1, var = $var"
 ```
 
 It will output
 
 ```
+At top level, before invoking func1, var = global
 In func2, var = func1 local
+At top level, after invoking func1, var = func1 local
 ```
 
 (here `$var` in func2 is `func1 local`)
@@ -92,11 +95,17 @@ Let's analyze the script first.
 
 + At top level, it defines a global variable named `var` with value `"global"`
 
-  then invokes `func1`
+  then echos message
+
+  invokes `func1`
+
+  echos message
 
 Next, let's analyze the step of execution of the script, its stack strace, and the information of defined variables.
 
-In the script, it defines a global variable named `var` with value `"global"` then invokes `func1`
+In the script, it defines a global variable named `var` with value `"global"` then echos "At top level, before invoking func1, var = $var"
+
+invokes `func1`, echos "At top level, after invoking func1, var = $var"
 
 Then in `func1` it defines a local variable named `var` with value `func1 local` then it invokes `func2`
 
@@ -104,11 +113,17 @@ In `func2` it echos `In func2, var = $var`
 
 Here is its stack strace, and the information of defined variables.
 
-| stack trace | defines variables | assignment | variable value in context of which | founded by |
-| :-- | :-- | :-- | :-- | :-- |
-| at top level | global variable `var` | `"global"` (determined at initialization) |  `"global"` in context of `var=global` | `var=global` |
-| `func1` | local variable `var` | `"func1 local"` (determined at initialization) | `"func1 local"` in context of `local var='func1 local'`| `local var='func1 local'` |
+| stack trace | defines variables | assignment |
+| :-- | :-- | :-- |
+| at top level | global variable `var` | `"global"` (determined at initialization) | 
+| `func1` | local variable `var` | `"func1 local"` (determined at initialization) | 
 | `func2` | | | `"func1 local"` in context of `echo "In func2, var = $var"` | `local var='func1 local'` (in `func1`) |
+
+| context | variable name | variable value | found at |
+| :-- | :-- | :-- | :-- |
+| `echo "At top level, before invoking func1, var = $var"` (at top level) | `var` | `"global"` | `var=global` (at top level) |
+| `echo "In func2, var = $var"` (inside `func2`)| `var` | `"func1 local"`| `local var='func1 local'` (in `func1`) |
+| `echo "At top level, after invoking func1, var = $var"` (at top level) | `var` | `"func1 local"`| `local var='func1 local'` (in `func1`) |
 
 ## CH2-3 -- assign a value to a variable
 To assign a value into a variable through `=`,
