@@ -24,23 +24,48 @@ where
 
 The `getopts` is a built-in command.
 
+The string quoated with double quotations followed by getopts define which short options can be recongized by Bash engine and the option should take one argument or not.
+
 When it is invoked, it will try to find current option with current index (stored in special variable `OPTIND`).
 
 Case 1: In non-slient mode
 
-Case 1.1: In non-slient mode, if it can successfully find a short option
+Case 1.1: In non-slient mode, if it can successfully find a short option (i.e. `<short-options-string>` contains the value of currently short option for targeting in current round) 
+
+Case 1.1.1: In this case, also, if either the corresponding argument is passed (if it is expected) or it is not expected.
 
 then it will 
 
-    + set `<current-option-name>` variable into currently found short option
+    + set `<current-option-name>` variable as currently found short option
 
     + set special variable `OPTARG` as currently corresponding argument (only applied when it is expected that there is one argument passed with the short option (i.e. `:` is followed after currently found short option))
 
     + advance (increase it by 1) special variable `OPTIND`.
 
+Case 1.2: In this case, if the corresponding argument is NOT passed (if it is expected)
 
-The string quoated with double quotations followed by getopts define which short options can be recongized by Bash engine and the option should take one argument or not.
+then it will throw an error like
 
+```
+D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-1.bash: option requires an argument -- a
+```
+
+    + set `<current-option-name>` variable as `?`
+
+    + set special variable `OPTARG` as NULL value.
+
+    + advance (increase it by 1) special variable `OPTIND`.
+      
+Case 1.2: In non-slient mode, if it can successfully find a short option (i.e. `<short-options-string>` does NOT contain the value of currently short option for targeting in current round) 
+
+then it will 
+
+    + set `<current-option-name>` variable as `?`
+
+    + set special variable `OPTARG` as NULL value
+
+    + advance (increase it by 1) special variable `OPTIND`.
+    
 #### Examples
 ##### Example 1
 
