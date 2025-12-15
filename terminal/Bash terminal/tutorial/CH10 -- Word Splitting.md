@@ -97,7 +97,62 @@ The shell will split **the string after parameter expansion** into a list of str
 #### Examples
 ##### Example 1
 
+`IFS-example-1.bash`
 
+```
+# 預設的 IFS: <space><tab><newline>
+# 假設 IFS= ' \t\n'
+
+my_string="apple  banana,cherry"
+echo "--- 預設 IFS ---"
+# 使用 for 迴圈來展示分詞結果 (for 迴圈預設會使用 IFS 分詞)
+for item in $my_string; do
+  echo "單詞: $item"
+done
+```
+
+will echo
+
+```
+--- 預設 IFS ---
+單詞: apple
+單詞: banana,cherry
+
+```
+
+##### Example 2
+
+`IFS-example-2.bash`
+
+```
+# 預設的 IFS: <space><tab><newline>
+# 假設 IFS= ' \t\n'
+
+my_csv="data1,data2,data3"
+
+# 暫時改變 IFS，並在處理完後恢復
+OLD_IFS=$IFS
+IFS=','
+
+echo "--- IFS=' ,' ---"
+# 確保 $my_csv 展開時在非雙引號下，才能進行分詞
+for item in $my_csv; do
+  echo "欄位: $item"
+done
+
+# 恢復 IFS
+IFS=$OLD_IFS
+```
+
+will echo
+
+```
+--- IFS=' ,' ---
+欄位: data1
+欄位: data2
+欄位: data3
+
+```
 #### reference
 
 See [Gemini's response](https://gemini.google.com/share/b17a5bd18807) for a brief explanation of [word splitting on GNU official docs](https://www.gnu.org/software/bash/manual/bash.html#Word-Splitting) in Traditional Chinese
