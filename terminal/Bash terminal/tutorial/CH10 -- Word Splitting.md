@@ -304,18 +304,6 @@ for item in "${result_array[@]}"; do
   echo "索引 $i: \"$item\""
   i=$((i+1))
 done
-
-# 輸出結果分析：
-# 陣列元素數量: 6
-# 索引 0: ""      <-- 開頭的 ":" 產生第一個空欄位
-# 索引 1: ""      <-- 相鄰的 "::" 產生第二個空欄位
-# 索引 2: "Apple" <-- 正常欄位
-# 索引 3: ""      <-- ": " 後面緊接著一個 " : " (兩個分隔塊之間的空欄位)
-# 索引 4: "Banana" <-- 正常欄位
-# 索引 5: "Orange" <-- 正常欄位 (字串結尾的 ": " 會被視為分隔符塊的一部分，不單獨產生空欄位，除非後面還有另一個非空白分隔符)
-
-# 備註：在 DATA 末尾的 ": " 被作為分隔符處理了，但因為 read 不會在結尾保留空欄位，所以總長是 6。
-# 如果 DATA="A:B:" 則結果會是 "A", "B", "" (3個元素)。
 ```
 
 will echo
@@ -333,6 +321,41 @@ will echo
 索引 5: "Orange"
 
 ```
+
+analysis of output
+
+In `"::Apple : Banana : :Orange: "`,
+
++ you will see the leading character is `:` (there is no any characters before leading character),
+
+thus there is a NULL value ("") in the 0th of the array `result_array`.
+
+echo following in 1th iteration of the loop
+
+```
+索引 0: ""
+```
+
++ also you will see there are no any characters between first occurence of `:` and second occurence of `:`,
+
+thus there is a NULL value ("") in the 1th of the array `result_array`.
+
+echo following in 2th iteration of the loop
+
+```
+索引 1: ""
+```
+
++ also you will see there is one whitespaces (which is one of `IFS whitespace`) between fifth occurence of `:` and sixth occurence of `:`,
+
+thus there is a NULL value ("") in the 3th of the array `result_array`.
+
+echo following in 4th iteration of the loop
+
+```
+索引 3: ""
+```
+
 #### reference
 
 See [Gemini's response](https://gemini.google.com/share/b17a5bd18807) for a brief explanation of [word splitting on GNU official docs](https://www.gnu.org/software/bash/manual/bash.html#Word-Splitting) in Traditional Chinese
