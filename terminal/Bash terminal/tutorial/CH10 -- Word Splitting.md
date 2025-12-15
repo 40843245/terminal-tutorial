@@ -153,6 +153,121 @@ will echo
 欄位: data3
 
 ```
+
+##### Example 3
+
+`IFS-example-3.bash`
+
+```
+# 設定 IFS 為 冒號、空格、Tab
+IFS_COMPLEX=': \t' # 實際值為 冒號 + 空格 + Tab
+
+my_path="dir1: dir2  :dir3\t::dir4"
+
+OLD_IFS=$IFS
+IFS=$IFS_COMPLEX
+
+echo "--- 複雜 IFS=': \t' ---"
+# 讀取結果到陣列 (read -a 預設使用 IFS 分隔)
+# 注意：read 指令在讀取時，不會像 for 迴圈那樣先移除前後的 IFS 空白
+# 但對於 `for item in $var;` 這種形式的展開，會移除前後 IFS 空白。
+# 我們使用 `read -ra` 來展示效果：
+read -ra items <<< "$my_path" 
+
+for item in "${items[@]}"; do
+  # 輸出時加上引號，以觀察空字串
+  echo "欄位: \"$item\""
+done
+
+# 恢復 IFS
+IFS=$OLD_IFS
+```
+
+will echo
+
+```
+--- 複雜 IFS=': \t' ---
+欄位: "dir1"
+欄位: "dir2"
+欄位: "dir3"
+欄位: ""
+欄位: ""
+欄位: ""
+欄位: "dir4"
+
+```
+
+##### Example 4
+
+`IFS-example-4.bash`
+
+```
+empty_var=""
+unset unset_var
+
+# --- 修正後的條件判斷與輸出 ---
+
+empty_or_null_empty="unknown"
+
+# 判斷 $empty_var 是否為空或 null
+if [ -z "$empty_var" ]; then
+    empty_or_null_empty="Yes"
+else
+    empty_or_null_empty="No"
+fi
+
+# 判斷 $unset_var 是否為空或 null
+if [ -z "$unset_var" ]; then
+    empty_or_null_unset="Yes"
+else
+    empty_or_null_unset="No"
+fi
+
+# 使用正確的變數替換 ${var_name}
+echo "empty_var is empty or null? ${empty_or_null_empty}"
+echo "unset_var is empty or null? ${empty_or_null_unset}"
+
+# --- 原始的分詞邏輯（這部分是正確的） ---
+
+# 1. 隱式空參數 (未引號的 $empty_var 或 $unset_var) 會被移除
+echo "--- 隱式空參數移除 ---"
+set -- a $empty_var b $unset_var c
+echo "參數數量: $#"
+echo "參數 1: $1"
+echo "參數 2: $2"
+echo "參數 3: $3"
+
+# 2. 顯式空參數 (用引號包住的 "" 或 '') 會被保留
+echo "--- 顯式空參數保留 ---"
+set -- a "" b '' c
+echo "參數數量: $#"
+echo "參數 1: $1"
+echo "參數 2: $2"
+echo "參數 3: $3"
+echo "參數 4: $4"
+echo "參數 5: $5"
+```
+
+will echo
+
+```
+empty_var is empty or null? Yes
+unset_var is empty or null? Yes
+--- 隱式空參數移除 ---
+參數數量: 3
+參數 1: a
+參數 2: b
+參數 3: c
+--- 顯式空參數保留 ---
+參數數量: 5
+參數 1: a
+參數 2:
+參數 3: b
+參數 4:
+參數 5: c
+
+```
+
 #### reference
 
 See [Gemini's response](https://gemini.google.com/share/b17a5bd18807) for a brief explanation of [word splitting on GNU official docs](https://www.gnu.org/software/bash/manual/bash.html#Word-Splitting) in Traditional Chinese
