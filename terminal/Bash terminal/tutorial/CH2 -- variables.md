@@ -79,6 +79,9 @@ $COUNT # access the variable `COUNT` which is NULL value
 
 ### Examples
 #### Example 1
+
+`variables-example-1.bash`
+
 ```
 func1()
 {
@@ -97,12 +100,13 @@ func1
 echo "At top level, after invoking func1, var = $var"
 ```
 
-It will output
+executing this script will echo
 
 ```
 At top level, before invoking func1, var = global
 In func2, var = func1 local
-At top level, after invoking func1, var = func1 local
+At top level, after invoking func1, var = global
+
 ```
 
 (here `$var` in func2 is `func1 local`)
@@ -152,6 +156,38 @@ Here is its stack strace, and the information of defined variables.
 | `echo "At top level, before invoking func1, var = $var"` (at top level) | `var` | `"global"` | `var=global` (at top level) |
 | `echo "In func2, var = $var"` (inside `func2`)| `var` | `"func1 local"`| `local var='func1 local'` (in `func1`) |
 | `echo "At top level, after invoking func1, var = $var"` (at top level) | `var` | `"func1 local"`| `local var='func1 local'` (in `func1`) |
+
+#### Example 2
+`variables-example-2.bash`
+
+```
+func1()
+{
+  var='func1 local'
+  func2
+}
+
+func2()
+{
+  echo "In func2, var = $var"
+}
+
+var=global
+echo "At top level, before invoking func1, var = $var"
+func1
+echo "At top level, after invoking func1, var = $var"
+```
+
+executing this script will echo
+
+```
+At top level, before invoking func1, var = global
+In func2, var = func1 local
+At top level, after invoking func1, var = func1 local
+
+```
+
+We can see the variable named `var` is polluted when invoking `func1`.
 
 ## CH2-3 -- assign a value to a variable
 > [!IMPORTANT]
