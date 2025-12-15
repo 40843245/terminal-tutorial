@@ -12,6 +12,11 @@ You will know how to
 >
 > the variable is set to NULL value.
 
+> [!IMPORTANT]
+> When assigning value (including `initializing`)  with assignment operator `=`,
+>
+> it is NOT allowed to leave any whitespace on the left-side of `=` and on the right-hand side of `=`
+
 To define a global variable, you can simply assign a value into an identifier, or even just type an identifier
 
 for example,
@@ -142,7 +147,12 @@ Here is its stack strace, and the information of defined variables.
 | `echo "At top level, after invoking func1, var = $var"` (at top level) | `var` | `"func1 local"`| `local var='func1 local'` (in `func1`) |
 
 ## CH2-3 -- assign a value to a variable
-To assign a value into a variable through `=`,
+> [!IMPORTANT]
+> When assigning value (including `initializing`)  with assignment operator `=`,
+>
+> it is NOT allowed to leave any whitespace on the left-side of `=` and on the right-hand side of `=`
+
+To assign a value into a variable, just use assignment operator `=`
 
 ```
 COUNT=1 # define COUNT global variable and initialize COUNT as 1  
