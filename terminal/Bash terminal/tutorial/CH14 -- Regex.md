@@ -66,117 +66,120 @@ etc
 
 ## Examples 
 ### Example 1
-`!/bin/bash/matching_version.bash`
+The following example illustrates how to matching a version
+
+utility module:
+
+`matching_version_module_nameref.bash`
 
 ```
 #!/bin/bash
-# 腳本名稱: matching_version.bash
+# 模組名稱: matching_version_module_nameref.bash
+# ...
 
-# 讓腳本更健壯
-set -euo pipefail
-
-# --- 函數定義 ---
-
-# 顯示使用說明
-usage() {
-    echo "Usage: $0 [-h] -v `<version_number>`"
-    echo "A reusable script for matching a version Regex."
-    echo "Options:"
-    echo "  -v `<version_number>`  Specify the required version for matching with Regex."
-    echo "  -h               Show this help message."
-    exit 0
-}
-
-# 匹配版本的函式 (version number format:`v<主要版本>.<次要版本>.<修訂版本>`)
-matching_version() {
-
-    if [[ "$#" -ne 1 ]]; then
-            echo "Error: $func_name requires exactly 1 argument (version number)." >&2
-            return 1
-    fi
-        
-    # 匹配 v<主要版本>.<次要版本>.<修訂版本>
+# 匹配版本的函式 (使用命名引用回傳多個值)
+# 參數：
+#   $1 - 待檢查的版本字串
+#   $2 - 變數名稱 (用於回傳整個匹配)
+#   $3 - 變數名稱 (用於回傳主要版本)
+#   $4 - 變數名稱 (用於回傳次要版本)
+#   $5 - 變數名稱 (用於回傳修訂版本)
+matching_version_nameref() {
+    local version_tag="$1"
     local version_regex="^v([0-9]+)\.([0-9]+)\.([0-9]+)"
+
+    # 設置命名引用，讓這些局部變數指向呼叫者提供的外部變數
+    declare -n ref_full_match="$2"
+    declare -n ref_major="$3"
+    declare -n ref_minor="$4"
+    declare -n ref_patch="$5"
+    declare -n ref_error_message="$6"
+
+    if [[ "$#" -ne 6 ]]; then
+        ref_error_message="Error: requires 6 arguments (tag + 4 namerefs + error_message)."
+        return 1
+    fi
     
-    if [[ $VERSION_TAG =~ $version_regex ]]; then
-        echo "整個匹配: ${BASH_REMATCH[0]}"  # 輸出: v1.2.3
-        echo "主要版本: ${BASH_REMATCH[1]}"  # 輸出: 1
-        echo "次要版本: ${BASH_REMATCH[2]}"  # 輸出: 2
-        echo "修訂版本: ${BASH_REMATCH[3]}"  # 輸出: 3
+    if [[ $version_tag =~ $version_regex ]]; then
+        # 透過引用直接將值賦予到呼叫者的變數
+        ref_full_match="${BASH_REMATCH[0]}"
+        ref_major="${BASH_REMATCH[1]}"
+        ref_minor="${BASH_REMATCH[2]}"
+        ref_patch="${BASH_REMATCH[3]}"
+        ref_error_message=""
+        return 0
     else
-        echo "this is NOT a version number"
+        # 匹配失敗時，清空變數
+        ref_full_match=""
+        ref_major=""
+        ref_minor=""
+        ref_patch=""
+        ref_error_message="this is NOT a version number: $version_tag"
+        return 1
     fi
-    
-    return 0
-}
-
-parse_args() {
-    # 修正賦值語法
-    local version_tag="" 
-
-    # 重設 OPTIND，確保函數可以被多次呼叫 (雖然此腳本中不需要)
-    OPTIND=1 
-
-    while getopts "v:h" opt; do
-        case "${opt}" in
-            v)
-                # 這裡不需要 option_code，直接設置 version_tag
-                version_tag="${OPTARG}"
-                ;;
-            h)
-                usage # usage 函數會退出
-                ;;
-            *)
-                echo "Invalid option: -${OPTARG}" >&2
-                usage
-                ;;
-        esac
-    done
-    
-    # 清理已處理的選項，但這次不需要
-    # shift $((OPTIND-1)) 
-    
-    # 執行必要的參數驗證和主要功能呼叫
-    if [[ -z "$version_tag" ]]; then
-        echo "Error: The required option -v <version_number> is missing." >&2
-        usage # 缺少參數時顯示 usage 並退出
-    fi
-
-    # 呼叫主要功能，並傳遞 version_tag 區域變數的值
-    matching_version "$version_tag"
 }
 ```
 
-Then, in Bash terminal, the output will be in these interactions.
+main script:
+
+`regex-example-1.bash`
 
 ```
-# grant it for permission
-chmod +x matching_version.bash
+#!/bin/bash
+# 腳本名稱: regex-example-1.bash
+
+source "../../utility modules/Regex/matching_version_module_nameref.bash"
+
+# 1. 在呼叫者腳本中定義變數
+
+
+parse_and_display(){
+    local full_version_tag=""
+    local major_version_number=""
+    local minor_version_number=""
+    local patch_version_number=""
+    local error_message=""
+    matching_version_nameref "$@" full_version_tag major_version_number minor_version_number patch_version_number error_message
+
+    if [ "$?" -eq 0 ]; then
+        echo "--- 命名引用成功解析 ---"
+        # 3. 直接使用已賦值的變數
+        echo "整個匹配: $full_version_tag"
+        echo "主要版本: $major_version_number"
+        echo "次要版本: $minor_version_number"
+        echo "修訂版本: $patch_version_number"
+    elif [[ "$error_message" != "" ]]; then
+        echo $error_message
+    else
+        echo "命名引用解析失敗。"
+    fi
+}
+
+parse_and_display "v1.2.3"
+parse_and_display "v1.2.3.4"
+parse_and_display "v.1.2.3"
+parse_and_display "1.2."
+parse_and_display "1.2"
+parse_and_display "1"
 ```
 
-enter
+it will echo
 
 ```
-./matching_version.bash -v v1.2.3
-```
-
-output
-
-```
+$ "D:\workspace\Bash\Bash tutorial\examples\Regex\regex-example-1.bash"
+--- 命名引用成功解析 ---
 整個匹配: v1.2.3
 主要版本: 1
 次要版本: 2
 修訂版本: 3
-```
+--- 命名引用成功解析 ---
+整個匹配: v1.2.3
+主要版本: 1
+次要版本: 2
+修訂版本: 3
+this is NOT a version number: v.1.2.3
+this is NOT a version number: 1.2.
+this is NOT a version number: 1.2
+this is NOT a version number: 1
 
-enter
-
-```
-./matching_version.bash -v 1.2.3
-```
-
-ouput
-
-```
-this is NOT a version number
 ```
