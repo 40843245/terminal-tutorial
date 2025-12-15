@@ -7,13 +7,26 @@ You will know how to
   + assign a value to a variable
 
 ## CH2-1 -- define a variable
-To define a global variable, you can simply assign a value into a variable.
+> [!IMPORTANT]
+> If you don't initalize value when declaring (i.e. just type an identifier),
+>
+> the variable is set to NULL value.
+
+To define a global variable, you can simply assign a value into an identifier, or even just type an identifier
+
+for example,
 
 ```
 COUNT=1
 ```
 
-To define a local variable, you have to use `local` variable and assign a value into a variable.
+and
+
+```
+COUNT
+```
+
+To define a local variable, you have to use `local` preserved word and assign a value into a variable, or even just use `local` preserved word then simply type an identifier
 
 ```
 parse_args(){
@@ -21,27 +34,30 @@ parse_args(){
 }
 ```
 
-## CH2-1 -- define a variable
-To define a global variable, you can simply assign a value into a variable.
-
-```
-COUNT=1
-```
-
-To define a local variable, you have to use `local` variable and assign a value into a variable.
+for example,
 
 ```
 parse_args(){
-  local integer1=1
+  local integer1
 }
 ```
 
 ## CH2-2 -- access a variable
-To access a variable, you have to simply add `$` followed by a variable
+
+To access a variable, you have to simply add `$` followed by a variable.
+
+for example
 
 ```
 COUNT=1
-$COUNT # access the variable `count`
+$COUNT # access the variable `COUNT`
+```
+
+and 
+ 
+```
+COUNT
+$COUNT # access the variable `COUNT` which is NULL value
 ```
 
 > [!NOTE]
