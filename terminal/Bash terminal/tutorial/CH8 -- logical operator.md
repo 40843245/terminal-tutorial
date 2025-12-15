@@ -5,7 +5,7 @@ You will know
   + logical operator
   + short-circuit feature
 
-## CH13-1 -- logical operator
+## CH8-1 -- logical operator
 
 Like C#,
 
@@ -15,7 +15,7 @@ Like C#,
 | `||` | or | iff one of expressions are evaluated to true, it will return true |
 | `!` | negate | iff the expression will be evaluated to false it will return true |
   
-## CH13-2 short-circuit feature
+## CH8-2 short-circuit feature
 
 Like C#,
 
