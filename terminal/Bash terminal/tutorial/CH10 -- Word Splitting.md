@@ -268,6 +268,71 @@ unset_var is empty or null? Yes
 
 ```
 
+##### Example 5
+
+`IFS-example-5`
+
+```
+#!/bin/bash
+
+# 1. 設置包含非空白字符和空白字符的 IFS
+# IFS = 冒號 + 空格 + Tab
+IFS_COMPLEX=': ' # 我們使用冒號和空格
+
+# 待處理的字串
+DATA="::Apple : Banana : :Orange: "
+
+OLD_IFS=$IFS
+IFS=$IFS_COMPLEX # 應用我們複雜的 IFS
+
+echo "--- 原始字串: '$DATA' ---"
+echo "--- 複雜 IFS: '$IFS_COMPLEX' ---"
+
+# 使用 read -ra 將字串結果根據 IFS 讀入陣列
+# <<< "$DATA" 是一種 here-string，將字串作為 read 的輸入
+read -ra result_array <<< "$DATA"
+
+# 恢復 IFS
+IFS=$OLD_IFS
+
+# 輸出結果 (注意：我們印出陣列長度和每個元素，包括空字串)
+echo "--- 分割結果 ---"
+echo "陣列元素數量: ${#result_array[@]}"
+
+i=0
+for item in "${result_array[@]}"; do
+  echo "索引 $i: \"$item\""
+  i=$((i+1))
+done
+
+# 輸出結果分析：
+# 陣列元素數量: 6
+# 索引 0: ""      <-- 開頭的 ":" 產生第一個空欄位
+# 索引 1: ""      <-- 相鄰的 "::" 產生第二個空欄位
+# 索引 2: "Apple" <-- 正常欄位
+# 索引 3: ""      <-- ": " 後面緊接著一個 " : " (兩個分隔塊之間的空欄位)
+# 索引 4: "Banana" <-- 正常欄位
+# 索引 5: "Orange" <-- 正常欄位 (字串結尾的 ": " 會被視為分隔符塊的一部分，不單獨產生空欄位，除非後面還有另一個非空白分隔符)
+
+# 備註：在 DATA 末尾的 ": " 被作為分隔符處理了，但因為 read 不會在結尾保留空欄位，所以總長是 6。
+# 如果 DATA="A:B:" 則結果會是 "A", "B", "" (3個元素)。
+```
+
+will echo
+
+```
+--- 原始字串: '::Apple : Banana : :Orange: ' ---
+--- 複雜 IFS: ': ' ---
+--- 分割結果 ---
+陣列元素數量: 6
+索引 0: ""
+索引 1: ""
+索引 2: "Apple"
+索引 3: "Banana"
+索引 4: ""
+索引 5: "Orange"
+
+```
 #### reference
 
 See [Gemini's response](https://gemini.google.com/share/b17a5bd18807) for a brief explanation of [word splitting on GNU official docs](https://www.gnu.org/software/bash/manual/bash.html#Word-Splitting) in Traditional Chinese
