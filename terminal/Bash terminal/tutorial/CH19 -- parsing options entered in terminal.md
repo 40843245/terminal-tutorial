@@ -18,15 +18,26 @@ where
 `<short-options-string>`: consists of many short option (options that has ONLY one character). 
 
 > [!NOTE]
-> If there is a `:` in short option (in `<short-options-string>`), then it is expected that there is one argument passed with the short option.
+> If there is a `:` append at a short option (in `<short-options-string>`), then it is expected that there is one argument passed with the short option.
 >
-> Otherwise, it will NOT require. 
+> Otherwise, it will NOT be required. 
+
+> [!NOTE]
+> To make `getopts` use silent mode, use `:` at the beginning of `<short-options-string>` (such as `<short-options-string>` is `":a:b"`)
+
+> [!IMPORTANT]
+> When `getopts` uses silent mode, you have to handle these cases
+>
+> + case `\?` to handle an invalid option (as case 1.2) 
+>
+> + case `:` to handle NO argument passed when it expects an argument (as case 1.1.2)
 
 The `getopts` is a built-in command.
 
 The string quoated with double quotations followed by getopts define which short options can be recongized by Bash engine and the option should take one argument or not.
 
 When it is invoked, it will try to find current option with current index (stored in special variable `OPTIND`).
+
 
 Case 1: In non-slient mode
 
@@ -44,7 +55,7 @@ then it will
 
 Case 1.1.2: In this case, if the corresponding argument is NOT passed (if it is expected)
 
-then it will echo an error message like
+then it will echo a diagnostic error message like
 
 ```
 D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-1.bash: option requires an argument -- a
@@ -58,7 +69,7 @@ D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-1.bash: option 
 
 Case 1.2: In non-slient mode, if it can't successfully find a short option (i.e. `<short-options-string>` does NOT contains the value of currently short option for targeting in current round) 
 
-then it will echo an error message like
+then it will echo a diagnostic error message like
 
 ```
 D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-1.bash: illegal option --c
@@ -82,11 +93,11 @@ then behaves same as Case 1.1.1
 
 Case 2.1.2: In this case, if the corresponding argument is NOT passed (if it is expected)
 
-then it will catch an error message (and thus, not echo it) 
+then it will catch a diagnostic error message (and thus, not echo it) 
 
 Next
 
-    + set `<current-option-name>` variable as `?`
+    + set `<current-option-name>` variable as `:`
 
     + set special variable `OPTARG` as NULL value.
 
@@ -94,11 +105,11 @@ Next
 
 Case 2.2: In slient mode, if it can't successfully find a short option (i.e. `<short-options-string>` does NOT contains the value of currently short option for targeting in current round) 
 
-then it will catch an error message (and thus, not echo it)
+then it will catch a diagnostic error message (and thus, not echo it)
 
 Next
 
-    + set `<current-option-name>` variable as `?`
+    + set `<current-option-name>` variable as `:`
 
     + set special variable `OPTARG` as NULL value.
 
