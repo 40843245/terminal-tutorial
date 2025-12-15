@@ -1335,6 +1335,116 @@ $ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -
 $
 
 ```
+
+## CH19-2 -- parse the long options user enters in a command
+> [!IMPORTANT]
+> `getopts` built-in command can NOT be used for parsing long options.
+>
+> To parse the long options, you have to parse it one-by-one (by iterating all passed arguments)
+
+### Examples
+#### Example 1
+This example illustrate how to parse a long option `--recursive` and a short option `-r`
+
+`parsing-long-options-example-1.bash`
+
+```
+#!/bin/bash
+
+# 定義一個函數來解析參數
+parse_long_options() {
+  # 初始化變數
+  RECURSIVE_FLAG=false
+  OUTPUT_FILE=""
+
+  # 遍歷所有傳入的參數 ($@)
+  while [[ "$#" -gt 0 ]]; do
+    case "$1" in
+      # 處理長選項: --recursive
+      --recursive)
+        RECURSIVE_FLAG=true
+        shift # 移除已處理的參數 (--recursive)
+        ;;
+      
+      # 處理長選項: --output <file>
+      --output)
+        # 檢查是否有下一個參數作為值
+        if [ -n "$2" ]; then
+          OUTPUT_FILE="$2"
+          shift 2 # 移除兩個參數 (--output 和 <file>)
+        else
+          echo "錯誤: 選項 '$1' 缺少必需的參數。" >&2
+          return 1
+        fi
+        ;;
+
+      # 處理短選項（可選，但為了完整性）
+      -r)
+        RECURSIVE_FLAG=true
+        shift
+        ;;
+
+      # 處理選項結束符號：--
+      --)
+        shift # 移除選項結束符號
+        break # 停止解析選項，後面的都是非選項參數
+        ;;
+
+      # 處理所有其他非選項參數
+      -*)
+        echo "錯誤: 無效選項 '$1'" >&2
+        return 1
+        ;;
+      
+      # 處理非選項參數（例如檔案路徑）
+      *)
+        # 這裡 $1 是第一個非選項參數
+        break # 遇到第一個非選項參數就跳出選項解析迴圈
+        ;;
+    esac
+  done
+
+  echo "--- 選項結果 ---"
+  echo "是否啟用遞迴 (-r / --recursive): $RECURSIVE_FLAG"
+  echo "輸出檔案 (--output): ${OUTPUT_FILE:-未指定}"
+  
+  echo "--- 剩餘參數 ---"
+  # 在迴圈結束後，所有剩餘的參數 (非選項參數) 仍保留在 $@ 中
+  if [ "$#" -gt 0 ]; then
+    echo "非選項參數列表: $@"
+  else
+    echo "沒有剩餘的非選項參數。"
+  fi
+}
+
+# --- 呼叫範例 ---
+echo "== 範例 1: 僅長選項 =="
+parse_long_options --recursive --output my_log.txt file1.txt
+
+echo -e "\n== 範例 2: 混合選項和非選項參數 =="
+parse_long_options -r file2.txt --output "another file.csv"
+
+echo -e "\n== 範例 3: 錯誤處理 (缺少參數) =="
+parse_long_options --output
 ```
 
+executing this script will echo
+
+```
+== 範例 1: 僅長選項 ==
+--- 選項結果 ---
+是否啟用遞迴 (-r / --recursive): true
+輸出檔案 (--output): my_log.txt
+--- 剩餘參數 ---
+非選項參數列表: file1.txt
+
+== 範例 2: 混合選項和非選項參數 ==
+--- 選項結果 ---
+是否啟用遞迴 (-r / --recursive): true
+輸出檔案 (--output): 未指定
+--- 剩餘參數 ---
+非選項參數列表: file2.txt --output another file.csv
+
+== 範例 3: 錯誤處理 (缺少參數) ==
+錯誤: 選項 '--output' 缺少必需的參數。
 ```
