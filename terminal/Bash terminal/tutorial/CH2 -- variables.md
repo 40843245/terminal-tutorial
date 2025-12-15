@@ -33,13 +33,20 @@ COUNT
 
 To define a local variable, you have to use `local` preserved word and assign a value into a variable, or even just use `local` preserved word then simply type an identifier
 
+> [!NOTE]
+> To prevent the variable is polluted in a function when invoking it (it usually happens when the assigns value into the variable with same name),
+>
+> declare a local variable.  
+
+for example,
+
 ```
 parse_args(){
   local integer1=1
 }
 ```
 
-for example,
+and
 
 ```
 parse_args(){
