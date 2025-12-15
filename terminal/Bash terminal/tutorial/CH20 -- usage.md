@@ -86,13 +86,13 @@ parse_args() {
 
 `parse_args` function parses and handles the arguments first.
 
-Case 1: If the end-user enters flag `-v`
+Case 1: If the end-user enters option `-v`
 
-Case 1.A: If the end-user enters flag `-v` followed by exactly one argument (separated by delimiter a whitespace)
+Case 1.A: If the end-user enters option `-v` followed by exactly one argument (separated by delimiter a whitespace)
 
-it can be parsed correctly then invoke `parse_and_display` function with one argument after `-v` flag (separated by delimiter a whitespace)
+it can be parsed correctly then invoke `parse_and_display` function with one argument after `-v` option (separated by delimiter a whitespace)
 
-Case 1.B: If the end-user enters flag `-v`, BUT NOT followed by one argument (or more)
+Case 1.B: If the end-user enters option `-v`, BUT NOT followed by one argument (or more)
 
 it can't be parsed correctly, so it doesn't invoke `parse_and_display` function.
 
@@ -114,13 +114,13 @@ D:\workspace\Bash\Bash tutorial\examples\Regex\regex-example-2.bash: option requ
 
 then automatically executes the helper function `usage`.
 
-Case 1.C: If the end-user enters flag `-v`, followed by more than one argument
+Case 1.C: If the end-user enters option `-v`, followed by more than one argument
 
-it can be parsed correctly then invoke `parse_and_display` function with one argument after `-v` flag (separated by delimiter a whitespace). 
+it can be parsed correctly then invoke `parse_and_display` function with one argument after `-v` option (separated by delimiter a whitespace). 
 
 The rest arguments will be ignored here.
 
-Case 1.D: If the end-user enters flag -v`, BUT followed by an empty string
+Case 1.D: If the end-user enters option -v`, BUT followed by an empty string
 
 The Bash engine can find an option `-v`, thus executing
 
@@ -159,7 +159,7 @@ echoing the `"Error: The required option -v <version_number> is missing."` to `s
 
 and invoking helper function `usage`.
 
-Case 2: If the end-user enters **other flag than `-v`** (for example `-x`), BUT followed by an empty string
+Case 2: If the end-user enters **other option than `-v`** (for example `-x`), BUT followed by an empty string
 
 Then it can't recognize the option `x`
 
