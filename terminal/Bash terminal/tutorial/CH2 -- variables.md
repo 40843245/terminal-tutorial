@@ -34,9 +34,9 @@ COUNT
 To define a local variable, you have to use `local` preserved word and assign a value into a variable, or even just use `local` preserved word then simply type an identifier
 
 > [!NOTE]
-> To prevent the variable is polluted in a function when invoking it (it usually happens when the assigns value into the variable with same name),
+> To prevent the variable is polluted with incidently in a function when invoking it (it usually happens to perform a variable with same name),
 >
-> declare a local variable.  
+> It is highly recommend to declare a local variable inside a function as possible as you can.  
 
 for example,
 
