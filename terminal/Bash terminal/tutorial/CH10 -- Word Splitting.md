@@ -36,7 +36,7 @@ Test              developing\ projects
 
 ```
 
-One command can behaves this thanks to word splitting and word expansion
+One command can behaves this thanks to word splitting and expansions
 
 When one enters these commands in terminal
 
@@ -58,16 +58,21 @@ and special variables will be
 
 ## CH10-2 -- special variable about word splitting
 ### IFS (Internal Field Seperator)
-The shell treats each character of `$IFS` as a delimiter, and splits the results of the other expansions into fields using these characters as field terminators.
 
 The shell will split **the string after parameter expansion** into a list of string according the value of `$IFS` special variable.
 
 #### Behavior of `$IFS`
-1. `{whitespace}{tab}{newline}` characters are treated as `IFS whitespace`
+1. The shell treats each character of `$IFS` as a delimiter, and splits the results of the other expansions into fields using these characters as field terminators.
 
-2. 
+2. `{whitespace}{tab}{newline}` characters are treated as `IFS whitespace`
 
-3. If `$IFS` is unset in terminal, then shell will behaves as the default value `{whitespace}{tab}{newline}` when splitting the word and these characters (`{whitespace}{tab}{newline}`) are treated as `IFS whitespace` 
+3. Iff `$IFS` ONLY contains these characters `{whitespace}{tab}{newline}`, then
+
+   3.1. any consequence consists of any of combination of these characters `{whitespace}{tab}{newline}` will be treated as **one delimiter**
+
+   3.2. the leading and trailing `IFS whitespace` will be trimmed (if exists) for the stting that is splitted. 
+
+4. If `$IFS` is unset in terminal, then shell will behaves as the default value `{whitespace}{tab}{newline}` when splitting the word and these characters (`{whitespace}{tab}{newline}`) are treated as `IFS whitespace` 
 
    where
 
@@ -76,6 +81,21 @@ The shell will split **the string after parameter expansion** into a list of str
   `{tab}`: a tab
   
   `{newline}`: a break line
+
+5. If `$IFS` is set to empty string, then shell will treat it as NULL value.
+
+   Here, it will NOT perform word splitting.
+
+   However, **implicit null arguments** will be reomved.
+
+6. If `$IFS` contains non-whitespace character, then
+
+   6.1. For these non-whitespace characters, the consequence of non-whitespace characters and its adjacent `IFS whitespace` will be the boundary of fields.
+
+   6.2. Its adjacent of non-whitespace characters (used as delimiter) will generate a NULL field (i.e. empty string).
+
+#### Examples
+##### Example 1
 
 
 #### reference
