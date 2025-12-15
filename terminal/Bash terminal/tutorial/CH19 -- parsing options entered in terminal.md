@@ -42,9 +42,9 @@ then it will
 
     + advance (increase it by 1) special variable `OPTIND`.
 
-Case 1.2: In this case, if the corresponding argument is NOT passed (if it is expected)
+Case 1.1.2: In this case, if the corresponding argument is NOT passed (if it is expected)
 
-then it will throw an error like
+then it will echo an error message like
 
 ```
 D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-1.bash: option requires an argument -- a
@@ -55,17 +55,55 @@ D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-1.bash: option 
     + set special variable `OPTARG` as NULL value.
 
     + advance (increase it by 1) special variable `OPTIND`.
-      
-Case 1.2: In non-slient mode, if it can successfully find a short option (i.e. `<short-options-string>` does NOT contain the value of currently short option for targeting in current round) 
 
-then it will 
+Case 1.2: In non-slient mode, if it can't successfully find a short option (i.e. `<short-options-string>` does NOT contains the value of currently short option for targeting in current round) 
+
+then it will echo an error message like
+
+```
+D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-1.bash: illegal option --c
+```
+
+Next, 
 
     + set `<current-option-name>` variable as `?`
 
-    + set special variable `OPTARG` as NULL value
+    + set special variable `OPTARG` as NULL value.
 
     + advance (increase it by 1) special variable `OPTIND`.
-    
+
+Case 2: In slient mode
+
+Case 2.1: In slient mode, if it can successfully find a short option (i.e. `<short-options-string>` does NOT contain the value of currently short option for targeting in current round) 
+
+Case 2.1.1: In this case, also, if either the corresponding argument is passed (if it is expected) or it is not expected.
+
+then behaves same as Case 1.1.1
+
+Case 2.1.2: In this case, if the corresponding argument is NOT passed (if it is expected)
+
+then it will catch an error message (and thus, not echo it) 
+
+Next
+
+    + set `<current-option-name>` variable as `?`
+
+    + set special variable `OPTARG` as NULL value.
+
+    + advance (increase it by 1) special variable `OPTIND`.
+
+Case 2.2: In slient mode, if it can't successfully find a short option (i.e. `<short-options-string>` does NOT contains the value of currently short option for targeting in current round) 
+
+then it will catch an error message (and thus, not echo it)
+
+Next
+
+    + set `<current-option-name>` variable as `?`
+
+    + set special variable `OPTARG` as NULL value.
+
+    + advance (increase it by 1) special variable `OPTIND`.
+
 #### Examples
 ##### Example 1
 
@@ -526,5 +564,766 @@ $ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-1.bash" -a -
 
 <user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
 $
+
+```
+
+##### Examples 2
+
+`getopts-example-2..bash`
+
+```
+#!/bin/bash
+
+echo "--- 腳本開始 ---"
+
+# 初始狀態
+echo "初始 OPTIND: $OPTIND"
+echo "---"
+
+# 使用靜默模式
+# optstring: "a:" 表示 -a 必須有參數；"b" 表示 -b 是個開關
+while getopts ":a:b" opt; do
+  echo "--- 迴圈開始 ---"
+  echo "在靜默模式下，當前選項 (opt): $opt"
+  
+  # 檢查 OPTARG 是否有值
+  if [ -n "$OPTARG" ]; then
+    echo "當前參數 (OPTARG): $OPTARG"
+  else
+    echo "當前參數 (OPTARG): (空)"
+  fi
+  
+  echo "下一個要處理的索引 (OPTIND): $OPTIND"
+  
+  case $opt in
+    a)
+      echo "選項 -a 已啟用，參數值是：$OPTARG"      
+      ;;
+    b)
+      echo "選項 -b 已啟用，參數值是：$OPTARG"  
+      ;;
+    \?)
+      # 處理無效選項
+      echo "錯誤 (靜默模式): 遇到無效選項 -$OPTARG" >&2
+      ;;
+    :)
+      # 處理缺少必需參數
+      echo "錯誤 (靜默模式): 選項 -$OPTARG 缺少必需的參數。" >&2
+  esac
+done
+
+echo "--- 迴圈結束 ---"
+echo "在靜默模式下，最終選項 (opt): $opt"
+echo "在靜默模式下，最終 OPTIND: $OPTIND (這指向第一個非選項參數的索引)"
+
+# shift 處理，移除已解析的參數
+shift $((OPTIND - 1))
+echo "在靜默模式下，剩餘的非選項參數 (\$@): $@"
+```
+
+In silent mode, users interactions:
+
+```
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -a -b
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): -b
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：-b
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -a
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): :
+當前參數 (OPTARG): a
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 選項 -a 缺少必需的參數。
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 2 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): :
+當前參數 (OPTARG): a
+下一個要處理的索引 (OPTIND): 3
+錯誤 (靜默模式): 選項 -a 缺少必需的參數。
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -ax
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): x
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：x
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a-a-a
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): -a-a
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：-a-a
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a"-a -a"
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): -a -a
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：-a -a
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a""
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): :
+當前參數 (OPTARG): a
+下一個要處理的索引 (OPTIND): 3
+錯誤 (靜默模式): 選項 -a 缺少必需的參數。
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a ""
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 4
+選項 -a 已啟用，參數值是：
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 4 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a" "
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG):
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a " "
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG):
+下一個要處理的索引 (OPTIND): 4
+選項 -a 已啟用，參數值是：
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 4 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a '" "'
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): " "
+下一個要處理的索引 (OPTIND): 4
+選項 -a 已啟用，參數值是：" "
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 4 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a'" "'
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): " "
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：" "
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a'""'
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): ""
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：""
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -carry
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): c
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 -c
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): rry
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：rry
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -c-arry
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): c
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 -c
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): rry
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：rry
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b --arry
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): rry
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：rry
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -------------------------------------------arry
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 2
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): rry
+下一個要處理的索引 (OPTIND): 3
+選項 -a 已啟用，參數值是：rry
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 3 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b--a-r-----ry
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 1
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 1
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): ?
+當前參數 (OPTARG): -
+下一個要處理的索引 (OPTIND): 1
+錯誤 (靜默模式): 遇到無效選項 --
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): -r-----ry
+下一個要處理的索引 (OPTIND): 2
+選項 -a 已啟用，參數值是：-r-----ry
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 2 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a "win" "victory"
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): win
+下一個要處理的索引 (OPTIND): 4
+選項 -a 已啟用，參數值是：win
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 4 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@): victory
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b " " -a "win" "victory"
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 2 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@):   -a win victory
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a "win" "victory" -b
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): win
+下一個要處理的索引 (OPTIND): 4
+選項 -a 已啟用，參數值是：win
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 4 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@): victory -b
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a "win" -b "victory" -b
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): win
+下一個要處理的索引 (OPTIND): 4
+選項 -a 已啟用，參數值是：win
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 5
+選項 -b 已啟用，參數值是：
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 5 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@): victory -b
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$ "D:\workspace\Bash\Bash tutorial\examples\getopts\getopts-example-2.bash" -b -a "win" -b "victory" -b -a
+--- 腳本開始 ---
+初始 OPTIND: 1
+---
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 2
+選項 -b 已啟用，參數值是：
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): a
+當前參數 (OPTARG): win
+下一個要處理的索引 (OPTIND): 4
+選項 -a 已啟用，參數值是：win
+--- 迴圈開始 ---
+在靜默模式下，當前選項 (opt): b
+當前參數 (OPTARG): (空)
+下一個要處理的索引 (OPTIND): 5
+選項 -b 已啟用，參數值是：
+--- 迴圈結束 ---
+在靜默模式下，最終選項 (opt): ?
+在靜默模式下，最終 OPTIND: 5 (這指向第一個非選項參數的索引)
+在靜默模式下，剩餘的非選項參數 ($@): victory -b -a
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/examples/Regex
+$
+
+```
+```
 
 ```
