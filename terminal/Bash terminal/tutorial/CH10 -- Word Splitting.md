@@ -10,7 +10,8 @@ You will know
 
 this behavior is called word splitting.
 
-For example,
+### Examples
+#### Example 1
 
 when one enters these commands in terminal
 
@@ -35,7 +36,7 @@ Test              developing\ projects
 
 ```
 
-One command can behaves this thanks to word splitting
+One command can behaves this thanks to word splitting and word expansion
 
 When one enters these commands in terminal
 
@@ -54,3 +55,7 @@ and special variables will be
 | RECOMMENDED | `"$@"` | "D:\workspace" "D:\SrcCode" | always 2 | it will be NOT combine them together, quotating with a doule quoation for each arguments. |
 | NOT RECOMMENDED | `$@` | D:\workspace D:\SrcCode | at least 2 (if no any whitespace between these arguments) | it will be NOT combine them together (BUT no quoated with a double quotation) | 
 | NOT RECOMMENDED | `$*` | D:\workspace D:\SrcCode | at least 2 (if no any whitespace between these arguments) | it will be combined into one longer string (BUT no quoated with a double quotation) | 
+
+## CH10-2 -- special variable about word splitting
+### IFS (Internal Field Seperator)
+The shell treats each character of `$IFS` as a delimiter, and splits the results of the other expansions into fields using these characters as field terminators.
