@@ -17,11 +17,33 @@ You just can define a function name without parameters.
 syntax:
 
 ```
-<function_name>(){
+<function_name>() {compound-command}?{
     # function body
     # defines statements here
 }
 ```
+
+or
+
+```
+function <function_name>() {compound-command}?{
+    # function body
+    # defines statements here
+}
+```
+
+or
+
+```
+function <function_name> {compound-command}?{
+    # function body
+    # defines statements here
+}
+```
+
+where
+
+`{compound-command}` is a compound command.
 
 ## CH9-2 -- inoke a function
 To invoke a function, simply execute the command
