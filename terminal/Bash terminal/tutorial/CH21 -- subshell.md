@@ -1,4 +1,4 @@
-# CH21 -- Subshell
+# CH21 -- subshell
 ## objectives
 You will know
 
@@ -59,6 +59,16 @@ Thus, after executing commands in the subshell script, when accessing variable `
 
 Compare following examples for fully understanding.
 
+## CH21-4 -- special variable about shell
+
+`$$`: Expands to the process ID of the shell. 
+
+      In a subshell, it expands to the process ID of the invoking shell, not the subshell.
+
+`$!`: Expands to the process ID of the job most recently placed into the background, 
+
+      whether executed as an asynchronous command or using the bg builtin.
+      
 ## Examples
 ### Example 1
 This example illustrates how a variable that is exported is polluted 
