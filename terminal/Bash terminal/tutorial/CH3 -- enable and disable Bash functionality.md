@@ -12,7 +12,7 @@ The built-in command `set` can enable or disable Bash functionalities.
 syntax:
 
 ```
-set {one-symbol-for-enabling-or-disabling}{short-option-for-functionality} {other-argumments}*
+set {one-symbol-for-enabling-or-disabling}{shorthand-of-functionality} {other-argumments}*
 ```
 
 where
@@ -26,9 +26,9 @@ where
 
 and
 
-`{short-option-for-functionality}` is a letter (usually is abbreviated from a word) that determines which functionality will be enabled or disabled
+`{shorthand-of-functionality}` is a letter (usually is abbreviated from a word) that determines which functionality will be enabled or disabled
 
-| `{short-option-for-functionality}` | functionality |
+| `{shorthand-of-functionality}` | functionality |
 | :-- | :-- |
 | `B` | Bash commands (which is extended based on shell) |
 | `e` | termination on error |
@@ -129,10 +129,13 @@ executing this script will echo
 ```
 
 ## CH3-2 -- look at all functionalites are turned on or off
-### set -o
+### `set -o`
 The built-in command `set` with short option `-o` (`set -o`)
 
-will list all functionalies active status (it is enabled or not)
+will list all functionalies active status (whether it is enabled or not)
+
+### `echo $-`
+`$-` is a special variable that stores all enabled functionalities (represented as a string, each character is a shorthand of functionality) (for example, see `{shorthand-of-functionality}` table)
 
 ### Examples
 #### Example 1
@@ -182,3 +185,29 @@ xtrace          off
 
 ```
 
+#### Example 2
+This example list all enabled functionalities (represented as a string where each character indicates shorthand of functionality) 
+
+`list-all-aliased-enabled-functionalities-example-1.bash`
+
+```
+main(){
+    echo $-
+}
+
+main
+```
+
+executing this script will echo
+
+```
+hB
+
+```
+
+indicating that 
+
+there is currently two functionalities are enabled in this shell 
+
++ `h` (shorthand of `hashall`)
++ `B` (shorthand of `braceexpand`)
