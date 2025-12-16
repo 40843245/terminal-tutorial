@@ -3,10 +3,12 @@
 You will know how to
 
   + define a variable
+  + define a variable with specific type or specific attributes
   + access a variable
   + assign a value to a variable
 
 ## CH2-1 -- define a variable
+### define a global variable
 > [!IMPORTANT]
 > If you don't initalize value when declaring (i.e. just type an identifier),
 >
@@ -31,6 +33,7 @@ and
 COUNT
 ```
 
+### define a local variable
 To define a local variable, you have to use `local` preserved word and assign a value into a variable, or even just use `local` preserved word then simply type an identifier
 
 > [!NOTE]
@@ -52,6 +55,63 @@ and
 parse_args(){
   local integer1
 }
+```
+
+## CH2-2 -- define a variable with specific type or specific attributes
+Directly assignment of a variable (such as `VAR=2` and `local `var=2`) is impossible to define a variable with either specific type (and thus the variable MUST be string type)
+
+or specific attributes (and thus the variable is assignable).
+
+To define a variable with specific type or specific attributes, you have to define a variable with `declare` preserved word.
+
+syntax:
+
+```
+declare {options}? {variable-name}(={inital-value})?
+```
+
+where
+
+`{options}`: one or more short option that specifies the type or specific attributes of variable.
+
+### short options
+#### -i
+To declare a variable is an integer and thus can perform arthimetic operation like C (such as `NUM=$NUM+5`) rather than use extended C++ style (such as `NUM=$(($NUM+5))`), you have to use `-i` short option.
+
+#### -r
+To declare a readonly variable (which can't be assigned by assignment operator after initialization), you have to use `-r` short option.
+
+#### -a
+To declare a variable is an indexed array (like array in C++), you have to use `-a` short option.
+
+#### -A
+To declare a variable is an associative array (like dictionary in C#), you have to use `-A` short option.
+
+#### -n
+Declare a variable with `nameref` attribute that references to the name of referenced variable.
+
+All references, assignments, and attribute modifications to name, except for those using or changing the -n attribute itself, are performed on the referenced variable referenced by value of variable name (concept like pointer in C++)
+
+> [!NOTE]
+> The `nameref` attribute can't be applied to array variables.
+
+For example,
+
+At top level
+
+```
+ORIGINAL_VAR=2
+declare -n var=ORGINAL_VAR
+
+echo "Before changing value of var variable"
+echo "ORIGINAL_VAR has value $ORIGINAL_VAR"
+echo "var has value $var"
+
+var=3
+
+echo "After changing value of var variable"
+echo "ORIGINAL_VAR has value $ORIGINAL_VAR"
+echo "var has value $var"
 ```
 
 ## CH2-2 -- access a variable
