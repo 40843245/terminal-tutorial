@@ -95,13 +95,16 @@ All references, assignments, and attribute modifications to name, except for tho
 > [!NOTE]
 > The `nameref` attribute can't be applied to array variables.
 
-For example,
+### Examples
+#### Example
+
+`declare-example-1.bash`
 
 At top level
 
 ```
 ORIGINAL_VAR=2
-declare -n var=ORGINAL_VAR
+declare -n var=ORIGINAL_VAR
 
 echo "Before changing value of var variable"
 echo "ORIGINAL_VAR has value $ORIGINAL_VAR"
@@ -112,6 +115,28 @@ var=3
 echo "After changing value of var variable"
 echo "ORIGINAL_VAR has value $ORIGINAL_VAR"
 echo "var has value $var"
+```
+
+it defines a global variable named `ORIGINAL_VAR` and initialize it to 2 (string type)
+
+Then it declares a global variable named `var` that points to `ORIGINAL_VAR` variable.
+
+Then changes value of `var` variable is changed to 3 (string type).
+
+Since `var` variable points to `ORIGINAL_VAR` variable,
+
+the value of `ORIGINAL_VAR` variable will be also changed to 3 (string type).
+
+Thus, executing this script will echo
+
+```
+Before changing value of var variable
+ORIGINAL_VAR has value 2
+var has value 2
+After changing value of var variable
+ORIGINAL_VAR has value 3
+var has value 3
+
 ```
 
 ## CH2-2 -- access a variable
