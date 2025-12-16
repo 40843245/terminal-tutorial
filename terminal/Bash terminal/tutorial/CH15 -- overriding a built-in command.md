@@ -17,3 +17,6 @@ To invoke the built-in command (its behavior is same as original built-in comman
 
 just invoke the built-in command with preserved word `command` (such as `command unset`)
 
+### Examples
+#### Example 1
+See example 1 in CH13-4. 
