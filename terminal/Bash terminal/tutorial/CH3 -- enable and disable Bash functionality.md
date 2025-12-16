@@ -64,9 +64,9 @@ and
 > ```
 
 > [!IMPORTANT]
-> Note that the preceedence of expansion (see CH19 for more details).
+> Note that the precedence of expansion (see CH19 for more details).
 >
-> Since brace expansion takes preceedence of variable expansion,
+> Since brace expansion takes precedence of variable expansion,
 >
 > in an expression, when accessing a variable, it will expand the variable to its value and
 >
