@@ -178,3 +178,137 @@ variable5 is NOT in unset state and its value is NOT an empty string
 
 ```
 
+## CH13-4 -- extra bonus
+### Q1 -- check a variable is in unset state and it has been unset by `unset` command
+Q1: 
+
+How check a variable is in unset state and it has been unset by `unset` command, returning 0 (boolean true) if the conditions are BOTH satisfied?
+
+A1:
+
+You have to define a global variable (dictionary type) to trace that the variable has been unset by `unset` command.
+
+To do that, first you have to override the `unset` command by defining function named `unset`
+
+In `unset` function, you have to set the argument name as its key and set its value as any value you want.
+
+Then invoke `unset` built-in command.
+
+Secondly, when checking, you have to check the argument is in unset state and it is in the dictory.
+
+#### Examples
+##### Example 1
+
+a utility module:
+
+`tracing_unset_state_module.bash`
+
+```
+# !/bin/bash
+# 模組名稱:tracing_unset_state_module.bash
+
+### 模組目的
+### 記錄該變數曾因`unset`指令而被unset過且正在處於unset狀態 (i.e.是否不存在)
+
+## 函式目的
+## 使用全域陣列，用於記錄被 'unset' 過的變數名稱
+## 變數名稱將作為陣列的鍵 (key)，值 (value) 不重要，只要存在即可。
+declare -gA UNSET_HISTORY
+
+# 確保這個函式名為 unset，以便覆蓋內建命令
+unset() {
+    # 遍歷所有傳遞給這個自定義 unset 函式的參數 (即變數名稱)
+    for var_name in "$@"; do
+        # 1. 記錄變數名稱到追蹤陣列
+        UNSET_HISTORY["$var_name"]=1
+        # 2. 執行內建的 unset 命令
+        command unset "$var_name" # 執行內建的 unset 命令
+    done
+}
+
+## ------------- 主要函式 ------------- ##
+## 函式目的
+## 判斷該變數曾因`unset`指令而被unset過且正在處於unset狀態 (i.e.是否不存在)
+## 
+## 回傳值
+## 若該變數曾因`unset`指令而被unset過且正在處於unset狀態，則回傳0(boolean true)。
+## 否則，則回傳1(boolean false)。
+##
+## 詳細情況分析
+##
+## Case 1:正在處於unset狀態
+## Case 1.1: 若該變數曾因`unset`指令而被unset過
+## => 回傳0
+## Case 1.2: 若該變數未曾因`unset`指令(example use case:直接嘗試存取未宣告過的變數)
+## => 回傳1
+## Case 2: 正在處於set狀態
+## > [!NOTE]
+## > 若該變數沒有被宣告而不存在的話，則也屬於Case 1.2，而回傳1(boolean false)。
+
+is_unset_preserved_word() {
+    local var_name="$1"
+
+    # 條件 1: 檢查變數是否處於 UNSET 狀態
+    if [ -z "${!var_name+set}" ]; then
+        # Case 1:正在處於unset狀態
+        # 注意: 使用 ${!var_name+set} 進行間接參數展開
+        # 條件 2: 檢查變數名稱是否在 UNSET_HISTORY 中
+        if [[ -v UNSET_HISTORY["$var_name"] ]]; then
+            # Case 1.1: 若該變數曾因`unset`指令而被unset過 => 回傳0
+            echo "$var_name: 因\`unset\` preserved word而被unset過且目前是unset狀態"
+            return 0
+        else
+            # Case 1.2 未曾設定，也未曾呼叫 unset => 回傳1
+            echo "$var_name: 目前是unset狀態，但沒有因呼叫內建的\`unset\`指令而被追蹤為'被unset過' (例如: 從未設定過)"
+            return 1
+        fi
+    else
+        # Case 2: 變數目前處於 SET 狀態 => 回傳1
+        echo "$var_name: 目前是 set 狀態"
+        return 1
+    fi 
+}
+```
+
+main script:
+
+`unset-example-3.bash`
+
+```
+source "../../utility modules/unset/tracing_unset_state_module.bash"
+
+variable1=""
+declare variable2 # 顯式宣告 variable2 處於 unset 狀態
+variable3=2
+unset variable3 # 觸發自定義 unset，記錄 variable3
+
+variable4=2
+unset variable4 # 觸發自定義 unset，記錄 variable4
+variable4=3     # 重新設定 variable4
+
+echo "--- 執行判斷 ---"
+
+is_unset_preserved_word variable1 # expected returns 1 (set)
+is_unset_preserved_word variable2 # expected returns 1 (unset, but not tracked)
+is_unset_preserved_word variable3 # expected returns 0 (tracked, and is unset)
+is_unset_preserved_word variable4 # expected returns 1 (set)
+
+echo "--- UNSET_HISTORY 追蹤紀錄 ---"
+# variable3 和 variable4 會被記錄
+declare -p UNSET_HISTORY
+```
+
+executing the main script will echo
+
+```
+--- 執行判斷 ---
+variable1: 目前是 set 狀態
+variable2: 目前是unset狀態，但沒有因呼叫內建的`unset`指令而被追蹤為'被unset過' (例如: 從未設定過)
+variable3: 因`unset` preserved word而被unset過且目前是unset狀態
+variable4: 目前是 set 狀態
+--- UNSET_HISTORY 追蹤紀錄 ---
+declare -A UNSET_HISTORY=([variable3]="1" [variable4]="1" )
+
+```
+
+see CH15 for overriding a built-in command.
