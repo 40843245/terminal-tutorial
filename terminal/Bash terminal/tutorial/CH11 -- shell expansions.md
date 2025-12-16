@@ -67,6 +67,7 @@ And thus, executing this script will echo
 
 ```
 ade ace abe
+
 ```
 
 #### Example 2
@@ -106,3 +107,44 @@ executing this script will create these folders respectively
     + `src` folder under `project` folder relative to current path
     + `bin` folder under `project` folder relative to current path
     + `doc` folder under `project` folder relative to current path
+
+#### Example 3
+
+```
+echo {1..5}
+```
+
+In above example, the `1..5` will be expanded to `1,2,3,4,5`
+
+Thus
+
+```
+echo {1..5}
+```
+
+is equivalent to
+
+```
+echo {1,2,3,4,5}
+```
+
+| sequence used for brace expansions | `n`th iteration | element | generated string  in `n`th iteration |
+| :-- | :-- | :-- | :-- |
+| `{1,2,3,4,5}` | 0 | `1` | `1` |
+| `{1,2,3,4,5}` | 1 | `2` | `2` |
+| `{1,2,3,4,5}` | 2 | `3` | `3` |
+| `{1,2,3,4,5}` | 3 | `4` | `4` |
+| `{1,2,3,4,5}` | 4 | `5` | `5` |
+
+Therefore, it is equivalent to
+
+```
+echo 1 2 3 4 5
+```
+
+executing this script will echo
+
+```
+1 2 3 4 5
+
+```
