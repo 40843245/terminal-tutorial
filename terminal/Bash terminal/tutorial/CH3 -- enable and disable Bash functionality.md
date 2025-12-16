@@ -54,7 +54,7 @@ and
 >
 > you will need to `echo` the expression to perform brace expansion then
 >
-> assign the result (after brace expansion) into a variable using `$()`.
+> assign the result (after brace expansion) into a variable using `$()` (command substitution technique, see CH11 for more details).
 >
 > For example,
 >
@@ -65,7 +65,7 @@ and
 > ```
 
 > [!IMPORTANT]
-> Note that the precedence of expansion (see CH19 for more details).
+> Note that the precedence of expansion (see CH11 for more details).
 >
 > Since brace expansion takes precedence of variable expansion,
 >
