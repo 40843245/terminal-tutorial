@@ -85,5 +85,29 @@ Subshell: Inside: `Temporary Value`
 Parent Shell: After: `Temporary Value`
 ```
 
+### Example 2
+This example illustrates how prevent variable that is exported to be polluted using command grouping
+
+`command-grouping-example-2.bash`
+
+```
+# 父 Shell
+echo "Parent Shell: Before: \`$TEMP_VAR\`" 
+
+## 有使用command grouping技術--`()`來包裝 commands
+## 所以，這個用export保留詞的變數`TEMP_VAR`沒有被汙染了。
+( export TEMP_VAR="Temporary Value" ; echo "Subshell: Inside: \`$TEMP_VAR\`" )
+
+# 回到父 Shell
+echo "Parent Shell: After: \`$TEMP_VAR\`"
+```
+executing this script will echo
+
+```
+Parent Shell: Before: ``
+Subshell: Inside: `Temporary Value`
+Parent Shell: After: ``
+
+```
 
 
