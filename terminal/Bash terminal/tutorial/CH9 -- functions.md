@@ -73,7 +73,7 @@ where
 > However, you can assign the value into a global variable to simulate to return a string.
 
 ## CH9-4 -- special variables about functions
-`$@`: all passed arguments
+`$@`: all passed arguments separator by first character of `$IFS`.
 
 `$*`: all passed arguments that are expanded as a string. 
 
@@ -81,11 +81,26 @@ When quotated by double quotations, it will expand a string and it will be split
 
 `$#`: number of all passed arguments
 
-`$0`: the called function name (inside a function) or shell script name (inside a top level of shell script)
+`${0}` or `$0`: the called function name (inside a function) or shell script name (inside a top level of shell script)
 
-`$1`: the first passed argument (zero-based index)
+`${1}` or `$1`: the first passed argument (zero-based index)
 
-`$2`: the second passed argument (zero-based index)
+`${2}` or `$2`: the second passed argument (zero-based index)
 
 and so on
+
+`${9}` or `$9`: the nineth passed argument (zero-based index)
+
+`$10`: the second tenth argument (zero-based index)
+
+> [!NOTE]
+> `$` followed a positive integer `n` means that expanding the `n`th argument value.
+
+> [!NOTE]
+> Since the parser only parses one digit after symbol `$`,
+>
+> `{}` in `${n}` can't be omitted for all n is greater than or equal to 10.
+>
+> Otherwise, you will get an unexpected result.
+
 
