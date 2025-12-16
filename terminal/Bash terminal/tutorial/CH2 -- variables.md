@@ -119,6 +119,21 @@ To force declare a global variable with `declare` preserved word  inside a funct
 
 If you declare a variable with `declare` preserved word inside a function without `-g` option, then the variable can be ONLY used in the function.
 
+#### -x
+To export a variable, you can use `-x` short option with `declare` preserved word or `export` built-in command.
+
+They are equivalent
+
+```
+export VAR_A="Value A"
+```
+
+and 
+
+```
+declare -x VAR_A="Value A"
+```
+
 ### Examples
 #### Example
 
@@ -207,6 +222,93 @@ GLOBAL_VAR has value `3`
 forced_global_var_with_declare_preserved_word has value `2`
 local_var_with_declare_preserved_word has value ``
 local_var_without_declare_preserved_word has value ``
+
+```
+
+#### Example 3
+
+`declare-example-3.bash`
+
+```
+function main(){
+    declare -i local_var_with_declare_preserved_word=3
+
+    echo "Before increasing"
+    echo "local_var_with_declare_preserved_word has value \`$local_var_with_declare_preserved_word\`"
+
+    local_var_with_declare_preserved_word=$local_var_with_declare_preserved_word+1
+    
+    echo "1) After increasing by 1"
+    echo "local_var_with_declare_preserved_word has value \`$local_var_with_declare_preserved_word\`"
+
+    local_var_with_declare_preserved_word=$(($local_var_with_declare_preserved_word+1))
+
+    echo "2) After increasing by 1"
+    echo "local_var_with_declare_preserved_word has value \`$local_var_with_declare_preserved_word\`"
+}
+
+main 
+```
+
+executing this script will echo
+
+```
+Before increasing
+local_var_with_declare_preserved_word has value `3`
+1) After increasing by 1
+local_var_with_declare_preserved_word has value `4`
+2) After increasing by 1
+local_var_with_declare_preserved_word has value `5`
+
+```
+
+#### Example 4
+
+```
+function main(){
+# 步驟 1: 在父 Shell 中定義兩個變數
+PARENT_ONLY="I am local"
+export ENVIRONMENT_VAR="I am exported"
+
+# 步驟 2: 啟動一個子程序 (sub-shell, 這裡用 bash)
+# 並且在子程序中嘗試印出這兩個變數
+bash -c 'echo "Child Shell sees:" ; echo "PARENT_ONLY: $PARENT_ONLY" ; echo "ENVIRONMENT_VAR: $ENVIRONMENT_VAR"'
+}
+
+main 
+```
+
+executing this script will echo
+
+```
+Child Shell sees:
+PARENT_ONLY:
+ENVIRONMENT_VAR: I am exported
+
+```
+
+#### Example 5
+
+```
+function main(){
+# 步驟 1: 在父 Shell 中定義兩個變數
+PARENT_ONLY="I am local"
+declare -x ENVIRONMENT_VAR="I am exported"
+
+# 步驟 2: 啟動一個子程序 (sub-shell, 這裡用 bash)
+# 並且在子程序中嘗試印出這兩個變數
+bash -c 'echo "Child Shell sees:" ; echo "PARENT_ONLY: $PARENT_ONLY" ; echo "ENVIRONMENT_VAR: $ENVIRONMENT_VAR"'
+}
+
+main 
+```
+
+executing this script will echo
+
+```
+Child Shell sees:
+PARENT_ONLY:
+ENVIRONMENT_VAR: I am exported
 
 ```
 
