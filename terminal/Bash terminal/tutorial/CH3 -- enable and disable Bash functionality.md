@@ -4,6 +4,7 @@ You will know how to
 
   + enable and disable functionality
   + look at all functionalites are turned on or off
+  + look at one functionality is turned on or off
 
 ## CH3-1 -- enable and disable Bash functionality
 ### set
@@ -211,3 +212,72 @@ there is currently two functionalities are enabled in this shell
 
 + `h` (shorthand of `hashall`)
 + `B` (shorthand of `braceexpand`)
+
+## CH3-3 -- look at one functionality is turned on or off
+### `shopt -p -o`
+Though in POSIX, `set -o` can list active status of all functionalities (and you can filter it)
+
+there is a more convenience command to do that
+
+```
+shopt -p -o {functionality-name}
+```
+
+where
+
+`{functionality-name}` is the functionality name (for example `braceexpand`)
+
+#### Examples
+##### Example 1
+`list-one-functionality-active-status-example-1.bash`
+
+```
+main(){
+    shopt -p -o braceexpand
+}
+
+main
+```
+
+executing this script will echo, by default,
+
+```
+set -o braceexpand
+```
+
+there is a minus `-` before `o`, 
+
+thus it indicates `braceexpand` functionality is currently enabled in this shell.
+
+> [!TIP]
+> minus `-`: enabled
+>
+> plus `+`: disabled
+>
+> see the above `{one-symbol-for-enabling-or-disabling}` table for more details.
+
+### grep
+You can also use `grep` to filter it by functionality name
+
+> [!NOTE]
+> `grep` is a built-in command in POSIX used for filtering by conditions
+
+#### Examples
+##### Example 1
+`list-one-functionality-active-status-example-2.bash`
+
+```
+main(){
+    set -o | grep braceexpand
+}
+
+main
+```
+
+executing this script will echo, by default,
+
+```
+braceexpand     on
+```
+
+which indicates the `braceexpand` functionality is currently enabled in this shell.
