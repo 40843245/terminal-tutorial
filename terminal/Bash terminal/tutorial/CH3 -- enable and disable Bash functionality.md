@@ -229,6 +229,15 @@ where
 
 #### Examples
 ##### Example 1
+> [!NOTE]
+> Although it is not cleaner than using other approaches (`shopt -p -o {functionality-name}` and `set -o | grep {functionality-name}`)
+>
+> it is easier and more flexible (as the condition consists of wildcards) to check the active status of one functionality (rather than simply looking at it),
+>
+> especially when it is needed to check the active status of lots functionalities.
+>
+> It is useful for executing different commands according to the active status of one or more functionalities.  
+
 `list-one-functionality-active-status-example-1.bash`
 
 ```
