@@ -36,6 +36,49 @@ and
 | `x` | echo expanded string before executing script |
 | `C` | report an error when overwriting an existing file |
 
+### Examples
+#### Example 1
+This example illustrates the behavior when a functionality is enabled and it is disabled respectively
+
+`enable-or-disable-functionality-example-1.bash`
+
+```
+main(){
+    local local_expanded_string
+    echo "--------- When Bash commands are enabled (by default) ---------"
+    local_expanded_string=$(echo {1..5})
+    echo "\`{1..5}\` will be \`$local_expanded_string\`"
+    
+    # Disable Bash commands (which there doesn't exist on shell (using `sh` command)
+    set +B
+
+    echo "--------- After Bash commands are disabled (by executing \`set +B\`) ---------"
+    local_expanded_string=$(echo {1..5})
+    echo "\`{1..5}\` will be \`$local_expanded_string\`"
+
+    # Enable Bash commands (which there doesn't exist on shell (using `sh` command)
+    set -B
+
+    echo "--------- When Bash commands are enabled (by executing \`set -B\`) ---------"
+    local_expanded_string=$(echo {1..5})
+    echo "\`{1..5}\` will be \`$local_expanded_string\`"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+--------- When Bash commands are enabled (by default) ---------
+`{1..5}` will be `1 2 3 4 5`
+--------- After Bash commands are disabled (by executing `set +B`) ---------
+`{1..5}` will be `{1..5}`
+--------- When Bash commands are enabled (by executing `set -B`) ---------
+`{1..5}` will be `1 2 3 4 5`
+
+```
+
 ## CH3-2 -- look at all functionalites are turned on or off
 ### set -o
 The built-in command `set` with short option `-o` (`set -o`)
