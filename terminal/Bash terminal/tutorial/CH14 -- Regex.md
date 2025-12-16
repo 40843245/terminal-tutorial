@@ -250,7 +250,12 @@ matching_version_nameref() {
 
 # 確保模組路徑正確，並引入模組
 # 假設匹配模組在正確的相對路徑下
-source "../../utility modules/Regex/matching_version_module_nameref.bash"
+
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Source the module using an absolute path derived from the script location
+source "$SCRIPT_DIR/../../utility modules/Regex/matching_version_module_nameref.bash"
 
 # --- 函數定義 ---
 
