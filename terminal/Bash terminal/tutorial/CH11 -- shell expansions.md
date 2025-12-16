@@ -11,11 +11,11 @@ You will know
     + word splitting
     + filename expansion
     + quote removal
-    + priority of these expansions
+    + precedence of these expansions
 
-## CH11-1 -- priority of these expansions
+## CH11-1 -- precedence of these expansions
 
-The priority from highest to lowest are as follows
+The precedence from highest to lowest are as follows
 
     + brace expansion
     + tilde expansion, parameter and variable expansion, arithmetic expansion (done in inside-to-outside fashion), command substitution (done in left-to-right fashion), process substitution (if system supports it)
