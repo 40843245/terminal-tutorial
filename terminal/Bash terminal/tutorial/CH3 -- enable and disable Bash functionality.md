@@ -281,3 +281,66 @@ braceexpand     on
 ```
 
 which indicates the `braceexpand` functionality is currently enabled in this shell.
+
+### check with `$-`
+Thanks to special variable `$-` (see CH3-2 for more details),
+
+We can check the value of `$-` contains a shorthand of functionality name using wildcard `*`.
+
+see following example 1 for utility function and its usage.
+
+#### Examples
+##### Example 1
+
+`list-one-functionality-active-status-example-3.bash`
+
+```
+function is_functionality_enabled(){
+    local shorthand_of_functionality_name="$1"
+    local matching_pattern="*${shorthand_of_functionality_name}*"
+    if [[ $- == $matching_pattern ]]; then 
+        return 0
+    else
+        return 1
+    fi
+}
+
+function print_active_status(){
+    local functionality_name="$1"
+    declare -i is_active=$2
+
+    if [[ $is_active == 0 ]]; then
+        echo "\`$functionality_name\` is currently enabled in this shell"
+    else
+        echo "\`$functionality_name\` is currently disabled in this shell"
+    fi
+}
+
+main(){
+    declare -i is_active=0
+
+    set -o | grep braceexpand
+
+    is_functionality_enabled B
+    is_active=$?
+    print_active_status "braceexpand" $is_active
+
+    set -o | grep hashall
+
+    is_functionality_enabled h
+    is_active=$?
+    print_active_status "hashall" $is_active
+}
+
+main
+```
+
+executing this script will echo, by default,
+
+```
+braceexpand     on
+`braceexpand` is currently enabled in this shell
+hashall         on
+`hashall` is currently enabled in this shell
+
+```
