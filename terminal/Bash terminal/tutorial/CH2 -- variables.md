@@ -19,6 +19,11 @@ You will know how to
 >
 > it is NOT allowed to leave any whitespace on the left-side of `=` and on the right-hand side of `=`
 
+> [!IMPORTANT]
+> You can't specify the type of variable and attributes when define a variable without `declare` preserved word.
+>
+> See CH2-2 for more details.
+
 To define a global variable, you can simply assign a value into an identifier, or even just type an identifier
 
 for example,
@@ -39,7 +44,12 @@ To define a local variable, you have to use `local` preserved word and assign a 
 > [!NOTE]
 > To prevent the variable is polluted with incidently in a function when invoking it (it usually happens to perform a variable with same name),
 >
-> It is highly recommend to declare a local variable inside a function as possible as you can.  
+> It is highly recommended to declare a local variable inside a function as possible as you can.  
+
+> [!IMPORTANT]
+> You can't specify the type of variable and attributes when define a variable without `declare` preserved word.
+>
+> See CH2-2 for more details.
 
 for example,
 
@@ -74,6 +84,15 @@ where
 
 `{options}`: one or more short option that specifies the type or specific attributes of variable.
 
+> [!NOTE]
+> The default scope of a variable that is declared with `declare` preserved word is current scope.
+>
+> To force declare a global variable with `declare` preserved word inside a function,
+>
+> you MUST use `-g` short option
+>
+> see -g section or more details.
+
 ### short options
 #### -i
 To declare a variable is an integer and thus can perform arthimetic operation like C (such as `NUM=$NUM+5`) rather than use extended C++ style (such as `NUM=$(($NUM+5))`), you have to use `-i` short option.
@@ -94,6 +113,11 @@ All references, assignments, and attribute modifications to name, except for tho
 
 > [!NOTE]
 > The `nameref` attribute can't be applied to array variables.
+
+#### -g
+To force declare a global variable with `declare` preserved word  inside a function, you have to use `-g` short option.
+
+If you declare a variable with `declare` preserved word inside a function without `-g` option, then the variable can be ONLY used in the function.
 
 ### Examples
 #### Example
@@ -136,6 +160,53 @@ var has value 2
 After changing value of var variable
 ORIGINAL_VAR has value 3
 var has value 3
+
+```
+
+#### Example 2
+
+`declare-example-2.bash`
+
+```
+GLOBAL_VAR=3
+
+function my_function(){
+    local local_var_without_declare_preserved_word=7
+    declare local_var_with_declare_preserved_word=5
+    declare -g forced_global_var_with_declare_preserved_word=2
+}
+
+function main(){
+    echo "Before invoking my_function"
+    echo "GLOBAL_VAR has value \`$GLOBAL_VAR\`"
+    echo "forced_global_var_with_declare_preserved_word has value \`$forced_global_var_with_declare_preserved_word\`"
+    echo "local_var_with_declare_preserved_word has value \`$local_var_with_declare_preserved_word\`"
+    echo "local_var_without_declare_preserved_word has value \`$local_var_without_declare_preserved_word\`"
+
+    my_function
+    echo "After invoking my_function"
+    echo "GLOBAL_VAR has value \`$GLOBAL_VAR\`"
+    echo "forced_global_var_with_declare_preserved_word has value \`$forced_global_var_with_declare_preserved_word\`"
+    echo "local_var_with_declare_preserved_word has value \`$local_var_with_declare_preserved_word\`"
+    echo "local_var_without_declare_preserved_word has value \`$local_var_without_declare_preserved_word\`"
+}
+
+main 
+```
+
+executing this script will echo
+
+```
+Before invoking my_function
+GLOBAL_VAR has value `3`
+forced_global_var_with_declare_preserved_word has value ``
+local_var_with_declare_preserved_word has value ``
+local_var_without_declare_preserved_word has value ``
+After invoking my_function
+GLOBAL_VAR has value `3`
+forced_global_var_with_declare_preserved_word has value `2`
+local_var_with_declare_preserved_word has value ``
+local_var_without_declare_preserved_word has value ``
 
 ```
 
