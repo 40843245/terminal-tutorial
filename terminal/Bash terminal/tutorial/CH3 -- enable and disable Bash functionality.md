@@ -36,6 +36,55 @@ and
 | `x` | echo expanded string before executing script |
 | `C` | report an error when overwriting an existing file |
 
+> [!IMPORTANT]
+> Directly assignment into a variable will not perform brace expansion
+>
+> for example,
+>
+> ```
+> local local_expanded_string={1..5}
+> ```
+>
+> will NOT perform brace expansion on `{1..5}`.
+>
+> It will consider `{1..5}` as a string then store it in `local_expanded_string` variable.
+>
+> To correctly assign a value after brace expansion into a variable,
+>
+> you will need to `echo` the expression to perform brace expansion then
+>
+> assign the result (after brace expansion) into a variable using `$()`.
+>
+> For example,
+>
+> changing above example into
+>
+> ```
+> local local_expanded_string=$(echo {1..5})
+> ```
+
+> [!IMPORTANT]
+> Note that the preceedence of expansion (see CH19 for more details).
+>
+> Since brace expansion takes preceedence of variable expansion,
+>
+> in an expression, when accessing a variable, it will expand the variable to its value and
+>
+> after that, it will not expand brace (if it contains)
+>
+> for example,
+>
+> ```
+> local local_expanded_string={1..5}
+> echo "\`{1..5}\` will be \`$local_expanded_string\`"
+> ```
+>
+> executing this script will always echo
+>
+> ```
+> `{1..5}` will be `{1..5}`
+> ```
+
 ### Examples
 #### Example 1
 This example illustrates the behavior when a functionality is enabled and it is disabled respectively
@@ -84,3 +133,52 @@ executing this script will echo
 The built-in command `set` with short option `-o` (`set -o`)
 
 will list all functionalies active status (it is enabled or not)
+
+### Examples
+#### Example 1
+This examples list all functionalities active status.
+
+`list-all-functionalities-active-status-example-1.bash`
+
+```
+main(){
+    set -o
+}
+
+main
+```
+
+executing this script will echo
+
+```
+allexport       off
+braceexpand     on
+emacs           off
+errexit         off
+errtrace        off
+functrace       off
+hashall         on
+histexpand      off
+history         off
+igncr           off
+ignoreeof       off
+interactive-comments    on
+keyword         off
+monitor         off
+noclobber       off
+noexec          off
+noglob          off
+nolog           off
+notify          off
+nounset         off
+onecmd          off
+physical        off
+pipefail        off
+posix           off
+privileged      off
+verbose         off
+vi              off
+xtrace          off
+
+```
+
