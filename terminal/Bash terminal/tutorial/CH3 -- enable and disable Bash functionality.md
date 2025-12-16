@@ -301,7 +301,9 @@ see following example 1 for utility function and its usage.
 #### Examples
 ##### Example 1
 
-`list-one-functionality-active-status-example-3.bash`
+utility module:
+
+`check-one-functionality-is-enabled-module.bash`
 
 ```
 function is_functionality_enabled(){
@@ -313,6 +315,18 @@ function is_functionality_enabled(){
         return 1
     fi
 }
+```
+
+main script:
+
+`check-one-functionality-is-enabled-example-1.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Source the module using an absolute path derived from the script location
+source "$SCRIPT_DIR/../../utility modules/functionality enabled/check-one-functionality-is-enabled-module.bash"
 
 function print_active_status(){
     local functionality_name="$1"
@@ -344,7 +358,7 @@ main(){
 main
 ```
 
-executing this script will echo, by default,
+executing main script will echo, by default,
 
 ```
 braceexpand     on
