@@ -180,3 +180,6 @@ In the format of
 Here if `{login-name}` is an empty string (i.e. **`tilde-prefix` is `~`**), 
 
 then **`~` will be expanded into `$HOME`** (a kind of a system environment path variable)
+
+| user inputs | `tilde-prefix` | `{login-name}` | perform tilde expansion or not | description | 
+| `~` | `~` | `` | yes | your h directory |
