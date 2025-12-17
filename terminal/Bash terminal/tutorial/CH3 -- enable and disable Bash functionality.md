@@ -595,4 +595,85 @@ function join_an_array(){
     return 0
 }
 
-`````
+```
+
+main script:
+
+`check-at-least-one-of-functionalities-is-enabled-example-1.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Source the module using an absolute path derived from the script location
+source "$SCRIPT_DIR/../../utility modules/functionality enabled/check-at-least-one-of-functionalities-is-enabled-module.bash"
+
+source "$SCRIPT_DIR/../../utility modules/joining/joining-an-array-module.bash"
+
+function print_active_status(){
+
+    declare -i is_active=$1
+    local parameters_for_functionalities="${@:2}"
+    local joined_functionality_names=$(join_an_array "," $parameters_for_functionalities)
+
+    if [[ $is_active == 0 ]]; then
+        echo "At least one of functionalities \`$joined_functionality_names\` is currently enabled in this shell"
+    else
+        echo "All functionalities \`$joined_functionality_names\` are BOTH currently disabled in this shell"
+    fi
+}
+
+main(){
+    declare -i is_active=0
+
+    echo "---------------- 測試1 ----------------"
+    set -o | grep braceexpand
+    set -o | grep hashall
+
+    is_any_functionalities_enabled Bh
+    is_active=$?
+    print_active_status $is_active "braceexpand" "hashall" 
+    echo "---------------- end of 測試1 ----------------"
+
+    echo "---------------- 測試2 ----------------"
+    set -o | grep braceexpand
+    set -o | grep errexit
+
+    is_any_functionalities_enabled Be
+    is_active=$?
+    print_active_status $is_active "braceexpand" "errexit" 
+    echo "---------------- end of 測試2 ----------------"
+
+    echo "---------------- 測試3 ----------------"
+    set -o | grep xtrace
+    set -o | grep errexit
+
+    is_any_functionalities_enabled xe
+    is_active=$?
+    print_active_status $is_active "xtrace" "errexit" 
+    echo "---------------- end of 測試3 ----------------"
+}
+
+main
+```
+
+executing main script will echo
+
+```
+---------------- 測試1 ----------------
+braceexpand     on
+hashall         on
+At least one of functionalities `braceexpand,hashall` is currently enabled in this shell
+---------------- end of 測試1 ----------------
+---------------- 測試2 ----------------
+braceexpand     on
+errexit         off
+At least one of functionalities `braceexpand,errexit` is currently enabled in this shell
+---------------- end of 測試2 ----------------
+---------------- 測試3 ----------------
+xtrace          off
+errexit         off
+All functionalities `xtrace,errexit` are BOTH currently disabled in this shell
+---------------- end of 測試3 ----------------
+
+```
