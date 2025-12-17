@@ -213,3 +213,6 @@ where
 
 > [!NOTE]
 > `dirs`: is a shorthand of *dir*ectory *s*tack, it will accessing the `N`th of directory stack (from left to right or from right to left) and expand the result.
+
+> [!TIP]
+> see CH16 for more details and usage
