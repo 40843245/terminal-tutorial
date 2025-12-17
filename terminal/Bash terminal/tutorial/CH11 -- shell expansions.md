@@ -149,7 +149,7 @@ executing this script will echo
 
 ```
 
-## CH11-2 -- tilde expansion
+## CH11-3 -- tilde expansion
 **`tilde-prefix` definition**
 
 In case of a word begins with an unquoted tilde character (‘~’), all of the characters up to the first unquoted slash (i.e. `/` but execlusive to `'/'` and `"/"`) are considered a `tilde-prefix` (if exists), or all characters are considered as a `tilde-prefix`, if there is no unquoted slash.
@@ -210,6 +210,41 @@ then **`~` will be expanded into `$HOME`** (a kind of a system environment path 
 where
 
 `N` is a nonnegative integer.
+
+> [TIP]
+> See CH16 for more details and example.
+
+## CH11-4 -- parameter and variable expansion
+### Examples
+#### Example 1
+`parameter-expansion-example-1.bash`
+
+```
+main(){
+    local v=123
+    echo ${v-unset}
+    echo ${v:-unset-or-null}
+    unset v
+    echo ${v-unset}
+    unset
+    v=
+    echo ${v-unset}
+    echo ${v:-unset-or-null}
+}
+
+main
+```
+
+executing this script will echo
+
+```
+123
+123
+unset
+
+unset-or-null
+
+```
 
 > [!NOTE]
 > `dirs`: is a shorthand of *dir*ectory *s*tack, it will accessing the `N`th of directory stack (from left to right or from right to left) and expand the result.
