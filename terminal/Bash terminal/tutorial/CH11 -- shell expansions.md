@@ -148,3 +148,17 @@ executing this script will echo
 1 2 3 4 5
 
 ```
+
+## CH11-2 -- tilde expansion
+If a word begins with an unquoted tilde character (‘~’), all of the characters up to the first unquoted slash (or all characters, if there is no unquoted slash) are considered a `tilde-prefix`
+
+for example,
+
+| word | `tilde-prefix` | description |
+| :- | :- | :-- |
+| `~` | `~` | no first occurence of unquoated slash `/` |
+| `~/workspace` | `~` | `/` at second char is the first occurence of unquoated slash `/` |
+| `~current-directory/workspace` | `~current-directory` | `/` between `y` and `w` is the first occurence of unquoated slash `/` |
+| `~current-directory/workspace/git` | `~current-directory` |  `/` between `y` and `w` is the first occurence of unquoated slash `/` |
+| `~~current-directory/workspace/git` | `~~current-directory` | `/` between `y` and `w` is the first occurence of unquoated slash `/` |
+| `parent-directory/~current-directory/workspace/git` | `` | the word does NOT begin with `~` |
