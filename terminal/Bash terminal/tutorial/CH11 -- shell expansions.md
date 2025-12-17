@@ -203,6 +203,17 @@ then **`~` will be expanded into `$HOME`** (a kind of a system environment path 
 
 | `tilde-prefix` | command | description |
 | :-- | :-- | :-- |
-| `~N` | `dirs +N` | your home directory | 
-| `~+N` | `dirs +N` | current working direcotry | 
-| `~-N` | `dirs -N` | old present working direcotry (previous working directory) | 
+| `~N` | `dirs +N` | expanded as the `N`th of directory stacking trace from left to right | 
+| `~+N` | `dirs +N` | expanded as the `N`th of directory stacking trace from left to right | 
+| `~-N` | `dirs -N` | expanded as the `N`th of directory stacking trace from right to left | 
+
+where
+
+`N` is a nonnegative integer.
+
+> [!NOTE]
+> `dirs`: is a shorthand of *dir*ectory *s*tacking trace, it will accessing the `N`th of directory stacking trace (from left to right or from right to left) and expand the result
+
+
+
+
