@@ -150,7 +150,9 @@ executing this script will echo
 ```
 
 ## CH11-2 -- tilde expansion
-If a word begins with an unquoted tilde character (‘~’), all of the characters up to the first unquoted slash (or all characters, if there is no unquoted slash) are considered a `tilde-prefix`
+**`tilde-prefix` definition**
+
+In case of a word begins with an unquoted tilde character (‘~’), all of the characters up to the first unquoted slash (i.e. `/` but execlusive to `'/'` and `"/"`) are considered a `tilde-prefix` (if exists), or all characters are considered as a `tilde-prefix`, if there is no unquoted slash.
 
 for example,
 
@@ -160,5 +162,21 @@ for example,
 | `~/workspace` | `~` | `/` at second char is the first occurence of unquoated slash `/` |
 | `~current-directory/workspace` | `~current-directory` | `/` between `y` and `w` is the first occurence of unquoated slash `/` |
 | `~current-directory/workspace/git` | `~current-directory` |  `/` between `y` and `w` is the first occurence of unquoated slash `/` |
-| `~~current-directory/workspace/git` | `~~current-directory` | `/` between `y` and `w` is the first occurence of unquoated slash `/` |
+| `~current-directory/workspace/git` | `~current-directory` |  `/` between `y` and `w` is the first occurence of unquoated slash `/` |
+| `~~current-directory"/"workspace/git` | `~~current-directory"/"workspace` | `/` between `e` and `g` is the first occurence of unquoated slash `/`. Note that `"/"` bwteen `y` and `w` are quoated (by double quotations)  |
+| `~~current-directory'/'workspace/git` | `~~current-directory"/"workspace` | `/` between `e` and `g` is the first occurence of unquoated slash `/`. Note that `"/"` bwteen `y` and `w` are quoated (by single quotations)  |
 | `parent-directory/~current-directory/workspace/git` | `` | the word does NOT begin with `~` |
+
+Only if a `tilde-prefix` does NOT contain any quotations (i.e. single quotation `'` or double quotations `"`) and backslash `\`, the tilde expansion will be validate.
+
+In the format of
+
+```
+~{login-name}/
+```
+
+`{login-name}` is the string after the beginning tilde `~` of the `tilde-prefix`
+
+Here if `{login-name}` is an empty string (i.e. **`tilde-prefix` is `~`**), 
+
+then **`~` will be expanded into `$HOME`** (a kind of a system environment path variable)
