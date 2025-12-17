@@ -182,4 +182,11 @@ Here if `{login-name}` is an empty string (i.e. **`tilde-prefix` is `~`**),
 then **`~` will be expanded into `$HOME`** (a kind of a system environment path variable)
 
 | user inputs | `tilde-prefix` | `{login-name}` | perform tilde expansion or not | description | 
-| `~` | `~` | `` | yes | your h directory |
+| :-- | :-- | :-- | :-- | :-- |
+| `~` | `~` | `` | yes | your home directory |
+| `~` | `~` | `` | yes | your home directory |
+| `~john/` | `~john` | `` | yes | john's home directory |
+| `~"john"/` | `~"john"` | `"john"` | no | considered as an unexpaned string `~john/` |
+| `~ /` | `~` | `` | `` | your home directory followed by a whitespace ` ` then root directory |
+
+
