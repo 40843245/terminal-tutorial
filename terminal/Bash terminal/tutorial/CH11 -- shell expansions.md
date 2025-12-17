@@ -189,11 +189,20 @@ then **`~` will be expanded into `$HOME`** (a kind of a system environment path 
 | `~"john"/` | `~"john"` | `"john"` | no | considered as an unexpaned string `~john/` |
 | `~ /` | `~` | `` | `` | your home directory followed by a whitespace ` ` then root directory |
 
-### shorthand
-(If tilde-prefix exists) some specific tilde-prefixes will be expanded into a system environment path variable in Shell
+### system environment path variable
+(If tilde-prefix exists) some of specific tilde-prefix will be expanded into a system environment path variable in Shell
 
 | `tilde-prefix` | system environment path variable | description |
 | :-- | :-- | :-- |
 | `~` | `$HOME` | your home directory | 
 | `~+` | `$PWD` | current working direcotry | 
-| `~-` | `$OLDPWD` | old present working direcotry (previous working directory) | 
+| `~-` | `$OLDPWD` | old present working direcotry (previous working directory) |
+
+### command
+(If tilde-prefix exists) some of specific tilde-prefix will be expanded into a command in Shell
+
+| `tilde-prefix` | command | description |
+| :-- | :-- | :-- |
+| `~N` | `dirs +N` | your home directory | 
+| `~+N` | `dirs +N` | current working direcotry | 
+| `~-N` | `dirs -N` | old present working direcotry (previous working directory) | 
