@@ -16,3 +16,10 @@ A directory is a parent of a folder or a file.
 
 If a directory has one child or more children, then it is NOT an empty directory.
 
+Otherwise, it is an empty directory.
+
+### Examples
+#### Example 1
+
+The directory `/Bash tutorial` has two folder `` 
+## CH16-2
