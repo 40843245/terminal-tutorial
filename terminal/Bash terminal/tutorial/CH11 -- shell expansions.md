@@ -211,8 +211,11 @@ where
 
 `N` is a nonnegative integer.
 
-> [TIP]
-> See CH16 for more details and example.
+> [!NOTE]
+> `dirs`: is a shorthand of *dir*ectory *s*tack, it will accessing the `N`th of directory stack (from left to right or from right to left) and expand the result.
+
+> [!TIP]
+> see CH16 for more details and usage
 
 ## CH11-4 -- parameter and variable expansion
 ### Examples
@@ -245,9 +248,3 @@ unset
 unset-or-null
 
 ```
-
-> [!NOTE]
-> `dirs`: is a shorthand of *dir*ectory *s*tack, it will accessing the `N`th of directory stack (from left to right or from right to left) and expand the result.
-
-> [!TIP]
-> see CH16 for more details and usage
