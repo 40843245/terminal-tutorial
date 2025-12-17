@@ -248,3 +248,36 @@ unset
 unset-or-null
 
 ```
+
+#### Example 2
+`parameter-expansion-example-2.bash`
+
+```
+main(){
+    local var=123
+    unset var
+    : ${var=DEFAULT}
+    echo $var   
+    var=
+    : ${var=DEFAULT}
+    echo $var
+    var=
+    : ${var:=DEFAULT}
+    echo $var
+    unset var
+    : ${var:=DEFAULT}
+    echo $var
+}
+
+main
+```
+
+executing this script will echo
+
+```
+DEFAULT
+
+DEFAULT
+DEFAULT
+
+```
