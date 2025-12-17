@@ -6,6 +6,12 @@ You will know how to
   + look at all functionalites are turned on or off
   + look at one functionality is turned on or off
 
+extra bonus
+
+  + look at many functionalities are BOTH enabed 
+  + look at at least one of functionalities is enabled
+
+
 ## CH3-1 -- enable and disable Bash functionality
 ### set
 The built-in command `set` can enable or disable Bash functionalities.
@@ -367,3 +373,226 @@ hashall         on
 `hashall` is currently enabled in this shell
 
 ```
+
+## CH3-4 -- look at many functionalities are BOTH enabed 
+### Examples
+#### Example 1
+
+utility modules:
+
+`check-many-functionalities-both-enabled-module.bash`
+
+```
+function is_all_functionalities_enabled(){
+    local query="$1"
+    # 遍歷輸入的每一個字元
+    for (( i=0; i<${#query}; i++ )); do
+        local char="${query:$i:1}"
+        if [[ $- != *"$char"* ]]; then 
+            return 1 # 只要有一個沒找到，就回傳失敗
+        fi
+    done
+    return 0 # 全部都找到了
+}
+```
+
+`joining-an-array-module.bash`
+
+```
+# !/bin/bash
+
+### 模組名稱: joinning-an-array-module.bash
+
+## 主要函式
+## 目的:
+## 串接參數至array。
+## 串接這種多個參數`"apple" "orange"`至array。
+## 
+## 詳細實作細節:
+## 將第零個引數當成seperator來join第一個引數至最後一個引數成以下形式
+##
+## $2c$1c$3
+## 
+## where `c` is a character, `$2`為第一個引數
+##
+## 注意事項:
+## + 第零個引數當成seperator必須為一個字元。
+## + 以zero-based index為準。
+## 
+## 回傳值:
+## return 退出代碼代表成功地串接array。
+## echo 出串接完的字串，當失敗地串接array時，將echo ""
+##
+## Case 1:當引數值不合法時
+## return(失敗)退出代碼。並echo空字串
+##
+## Case 2:當引數值不合法時
+## return(成功)退出代碼。並echo串接完後的字串
+function join_an_array(){
+    local seperator="$1"
+    declare -i seperator_length=${#seperator}
+    if [[ $seperator_length != 1 ]]; then
+        # when the seperator is NOT a character, 
+        # return exit code with failure
+        # echo empty string as failure
+        echo ""
+        return 1 
+    fi
+    local args=("${@:2}")
+
+    # core of logic 
+    # 保存原本的`$IFS`
+    local old_ifs=$IFS
+
+    # 將其暫時設為目標分隔符
+    IFS=$seperator
+
+    # 將陣列元素展開為單一字串
+    local joined_str="${args[*]}"
+    
+    # 還原 `$IFS`
+    IFS=$old_ifs
+
+    # return exit code with success
+    # echo string after joined (also with success)
+    echo "$joined_str"
+    return 0
+}
+
+```
+
+main script:
+
+`check-many-functionalities-both-enabled-example-1.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Source the module using an absolute path derived from the script location
+source "$SCRIPT_DIR/../../utility modules/functionality enabled/check-many-functionalities-both-enabled-module.bash"
+
+source "$SCRIPT_DIR/../../utility modules/joining/joining-an-array-module.bash"
+
+function print_active_status(){
+
+    declare -i is_active=$1
+    local parameters_for_functionalities="${@:2}"
+    local joined_functionality_names=$(join_an_array "," $parameters_for_functionalities)
+
+    if [[ $is_active == 0 ]]; then
+        echo "\`$joined_functionality_names\` are BOTH currently enabled in this shell"
+    else
+        echo "\`$joined_functionality_names\` are NOT BOTH currently enabled in this shell"
+    fi
+}
+
+main(){
+    declare -i is_active=0
+
+    set -o | grep braceexpand
+    set -o | grep hashall
+
+    is_all_functionalities_enabled Bh
+    is_active=$?
+    print_active_status $is_active "braceexpand" "hashall" 
+}
+
+main
+```
+
+executing main script will echo
+
+```
+braceexpand     on
+hashall         on
+`braceexpand,hashall` are BOTH currently enabled in this shell
+
+```
+
+## CH3-5 -- look at at least one of functionalities is enabled
+### Examples
+#### Example 1
+
+utility modules:
+
+`check-at-least-one-of-functionalities-is-enabled-module.bash`
+
+```
+function is_any_functionalities_enabled(){
+    local query="$1"
+    # 遍歷輸入的每一個字元
+    for (( i=0; i<${#query}; i++ )); do
+        local char="${query:$i:1}"
+        if [[ $- == *"$char"* ]]; then 
+            return 0 # 只要有一個找到，就回傳成功
+        fi
+    done
+    return 1 # 全部都沒有找到
+}
+```
+
+`joining-an-array-module.bash`
+
+```
+# !/bin/bash
+
+### 模組名稱: joinning-an-array-module.bash
+
+## 主要函式
+## 目的:
+## 串接參數至array。
+## 串接這種多個參數`"apple" "orange"`至array。
+## 
+## 詳細實作細節:
+## 將第零個引數當成seperator來join第一個引數至最後一個引數成以下形式
+##
+## $2c$1c$3
+## 
+## where `c` is a character, `$2`為第一個引數
+##
+## 注意事項:
+## + 第零個引數當成seperator必須為一個字元。
+## + 以zero-based index為準。
+## 
+## 回傳值:
+## return 退出代碼代表成功地串接array。
+## echo 出串接完的字串，當失敗地串接array時，將echo ""
+##
+## Case 1:當引數值不合法時
+## return(失敗)退出代碼。並echo空字串
+##
+## Case 2:當引數值不合法時
+## return(成功)退出代碼。並echo串接完後的字串
+function join_an_array(){
+    local seperator="$1"
+    declare -i seperator_length=${#seperator}
+    if [[ $seperator_length != 1 ]]; then
+        # when the seperator is NOT a character, 
+        # return exit code with failure
+        # echo empty string as failure
+        echo ""
+        return 1 
+    fi
+    local args=("${@:2}")
+
+    # core of logic 
+    # 保存原本的`$IFS`
+    local old_ifs=$IFS
+
+    # 將其暫時設為目標分隔符
+    IFS=$seperator
+
+    # 將陣列元素展開為單一字串
+    local joined_str="${args[*]}"
+    
+    # 還原 `$IFS`
+    IFS=$old_ifs
+
+    # return exit code with success
+    # echo string after joined (also with success)
+    echo "$joined_str"
+    return 0
+}
+
+`````
