@@ -1,4 +1,4 @@
-# CH3 -- enable and disable Bash functionality
+# CH3 -- enable and disable functionality
 ## objectives
 You will know how to
 
