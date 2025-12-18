@@ -619,3 +619,67 @@ orange banana orange
  banana
 
 ```
+
+#### Example 11
+
+`capitalize-and-decapitalize-example-1.bash`
+
+```
+main(){
+    local text="hello"
+
+    ## capitalize
+    ## `${parameter^}`
+    ## capitalize the first letter
+    echo "${text^}"   
+
+    ## capitalize
+    ## `${parameter^^}`
+    ## capitalize all letters    
+    echo "${text^^}" 
+
+    text="WORLD"
+    
+    ## decapitalize
+    ## `${parameter,}`
+    ## decapitalize first letters   
+    echo "${text,}" 
+
+    ## decapitalize
+    ## `${parameter,,}`
+    ## decapitalize all letters    
+    echo "${text,,}"     
+}
+
+main
+```
+
+executing this script will echo
+
+```
+Hello
+HELLO
+wORLD
+world
+
+```
+
+#### Example 12
+
+`indirect-expansion-example-1.bash`
+
+```
+main(){
+    local real_var="Hello World"
+    local ref_name="real_var"
+    echo "${!ref_name}"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+Hello World
+```
