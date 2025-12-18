@@ -386,3 +386,38 @@ bc
 bcdef
 
 ```
+
+#### Example 5
+This example also illustrates how to get specific part of string (like `string.Substring` method in `C#`) 
+
+`parameter-expansion-example-5.bash`
+
+```
+main(){
+    arr[0]=01234567890abcdefgh
+    echo ${arr[0]:7}
+    echo ${arr[0]:7:0}
+    echo ${arr[0]:7:2}
+    echo ${arr[0]:7:-2}
+    echo ${arr[0]: -7}
+    echo ${arr[0]: -7:0}
+    echo ${arr[0]: -7:2}
+    echo ${arr[0]: -7:-2}
+}
+
+main
+```
+
+executing this script will echo
+
+```
+7890abcdefgh
+
+78
+7890abcdef
+bcdefgh
+
+bc
+bcdef
+
+```
