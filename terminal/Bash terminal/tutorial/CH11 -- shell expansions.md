@@ -281,3 +281,98 @@ DEFAULT
 DEFAULT
 
 ```
+
+#### Example 3
+`parameter-expansion-example-3.bash`
+
+```
+main(){
+    local var=123
+    # sets v as empty string (which can be considered as NULL value)
+    var=
+    # performs a null or unset safetly check 
+    # Since var is an empty string (which can be considered as NULL value) 
+    # it throws an user-defined error 
+    # `var: var is unset or null`
+    # and thus NOT executing the following commands
+    : ${var:?var is unset or null} 
+    
+    # performs an unset safetly check 
+    # Since var is not unset
+    # it will be expanded as the value of var 
+    # and thus echoing empty string
+    echo ${var?var is unset}
+
+    # unsets v
+    unset var
+    : ${var?var is unset}
+
+    # performs a null or unset safetly check 
+    # Since var is an empty string (which can be considered as NULL value) 
+    # it throws an user-defined error 
+    # `var: var is unset or null`
+    # and thus NOT executing the following commands
+    : ${var:?var is unset or null}
+
+    var=123
+
+    # performs a null or unset safetly check 
+    # Since var is neither an empty string (which can be considered as NULL value) nor unset, 
+    # it will be expanded as the value of var 
+    # and thus echoing `123`
+    echo ${var:?var is unset or null}
+}
+
+main
+```
+
+executing this script will throw an user-defined error at line 10
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-3.bash"
+D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-3.bash: line 10: var: var is unset or null
+
+```
+
+#### Example 4
+This example illustrates how to get specific part of string (like `string.Substring` method in `C#`) 
+
+`parameter-expansion-example-4.bash`
+
+```
+main(){
+    local str=01234567890abcdefgh
+    echo ${str:7}
+    echo ${str:7:0}
+    echo ${str:7:2}
+    echo ${str:7:-2}
+    echo ${str: -7}
+    echo ${str: -7:0}
+    echo ${str: -7:2}
+    echo ${str: -7:-2}
+
+    set -- 01234567890abcdefgh
+    echo ${1:7}
+    echo ${1:7:0}
+    echo ${1:7:2}
+}
+
+main
+```
+
+executing this script will echo
+
+```
+7890abcdefgh
+
+78
+7890abcdef
+bcdefgh
+
+bc
+bcdef
+7890abcdefgh
+
+78
+
+```
