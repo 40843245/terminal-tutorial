@@ -578,3 +578,44 @@ image.jpg
 image
 
 ```
+
+#### Example 11
+`string-replacement-example-1.bash`
+
+```
+main(){
+    local str="apple banana apple"
+
+    ## string replacement
+    ## `${parameter/old-string/new-string}``
+    ## replace the first occurrence of `old-string` to `new-string`
+    echo "${str/apple/orange}"
+
+    ## string replacement
+    ## `${parameter//old-string/new-string}``
+    ## replace all occurrences of `old-string` to `new-string`
+    echo "${str//apple/orange}"
+
+    ## string replacement
+    ## `${parameter/old-string}``
+    ## replace first occurrences of `old-string` to empty string
+    echo "${str/apple}"
+
+    ## string replacement
+    ## `${parameter/old-string}``
+    ## replace all occurrences of `old-string` to empty string
+    echo "${str//apple}"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+orange banana apple
+orange banana orange
+ banana apple
+ banana
+
+```
