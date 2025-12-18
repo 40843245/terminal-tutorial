@@ -421,3 +421,60 @@ bc
 bcdef
 
 ```
+
+#### Example 6
+This example illustrates how to get specific part of all arguments that are set. 
+
+`parameter-expansion-example-6.bash`
+
+```
+main(){
+    set -- 1 2 3 4 5 6 7 8 9 0 a b c d e f g h
+    echo ${@:7}
+    echo ${@:7:0}
+    echo ${@:7:2}
+    echo ${@:7:-2}
+    echo ${@: -7:2}
+    echo ${@:0}
+    echo ${@:0:2}
+    echo ${@: -7:0}
+}
+
+main
+```
+
+
+executing this script will throw an error at line 6, terminating the script
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-6.bash"
+7 8 9 0 a b c d e f g h
+
+7 8
+D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-6.bash: line 6: -2: substring expression < 0
+
+```
+#### Example 7
+This example also illustrates how to get specific part of all arguments that are set. 
+
+`parameter-expansion-example-7.bash`
+
+```
+main(){
+    set -- 1 2 3 4 5 6 7 8 9 0 a b c d e f g h
+    echo ${@:0}
+    echo ${@:0:2}
+    echo ${@: -7:0}
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-7.bash"
+D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-7.bash 1 2 3 4 5 6 7 8 9 0 a b c d e f g h
+D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-7.bash 1
+
+```
