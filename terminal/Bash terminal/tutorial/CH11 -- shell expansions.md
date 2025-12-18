@@ -631,22 +631,22 @@ main(){
     declare -i index=0
 
     echo "------------------- ${index}th series of test -------------------"
-    ## string replacement
+    ## string insertion
     ## `${parameter/old-string/& }`
     ## append a whitespace after the first occurrence of `old-string`
     echo ${str/abc/& }
 
-    ## string replacement
+    ## string insertion
     ## `${parameter/old-string/& }` with double quotation
     ## append a whitespace after the first occurrence of `old-string`
     echo "${str/abc/& }"
 
-    ## string replacement
+    ## string insertion
     ## `${parameter/old-string/'& '}`
     ## append a whitespace after the first occurrence of `old-string`
     echo ${str/abc/$rep}
 
-    ## string replacement
+    ## string insertion
     ## `${parameter/old-string/'& '}`with double quotation
     ## append a whitespace after the first occurrence of `old-string`
     echo "${str/abc/$rep}"
@@ -655,24 +655,24 @@ main(){
     ((index++))
 
     echo "------------------- ${index}th series of test -------------------"
-    ## string replacement
+    ## string insertion
     ## `${parameter//old-string/& }`
     ## append a whitespace after all occurrences of `old-string`
     echo ${str//abc/& }
 
-    ## string replacement
+    ## string insertion
     ## `${parameter//old-string/& }` with double quotation
-    ## append a whitespace after the first occurrence of `old-string`
+    ## append a whitespace after all occurrences of `old-string`
     echo "${str//abc/& }"
 
-    ## string replacement
+    ## string insertion
     ## `${parameter//old-string/'& '}`
-    ## append a whitespace after the first occurrence of `old-string`
+    ## append a whitespace after all occurrences of `old-string`
     echo ${str//abc/$rep}
 
-    ## string replacement
+    ## string insertion
     ## `${parameter//old-string/'& '}`with double quotation
-    ## append a whitespace after the first occurrence of `old-string`
+    ## append a whitespace after all occurrences of `old-string`
     echo "${str//abc/$rep}"
     echo "------------------- end of ${index}th series of test -------------------"
 
@@ -759,6 +759,88 @@ abc 123abc 456abc 789abc
 ------------------- end of 3th series of test -------------------
 
 ```
+
+#### Example 13
+
+`string-insertion-example-1.bash`
+
+```
+main(){
+    local str=abc123abc456abc789abc
+    local rep='\\&xyz'
+
+    declare -i index=0
+
+    echo "------------------- ${index}th series of test -------------------"
+    ## string insertion
+    ## `${parameter/old-string/\\&new-string}`
+    ## insert `\` before the first occurrence of `old-string and append `new-string` after that.`
+    echo ${str/abc/\\&xyz}
+
+    ## string insertion
+    ## `${parameter/old-string/`\\&new-string`}`
+    ## insert `\` before the first occurrence of `old-string and append `new-string` after that.`
+    echo "${str/abc/$rep}"
+
+    ## string insertion
+    ## `${parameter/old-string/\\&new-string}` with double quotation
+    ## insert `\` before the first occurrence of `old-string and append `new-string` after that.`
+    echo "${str/abc/\\&xyz}"
+
+    ## string insertion
+    ## `${parameter/old-string/`\\&new-string`}` with double quotation
+    ## insert `\` before the first occurrence of `old-string and append `new-string` after that.`
+    echo "${str/abc/$rep}"
+    echo "------------------- end of ${index}th series of test -------------------"
+
+    ((index++))
+
+    echo "------------------- ${index}th series of test -------------------"
+    ## string insertion
+    ## `${parameter//old-string/\\&new-string}`
+    ## insert `\` before all occurrences of `old-string and append `new-string` after them.`
+    echo ${str//abc/\\&xyz}
+
+    ## string insertion
+    ## `${parameter//old-string/`\\&new-string`}`
+    ## insert `\` before all occurrences of `old-string and append `new-string` after them.`
+    echo "${str//abc/$rep}"
+
+    ## string insertion
+    ## `${parameter//old-string/\\&new-string}` with double quotation
+    ## insert `\` before all occurrences of `old-string and append `new-string` after them.`
+    echo "${str//abc/\\&xyz}"
+
+    ## string insertion
+    ## `${parameter//old-string/`\\&new-string`}` with double quotation
+    ## insert `\` before all occurrences of `old-string and append `new-string` after them.`
+    echo "${str//abc/$rep}"
+    echo "------------------- end of ${index}th series of test -------------------"
+
+    ((index++))
+}
+
+main
+```
+
+executing this script will echo
+
+```
+------------------- 0th series of test -------------------
+\abcxyz123abc456abc789abc
+\abcxyz123abc456abc789abc
+\abcxyz123abc456abc789abc
+\abcxyz123abc456abc789abc
+------------------- end of 0th series of test -------------------
+------------------- 1th series of test -------------------
+\abcxyz123\abcxyz456\abcxyz789\abcxyz
+\abcxyz123\abcxyz456\abcxyz789\abcxyz
+\abcxyz123\abcxyz456\abcxyz789\abcxyz
+\abcxyz123\abcxyz456\abcxyz789\abcxyz
+------------------- end of 1th series of test -------------------
+
+```
+
 
 #### Example 13
 
