@@ -901,6 +901,106 @@ world
 
 #### Example 15
 
+`capitalize-and-decapitalize-example-2.bash`
+
+```
+main(){
+    local text="hello"
+
+    ## capitalize
+    ## `${parameter^}`
+    ## capitalize the first letter
+    echo "${text^}" 
+    echo "${text^?}"   
+
+    ## capitalize
+    ## `${parameter^^}`
+    ## capitalize all letters    
+    echo "${text^^}"
+    echo "${text^^?}"  
+
+    text="WORLD"
+    
+    ## decapitalize
+    ## `${parameter,}`
+    ## decapitalize first letters   
+    echo "${text,}" 
+    echo "${text,?}" 
+
+    ## decapitalize
+    ## `${parameter,,}`
+    ## decapitalize all letters    
+    echo "${text,,}"
+    echo "${text,,?}"     
+}
+
+main
+```
+
+executing this script will echo
+
+```
+Hello
+Hello
+HELLO
+HELLO
+wORLD
+wORLD
+world
+world
+
+```
+
+#### Example 16
+
+`capitalize-and-decapitalize-example-3.bash`
+
+```
+main(){
+    local paragraph1="High-level programming language contains:\n+\`C#\`\n+\`Java\`\n+\`Python\`\nIt is highly recommended to use high-level programming lanuage since it is more readable than IL (Intermediate Language)"
+    local regex_pattern1="H" 
+    local regex_pattern2="h" 
+
+    ## capitalize
+    ## `${parameter^pattern}`
+    ## will ONLY check the first letter satisfies the pattern `pattern` matching
+    ## if matches, the first matach (one letter) will be capitalized.
+    echo "${paragraph1^$regex_pattern2}"   
+
+    ## capitalize
+    ## `${parameter^^pattern}`
+    ## will check the full string satisfies the pattern `pattern` matching
+    ## if matches, the all mataches will be capitalized.  
+    echo "${paragraph1^^$regex_pattern2}" 
+    
+    ## decapitalize
+    ## `${parameter,pattern}`
+    ## will check the full string satisfies the pattern `pattern` matching
+    ## if matches, the all mataches will be decapitalized.  
+    echo "${paragraph1,$regex_pattern1}" 
+
+    ## decapitalize
+    ## `${parameter,,pattern}`
+    ## will ONLY check the first letter satisfies the pattern `pattern` matching
+    ## if matches, the all mataches will be decapitalized
+    echo "${paragraph1,,$regex_pattern1}"     
+}
+
+main
+```
+
+executing this script will echo
+
+```
+High-level programming language contains:\n+`C#`\n+`Java`\n+`Python`\nIt is highly recommended to use high-level programming lanuage since it is more readable than IL (Intermediate Language)
+HigH-level programming language contains:\n+`C#`\n+`Java`\n+`PytHon`\nIt is HigHly recommended to use HigH-level programming lanuage since it is more readable tHan IL (Intermediate Language)
+high-level programming language contains:\n+`C#`\n+`Java`\n+`Python`\nIt is highly recommended to use high-level programming lanuage since it is more readable than IL (Intermediate Language)
+high-level programming language contains:\n+`C#`\n+`Java`\n+`Python`\nIt is highly recommended to use high-level programming lanuage since it is more readable than IL (Intermediate Language)
+
+```
+
+#### Example 17
+
 `indirect-expansion-example-1.bash`
 
 ```
