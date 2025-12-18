@@ -842,7 +842,7 @@ executing this script will echo
 ```
 
 
-#### Example 13
+#### Example 14
 
 `capitalize-and-decapitalize-example-1.bash`
 
@@ -886,7 +886,7 @@ world
 
 ```
 
-#### Example 14
+#### Example 15
 
 `indirect-expansion-example-1.bash`
 
