@@ -218,6 +218,19 @@ where
 > see CH16 for more details and usage
 
 ## CH11-4 -- parameter and variable expansion
+### capitalize and decapitalize
+syntax: repsented by Regex
+
+```
+$\{{pattern_to_be_matched}({special_symbol}{1,2}){regex_pattern}?\}
+```
+
+where
+
+`{pattern_to_be_matched}` is the pattern that will be matached by the pattern `{regex_pattern}` using Regex
+
+`{regex_pattern}` is a pattern that can consist of alphabet letters and 
+
 ### Examples
 #### Example 1
 `parameter-expansion-example-1.bash`
