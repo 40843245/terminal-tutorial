@@ -536,3 +536,45 @@ $ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion
 0 1
 
 ```
+
+#### Example 10
+
+`pattern-removal-example-1.bash`
+
+```
+main(){
+    local file_name="image.jpg.png"
+    
+    ## pattern removal
+    ## `${parameter#word}`
+    ## remove the shortest prefix
+    echo "${file_name#*.}"
+
+    ## pattern removal
+    ## `${parameter##word}`
+    ## remove the longest prefix
+    echo "${file_name##*.}"
+
+    ## pattern removal
+    ## `${parameter%word}`
+    ## remove the shortest postfix
+    echo "${file_name%.*}"
+
+    ## pattern removal
+    ## `${parameter%%word}`
+    ## remove the longest postfix
+    echo "${file_name%%.*}"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+jpg.png
+png
+image.jpg
+image
+
+```
