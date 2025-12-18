@@ -454,6 +454,7 @@ $ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion
 D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-6.bash: line 6: -2: substring expression < 0
 
 ```
+
 #### Example 7
 This example also illustrates how to get specific part of all arguments that are set. 
 
@@ -476,5 +477,62 @@ executing this script will echo
 $ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-7.bash"
 D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-7.bash 1 2 3 4 5 6 7 8 9 0 a b c d e f g h
 D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-7.bash 1
+
+```
+
+#### Example 8
+This example illustrates how to get specific range of an array
+
+`parameter-expansion-example-8.bash`
+
+```
+main(){
+    arr=(0 1 2 3 4 5 6 7 8 9 0 a b c d e f g h)
+    echo ${arr[@]:7}
+    echo ${arr[@]:7:2}
+    echo ${arr[@]: -7:2}
+    echo ${arr[@]: -7:-2}
+    echo ${arr[@]:0}
+    echo ${arr[@]:0:2}
+    echo ${arr[@]: -7:0}
+}
+
+main
+```
+
+
+executing this script will throw an error at line 6, terminating the script
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-8.bash"
+7 8 9 0 a b c d e f g h
+7 8
+b c
+D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-8.bash: line 6: -2: substring expression < 0
+
+```
+
+#### Example 9
+This example also illustrates how to get specific range of an array
+
+`parameter-expansion-example-9.bash`
+
+```
+main(){
+    arr=(0 1 2 3 4 5 6 7 8 9 0 a b c d e f g h)
+    echo ${arr[@]:0}
+    echo ${arr[@]:0:2}
+    echo ${arr[@]: -7:0}
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion\parameter-expansion-example-9.bash"
+0 1 2 3 4 5 6 7 8 9 0 a b c d e f g h
+0 1
 
 ```
