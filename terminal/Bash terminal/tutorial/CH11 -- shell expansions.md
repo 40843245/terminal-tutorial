@@ -620,7 +620,147 @@ orange banana orange
 
 ```
 
-#### Example 11
+#### Example 12
+`string-replacement-example-2.bash`
+
+```
+main(){
+    local str=abc123abc456abc789abc
+    local rep='& '
+
+    declare -i index=0
+
+    echo "------------------- ${index}th series of test -------------------"
+    ## string replacement
+    ## `${parameter/old-string/& }`
+    ## append a whitespace after the first occurrence of `old-string`
+    echo ${str/abc/& }
+
+    ## string replacement
+    ## `${parameter/old-string/& }` with double quotation
+    ## append a whitespace after the first occurrence of `old-string`
+    echo "${str/abc/& }"
+
+    ## string replacement
+    ## `${parameter/old-string/'& '}`
+    ## append a whitespace after the first occurrence of `old-string`
+    echo ${str/abc/$rep}
+
+    ## string replacement
+    ## `${parameter/old-string/'& '}`with double quotation
+    ## append a whitespace after the first occurrence of `old-string`
+    echo "${str/abc/$rep}"
+    echo "------------------- end of ${index}th series of test -------------------"
+
+    ((index++))
+
+    echo "------------------- ${index}th series of test -------------------"
+    ## string replacement
+    ## `${parameter//old-string/& }`
+    ## append a whitespace after all occurrences of `old-string`
+    echo ${str//abc/& }
+
+    ## string replacement
+    ## `${parameter//old-string/& }` with double quotation
+    ## append a whitespace after the first occurrence of `old-string`
+    echo "${str//abc/& }"
+
+    ## string replacement
+    ## `${parameter//old-string/'& '}`
+    ## append a whitespace after the first occurrence of `old-string`
+    echo ${str//abc/$rep}
+
+    ## string replacement
+    ## `${parameter//old-string/'& '}`with double quotation
+    ## append a whitespace after the first occurrence of `old-string`
+    echo "${str//abc/$rep}"
+    echo "------------------- end of ${index}th series of test -------------------"
+
+    ((index++))
+
+    echo "------------------- ${index}th series of test -------------------"
+    ## string replacement
+    ## `${parameter/old-string/\& }`
+    ## replace the first occurence of `old-string` to `& `.
+    echo ${str/abc/\& }
+
+    ## string replacement
+    ## `${parameter/old-string/\& }` with double quotation
+    ## replace the first occurence of `old-string` to `& `.
+    echo "${str/abc/\& }"
+
+    ## string replacement
+    ## `${parameter/old-string/"& "}`
+    ## replace the first occurence of `old-string` to `& `.
+    echo ${str/abc/"& "}
+
+    ## string replacement
+    ## `${parameter/old-string/"'& '"}`
+    ## replace the first occurence of `old-string` to `& `.
+    echo ${str/abc/"$rep"}
+    echo "------------------- end of ${index}th series of test -------------------"
+
+    ((index++))
+
+    echo "------------------- ${index}th series of test -------------------"
+    ## string replacement
+    ## `${parameter/old-string/\& }`
+    ## replace all occurences of `old-string` to `& `.
+    echo ${str//abc/\& }
+
+    ## string replacement
+    ## `${parameter/old-string/\& }` with double quotation
+    ## replace all occurences of `old-string` to `& `.
+    echo "${str//abc/\& }"
+
+    ## string replacement
+    ## `${parameter//old-string/"& "}`
+    ## replace all occurences of `old-string` to `& `.
+    echo ${str//abc/"& "}
+
+    ## string replacement
+    ## `${parameter//old-string/"'& '"}`
+    ## replace all occurences of `old-string` to `& `.
+    echo ${str//abc/"$rep"}
+    echo "------------------- end of ${index}th series of test -------------------"
+
+    ((index++))
+}
+
+main
+```
+
+executing this script will echo
+
+```
+------------------- 0th series of test -------------------
+abc 123abc456abc789abc
+abc 123abc456abc789abc
+abc 123abc456abc789abc
+abc 123abc456abc789abc
+------------------- end of 0th series of test -------------------
+------------------- 1th series of test -------------------
+abc 123abc 456abc 789abc
+abc 123abc 456abc 789abc
+abc 123abc 456abc 789abc
+abc 123abc 456abc 789abc
+------------------- end of 1th series of test -------------------
+------------------- 2th series of test -------------------
+& 123abc456abc789abc
+& 123abc456abc789abc
+& 123abc456abc789abc
+& 123abc456abc789abc
+------------------- end of 2th series of test -------------------
+------------------- 3th series of test -------------------
+& 123& 456& 789&
+& 123& 456& 789&
+& 123& 456& 789&
+& 123& 456& 789&
+------------------- end of 3th series of test -------------------
+
+```
+
+#### Example 13
 
 `capitalize-and-decapitalize-example-1.bash`
 
@@ -664,7 +804,7 @@ world
 
 ```
 
-#### Example 12
+#### Example 14
 
 `indirect-expansion-example-1.bash`
 
