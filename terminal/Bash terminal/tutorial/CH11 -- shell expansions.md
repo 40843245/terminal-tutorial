@@ -354,7 +354,12 @@ main(){
     set -- 01234567890abcdefgh
     echo ${1:7}
     echo ${1:7:0}
+    echo ${1:7:-2}
     echo ${1:7:2}
+    echo ${1: -7}
+    echo ${1: -7:0}
+    echo ${1: -7:2}
+    echo ${1: -7:-2}
 }
 
 main
@@ -373,6 +378,11 @@ bc
 bcdef
 7890abcdefgh
 
+7890abcdef
 78
+bcdefgh
+
+bc
+bcdef
 
 ```
