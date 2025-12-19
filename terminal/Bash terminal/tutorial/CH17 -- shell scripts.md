@@ -32,6 +32,20 @@ $ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\variable expansion\
 and
 
 ```
+$ bash "D:\workspace\Bash\Bash tutorial\examples\shell expansions\variable expansion\variable-expansion-example-2.bash"
+```
 
+interactions
 
-``
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\variable expansion\variable-expansion-example-2.bash"
+output: `weight:100kg, height:175cm, name:jay`
+output: `version:3.0, name:gemini flash`
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ bash "D:\workspace\Bash\Bash tutorial\examples\shell expansions\variable expansion\variable-expansion-example-2.bash"
+output: `weight:100kg, height:175cm, name:jay`
+output: `version:3.0, name:gemini flash`
+
+```
