@@ -1109,8 +1109,10 @@ main(){
 main
 ```
 
-executing this script will echo
+executing main script will echo
 
 ```
+output: `weight:100kg, height:175cm, name:jay`
+output: `version:3.0, name:gemini flash`
 
 ```
