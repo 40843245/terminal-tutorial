@@ -5,7 +5,8 @@ You will know how to
   + define a function
   + inoke a function
   + special variables about functions
-  + return in a function
+  + return an exit code in a function
+  + shift positional arguments 
     
 ## CH9-1 -- define a function
 It doesn't like that in high-level programming language.
@@ -176,4 +177,115 @@ and so on
 >
 > Otherwise, you will get an unexpected result.
 
+## CH9-5 -- shift positional arguments
+### `shift`
+built-in command `shift` can shift `n` positional arguments from right to left
 
+where 
+
+`n` MUST be a positive integer.
+
+If `n` is NOT specified, it uses one as default value.
+
+syntax:
+
+```
+shift {n}
+```
+
+#### Examples
+##### Example 1
+
+`shift-example-1.bash`
+
+```
+function func1(){
+    local args="$@"
+    local arg1="$1"
+    local arg2="$2"
+    local arg3="$3"
+    local arg4="$4"
+    local arg5="$5"
+    local arg6="$6"
+
+    echo "before shifting"
+
+    echo "Arguments that store values before unshifted"
+    echo "args:\`$args\`"
+    echo "arg1:\`$arg1\`"
+    echo "arg2:\`$arg2\`"
+    echo "arg3:\`$arg3\`"
+    echo "arg4:\`$arg4\`"
+    echo "arg5:\`$arg5\`"
+    echo "arg6:\`$arg6\`"
+
+    shift 2
+
+    local shifted_args="$@"
+    local shifted_arg1="$1"
+    local shifted_arg2="$2"
+    local shifted_arg3="$3"
+    local shifted_arg4="$4"
+    local shifted_arg5="$5"
+    local shifted_arg6="$6"
+
+    echo "after shifting 2 positional argument from right to left"
+
+    echo "Arguments that store values before unshifted"
+    echo "args:\`$args\`"
+    echo "arg1:\`$arg1\`"
+    echo "arg2:\`$arg2\`"
+    echo "arg3:\`$arg3\`"
+    echo "arg4:\`$arg4\`"
+    echo "arg5:\`$arg5\`"
+    echo "arg6:\`$arg6\`"
+    
+    echo "Arguments that store values after unshifted"
+    echo "shifted_args:\`$shifted_args\`"
+    echo "shifted_arg1:\`$shifted_arg1\`"
+    echo "shifted_arg2:\`$shifted_arg2\`"
+    echo "shifted_arg3:\`$shifted_arg3\`"
+    echo "shifted_arg4:\`$shifted_arg4\`"
+    echo "shifted_arg5:\`$shifted_arg5\`"
+    echo "shifted_arg6:\`$shifted_arg6\`"
+}
+
+main(){
+    func1 "apple" "banana" "orange" "kiwi" "grape" "passionate" "papaya" "peach" "tomato"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\functions\shift\shift-example-1.bash"
+before shifting
+Arguments that store values before unshifted
+args:`apple banana orange kiwi grape passionate papaya peach tomato`
+arg1:`apple`
+arg2:`banana`
+arg3:`orange`
+arg4:`kiwi`
+arg5:`grape`
+arg6:`passionate`
+after shifting 2 positional argument from right to left
+Arguments that store values before unshifted
+args:`apple banana orange kiwi grape passionate papaya peach tomato`
+arg1:`apple`
+arg2:`banana`
+arg3:`orange`
+arg4:`kiwi`
+arg5:`grape`
+arg6:`passionate`
+Arguments that store values after unshifted
+shifted_args:`orange kiwi grape passionate papaya peach tomato`
+shifted_arg1:`orange`
+shifted_arg2:`kiwi`
+shifted_arg3:`grape`
+shifted_arg4:`passionate`
+shifted_arg5:`papaya`
+shifted_arg6:`peach`
+
+```
