@@ -23,3 +23,11 @@ syntax:
 ```
 
 `.` command reads and then execute {file-name} with `{arguments}` in the current shell context.
+
+> [!NOTE]
+> If `-p` is supplied, `.` treats `{path}` as a colon-separated list of directories in which to find {file-name}
+>
+> Otherwise, `.` uses the directories in `$PATH` to find {file-name}. 
+
+> [!NOTE]
+> `{file-name}` does not need to be executable
