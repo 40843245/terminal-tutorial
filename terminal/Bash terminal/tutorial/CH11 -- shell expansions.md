@@ -1018,3 +1018,99 @@ executing this script will echo
 ```
 Hello World
 ```
+
+#### Example 18
+
+`variable-expansion-example-1.bash`
+
+```
+main(){
+    local current_time=$(date)
+    echo "現在時間是：$current_time"
+
+    echo "現在時間是：$(date)"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+現在時間是：Fri Dec 19 09:30:12 TST 2025
+現在時間是：Fri Dec 19 09:30:12 TST 2025
+
+```
+
+#### Example 19
+
+main script
+
+`associative-array-to-string-module.bash`
+
+```
+
+
+## 主要函式
+## 目的:
+## 將associative array組成string 
+## 格式範例: 
+## "key1:value1, key2:value2"
+function associative_array_to_string(){
+    local -n _array_ref=$1
+    local result=""
+    local delimiter=", "
+    
+    # 遍歷陣列的鍵 (Keys)
+    for key in "${!_array_ref[@]}"; do
+        local value="${_array_ref[$key]}"
+        
+        # 拼接字串
+        if [[ -z "$result" ]]; then
+            result="$key:$value"
+        else
+            result="$result$delimiter$key:$value"
+        fi
+    done
+    
+    echo "$result"
+}
+```
+
+`variable-expansion-example-2.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Source the module using an absolute path derived from the script location
+source "$SCRIPT_DIR/../../../utility modules/array/associative array/associative-array-to-string-module.bash"
+
+function get_person_info(){
+    declare -A person_info=(["name"]="jay" ["height"]="175cm" ["weight"]="100kg")
+    local output=$(associative_array_to_string person_info)
+    echo "$output"
+}
+
+function get_gemini_flash_info(){
+    declare -A gemini_flash=(["name"]="gemini flash" ["version"]="3.0")
+    local output=$(associative_array_to_string gemini_flash)
+    echo "$output"
+}
+
+main(){
+    local output=$(get_person_info)
+    echo "output: \`$output\`"
+
+    local output=$(get_gemini_flash_info)
+    echo "output: \`$output\`"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+
+```
