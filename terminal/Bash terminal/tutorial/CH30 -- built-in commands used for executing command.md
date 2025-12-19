@@ -33,4 +33,7 @@ syntax:
 >  If the `sourcepath` option is turned off, `.` does not search `$PATH`.
 
 > [!NOTE]
-> `{file-name}` does not need to be executable
+> `{file-name}` does not need to be executable.
+
+> [!NOTE]
+> If any arguments are supplied, they become the positional parameters iff `{file-name}` is executed. Otherwise the positional parameters are unchanged.
