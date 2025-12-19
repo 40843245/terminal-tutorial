@@ -282,3 +282,370 @@ In the outer loop, completed_runs=`10`,completed_sub_runs_in_this_run=`3`
 In the outer loop, completed_runs=`11`,completed_sub_runs_in_this_run=`3`
 
 ```
+
+#### Example 2
+
+`continue-example-3.bash`
+
+```
+function roll_dice(){
+    local name_in_current_turn="$1"
+    declare -i rolling_times_in_this_round=0;
+    declare -i max_rolling_times_in_this_round=5;
+    declare -i point_1=0;
+    declare -i point_2=0;
+    declare -i sum=0;
+    declare -i current_status_code=2;
+
+    while [ $rolling_times_in_this_round -lt $max_rolling_times_in_this_round ]
+    do 
+        point_1=$(( ( RANDOM % 6 )  + 1 ));
+        point_2=$(( ( RANDOM % 6 )  + 1 ));
+        sum=$((point_1 + point_2))
+            echo "The \`$name_in_current_turn\` throws two dices and gets \`$sum\` point in total."
+        if [ $sum  -eq 7 ]; then
+            # win this round
+            current_status_code=0
+            break
+        fi
+        if [ $sum -eq 11 ]; then
+            # lose this round
+            current_status_code=1;
+            break
+        fi
+        ((rolling_times_in_this_round++))
+    done
+
+    if [ $rolling_times_in_this_round -eq $max_rolling_times_in_this_round ]; then
+        # lose this round
+        # due to rolling the dice too many times (>=5) in this round.
+        current_status_code=1;
+    fi
+
+    return $current_status_code;
+}
+
+function dice_rolling_game(){
+    declare number_of_turns_of_championship=$1;
+    local max_win_needed_for_championship=$((number_of_turns_of_championship/2+1))
+    local number_of_completed_turns_in_this_overtime=0;
+    local number_of_completed_turns=0;
+    declare max_turn_limit=10;
+    declare max_overtime_limit=4;
+    declare -i player_win_times=0;
+    declare -i computer_win_times=0;
+    local is_player_win=0;
+    local is_computer_win=0;
+    local is_win_in_this_round=0;
+    local is_end_of_the_game=0;
+    local current_turn=1; # 0: player's turn 1: computer's turn
+    local name_in_current_turn=player;
+    local status_text_in_current_round=win;
+    local message_in_current_round="";
+    local congratulation_message="";
+    local needs_to_execute_this_turn=1;
+
+    echo "------------- the rolling game starts -------------"
+
+    while [ $is_end_of_the_game -eq 0 ]
+    do
+        status_text_in_current_round=""
+        message_in_current_round=""
+
+        # 0->1, 1->0
+        current_turn=$(( ( current_turn + 1 ) % 2 ))
+
+        if [[ $current_turn -eq 0 ]]; then
+            name_in_current_turn=player
+        else
+            name_in_current_turn=computer
+        fi 
+
+        roll_dice "$name_in_current_turn"
+        
+        is_win_in_this_round=$?
+        
+        if [[ $is_win_in_this_round -eq 1 ]]; then
+            status_text_in_current_round="win"
+            message_in_current_round="The $name_in_current_turn ${status_text_in_current_round}s in ${number_of_completed_turns}th ${name_in_current_turn}'s turn";
+            if [[ $current_turn -eq 0 ]]; then
+                player_win_times=$((player_win_times + 1))
+            else
+                computer_win_times=$((computer_win_times + 1))
+            fi
+        elif [ $is_win_in_this_round -eq 0 ]; then
+            status_text_in_current_round="lose"
+            message_in_current_round="The $name_in_current_turn ${status_text_in_current_round}s in ${number_of_completed_turns}th ${name_in_current_turn}'s turn";
+        else
+            message_in_current_round="Unknown error in ${number_of_completed_turns}th ${name_in_current_turn}'s turn";
+        fi
+
+        number_of_completed_turns=$((number_of_completed_turns + 1))
+
+        echo "$message_in_current_round"
+        
+        if [[ $player_win_times -gt $max_win_needed_for_championship && $((player_win_times - computer_win_times)) -gt 2 ]]; then
+            # player wins
+            is_player_win=1;
+            # end games in this championship
+            is_end_of_the_game=1
+            continue 1
+        fi
+
+        if [[ $computer_win_times -gt $max_win_needed_for_championship && $((computer_win_times - player_win_times)) -gt 2 ]]; then
+            # computer wins
+            is_computer_win=1;
+            # end games in this championship
+            is_end_of_the_game=1
+            continue
+        fi
+        
+        if [[ $number_of_completed_turns -gt $number_of_turns_of_championship ]]; then
+            number_of_completed_turns_in_this_overtime=0;
+            while [ $number_of_completed_turns_in_this_overtime -le $max_overtime_limit ]
+            do
+                status_text_in_current_round=""
+                message_in_current_round=""
+                
+                # 0->1, 1->0
+                current_turn=$(( ( current_turn + 1 ) % 2 ))
+
+                if [[ $current_turn -eq 0 ]]; then
+                    name_in_current_turn=player
+                else
+                    name_in_current_turn=computer
+                fi
+
+                roll_dice "$name_in_current_turn"
+                
+                is_win_in_this_round=$?
+
+                if [[ $is_win_in_this_round -eq 1 ]]; then
+                    status_text_in_current_round="win"
+                    message_in_current_round="The $name_in_current_turn ${status_text_in_current_round}s in ${number_of_completed_turns}th ${name_in_current_turn}'s turn";
+                    if [[ $current_turn -eq 0 ]]; then
+                        player_win_times=$((player_win_times + 1))
+                    else
+                        computer_win_times=$((computer_win_times + 1))
+                    fi
+                elif [ $is_win_in_this_round -eq 0 ]; then
+                    status_text_in_current_round="lose"
+                    message_in_current_round="The $name_in_current_turn ${status_text_in_current_round}s in ${number_of_completed_turns}th ${name_in_current_turn}'s turn";
+                else
+                    message_in_current_round="Unknown error in ${number_of_completed_turns}th ${name_in_current_turn}'s turn";
+                fi
+
+                number_of_completed_turns=$(( number_of_completed_turns + 1 ))
+                number_of_completed_turns_in_this_overtime=$(( number_of_completed_turns_in_this_overtime + 1 ))
+
+                echo "$message_in_current_round"
+
+                if [[ $player_win_times -gt $max_win_needed_for_championship && $(( player_win_times - computer_win_times )) -gt 2 ]]; then
+                    # player wins
+                    is_player_win=1;
+                    
+                    # end games in this championship
+                    is_end_of_the_game=1
+                    continue 2
+                fi
+
+                if [[ $computer_win_times -gt $max_win_needed_for_championship && $(( computer_win_times - player_win_times )) -gt 2 ]]; then        
+                    # computer wins
+                    is_computer_win=1;
+                    
+                    # end games in this championship
+                    is_end_of_the_game=1
+                    continue 2
+                fi
+            done 
+        fi
+    done
+    echo "game over"
+    if [ $is_player_win -eq 1 ]; then
+        echo "The player wins this championship"
+    elif [ $is_computer_win -eq 1 ]; then
+        echo "The player wins this championship"
+    fi
+
+    echo "------------- the rolling game over -------------"
+}
+
+main(){
+    echo "------------- ready to play the rolling game -------------"
+
+    dice_rolling_game 3
+
+    echo "------------- bye bye -------------"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\loop\repetitive loop\continue\continue-example-3.bash"
+------------- ready to play the rolling game -------------
+------------- the rolling game starts -------------
+The `player` throws two dices and gets `4` point in total.
+The `player` throws two dices and gets `4` point in total.
+The `player` throws two dices and gets `6` point in total.
+The `player` throws two dices and gets `3` point in total.
+The `player` throws two dices and gets `7` point in total.
+The player loses in 0th player's turn
+The `computer` throws two dices and gets `6` point in total.
+The `computer` throws two dices and gets `7` point in total.
+The computer loses in 1th computer's turn
+The `player` throws two dices and gets `9` point in total.
+The `player` throws two dices and gets `9` point in total.
+The `player` throws two dices and gets `7` point in total.
+The player loses in 2th player's turn
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `6` point in total.
+The `computer` throws two dices and gets `11` point in total.
+The computer wins in 3th computer's turn
+The `player` throws two dices and gets `5` point in total.
+The `player` throws two dices and gets `5` point in total.
+The `player` throws two dices and gets `5` point in total.
+The `player` throws two dices and gets `11` point in total.
+The player wins in 4th player's turn
+The `computer` throws two dices and gets `6` point in total.
+The `computer` throws two dices and gets `9` point in total.
+The `computer` throws two dices and gets `10` point in total.
+The `computer` throws two dices and gets `5` point in total.
+The `computer` throws two dices and gets `9` point in total.
+The computer wins in 5th computer's turn
+The `player` throws two dices and gets `2` point in total.
+The `player` throws two dices and gets `7` point in total.
+The player loses in 6th player's turn
+The `computer` throws two dices and gets `5` point in total.
+The `computer` throws two dices and gets `9` point in total.
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `4` point in total.
+The `computer` throws two dices and gets `7` point in total.
+The computer loses in 7th computer's turn
+The `player` throws two dices and gets `4` point in total.
+The `player` throws two dices and gets `11` point in total.
+The player wins in 8th player's turn
+The `computer` throws two dices and gets `7` point in total.
+The computer loses in 9th computer's turn
+The `player` throws two dices and gets `11` point in total.
+The player wins in 10th player's turn
+The `computer` throws two dices and gets `7` point in total.
+The computer loses in 11th computer's turn
+The `player` throws two dices and gets `5` point in total.
+The `player` throws two dices and gets `6` point in total.
+The `player` throws two dices and gets `10` point in total.
+The `player` throws two dices and gets `9` point in total.
+The `player` throws two dices and gets `11` point in total.
+The player wins in 12th player's turn
+The `computer` throws two dices and gets `9` point in total.
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `3` point in total.
+The `computer` throws two dices and gets `10` point in total.
+The computer wins in 13th computer's turn
+The `player` throws two dices and gets `5` point in total.
+The `player` throws two dices and gets `4` point in total.
+The `player` throws two dices and gets `6` point in total.
+The `player` throws two dices and gets `7` point in total.
+The player loses in 14th player's turn
+The `computer` throws two dices and gets `5` point in total.
+The `computer` throws two dices and gets `4` point in total.
+The `computer` throws two dices and gets `7` point in total.
+The computer loses in 15th computer's turn
+The `player` throws two dices and gets `10` point in total.
+The `player` throws two dices and gets `8` point in total.
+The `player` throws two dices and gets `11` point in total.
+The player wins in 16th player's turn
+The `computer` throws two dices and gets `4` point in total.
+The `computer` throws two dices and gets `9` point in total.
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `4` point in total.
+The `computer` throws two dices and gets `3` point in total.
+The computer wins in 17th computer's turn
+The `player` throws two dices and gets `2` point in total.
+The `player` throws two dices and gets `8` point in total.
+The `player` throws two dices and gets `5` point in total.
+The `player` throws two dices and gets `4` point in total.
+The `player` throws two dices and gets `8` point in total.
+The player wins in 18th player's turn
+The `computer` throws two dices and gets `9` point in total.
+The `computer` throws two dices and gets `11` point in total.
+The computer wins in 19th computer's turn
+The `player` throws two dices and gets `7` point in total.
+The player loses in 20th player's turn
+The `computer` throws two dices and gets `10` point in total.
+The `computer` throws two dices and gets `4` point in total.
+The `computer` throws two dices and gets `10` point in total.
+The `computer` throws two dices and gets `7` point in total.
+The computer loses in 21th computer's turn
+The `player` throws two dices and gets `9` point in total.
+The `player` throws two dices and gets `9` point in total.
+The `player` throws two dices and gets `6` point in total.
+The `player` throws two dices and gets `7` point in total.
+The player loses in 22th player's turn
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `3` point in total.
+The `computer` throws two dices and gets `9` point in total.
+The `computer` throws two dices and gets `2` point in total.
+The `computer` throws two dices and gets `11` point in total.
+The computer wins in 23th computer's turn
+The `player` throws two dices and gets `7` point in total.
+The player loses in 24th player's turn
+The `computer` throws two dices and gets `5` point in total.
+The `computer` throws two dices and gets `4` point in total.
+The `computer` throws two dices and gets `7` point in total.
+The computer loses in 25th computer's turn
+The `player` throws two dices and gets `5` point in total.
+The `player` throws two dices and gets `5` point in total.
+The `player` throws two dices and gets `7` point in total.
+The player loses in 26th player's turn
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `5` point in total.
+The `computer` throws two dices and gets `7` point in total.
+The computer loses in 27th computer's turn
+The `player` throws two dices and gets `6` point in total.
+The `player` throws two dices and gets `8` point in total.
+The `player` throws two dices and gets `6` point in total.
+The `player` throws two dices and gets `3` point in total.
+The `player` throws two dices and gets `7` point in total.
+The player loses in 28th player's turn
+The `computer` throws two dices and gets `2` point in total.
+The `computer` throws two dices and gets `11` point in total.
+The computer wins in 29th computer's turn
+The `player` throws two dices and gets `6` point in total.
+The `player` throws two dices and gets `8` point in total.
+The `player` throws two dices and gets `5` point in total.
+The `player` throws two dices and gets `4` point in total.
+The `player` throws two dices and gets `7` point in total.
+The player loses in 30th player's turn
+The `computer` throws two dices and gets `11` point in total.
+The computer wins in 31th computer's turn
+The `player` throws two dices and gets `8` point in total.
+The `player` throws two dices and gets `12` point in total.
+The `player` throws two dices and gets `9` point in total.
+The `player` throws two dices and gets `8` point in total.
+The `player` throws two dices and gets `4` point in total.
+The player wins in 32th player's turn
+The `computer` throws two dices and gets `12` point in total.
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `6` point in total.
+The `computer` throws two dices and gets `5` point in total.
+The `computer` throws two dices and gets `8` point in total.
+The computer wins in 33th computer's turn
+The `player` throws two dices and gets `7` point in total.
+The player loses in 34th player's turn
+The `computer` throws two dices and gets `6` point in total.
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `8` point in total.
+The `computer` throws two dices and gets `9` point in total.
+The `computer` throws two dices and gets `6` point in total.
+The computer wins in 35th computer's turn
+game over
+The player wins this championship
+------------- the rolling game over -------------
+------------- bye bye -------------
+
+```
