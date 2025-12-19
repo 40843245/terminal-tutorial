@@ -79,6 +79,54 @@ where
 `return-example-1.bash`
 
 ```
+function func1(){
+    echo "The function named \`func1\` is invoked."
+
+    echo "Before calling \`func2\` in the function named \`func1\`"
+    func2
+    echo "After calling \`func2\` in the function named \`func1\`"
+    
+    echo "End of the function named \`func1\` call."
+}
+
+function func2(){
+    echo "The function named \`func2\` is invoked."
+    
+    echo "Before calling \`func3\` in the function named \`func2\`"
+    func3
+    echo "After calling \`func3\` in the function named \`func2\`"
+
+    echo "End of the function named \`func2\` call."
+}
+
+function func3(){
+    echo "The function named \`func3\` is invoked."
+
+    echo "Before calling \`func4\` in the function named \`func3\`"
+    func4
+    echo "After calling \`func4\` in the function named \`func3\`"
+
+    echo "End of the function named \`func3\` call."
+    return 2 
+}
+
+function func4(){
+    echo "The function named \`func4\` is invoked."
+
+    echo "End of the function named \`func4\` call."
+}
+
+
+main(){
+    func1
+}
+
+main
+```
+
+executing this script will echo
+
+```
 $ "D:\workspace\Bash\Bash tutorial\examples\loop\repetitive loop\return\return-example-1.bash"
 The function named `func1` is invoked.
 Before calling `func2` in the function named `func1`
@@ -97,8 +145,8 @@ End of the function named `func1` call.
 
 ```
 
-# CH9-4 -- special variables about functions
-CC\`@`: all passed arguments separator by first character o` `$I.
+## CH9-4 -- special variables about functions
+`\`@`: all passed arguments separator by first character o` `$I.
 
 `$*`: all passed arguments that are expanded as a string. 
 
