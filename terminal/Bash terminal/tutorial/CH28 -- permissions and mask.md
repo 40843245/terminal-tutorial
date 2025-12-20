@@ -78,7 +78,13 @@ sudo chown user:john "D:\workspace\Bash\Bash tutorial\examples\functions\shift\s
 
 ## CH28-3 -- unmask the permission
 ### `umask`
-Built-in command `umask` (NOT spelled as `unmask`), you can use built-in `` 
+Built-in command `umask` (NOT spelled as `unmask`) sets the default permission when creating a direcory or a file.
+
+for example,
+
+```
+umask 077
+```
 
 
 ### reference
