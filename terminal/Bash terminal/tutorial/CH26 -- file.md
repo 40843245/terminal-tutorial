@@ -53,6 +53,41 @@ main
 ### `touch`
 `touch` built-in command in Linux will create an empty file with given file name.
 
+### Examples
+#### Example 1
+`file-example-1.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function initialize(){
+    echo "directory of current script:\`$SCRIPT_DIR\`"
+    
+    local base_directory="$SCRIPT_DIR/../../outputs/examples/create files"
+    local files1_name=$(echo file{1..5}.txt)
+    cd "$base_directory"
+    touch $files1_name
+}
+
+main(){
+    initialize
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\file\file-example-1.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/file`
+
+```
+
+and create empty files `file1.txt` `file2.txt` `file3.txt` `file4.txt` `file5.txt`
+
+under directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files`
 ## CH26-3 -- delete a file
 ### `rm`
 `rm` built-in command in Linux will remove a file with given specific file name.
