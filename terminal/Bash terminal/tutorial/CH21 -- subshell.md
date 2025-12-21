@@ -15,7 +15,7 @@ A subshell script is a script inside a shell script.
 ## CH21-2 -- execute a subshell script
 ### inline subshell script
 #### `bash`
-You can execute an inline subshell script using `bash` built-in command with `-c` short option.
+You can execute an inline subshell script using `bash` built-in command with `-c` short option (`bash -c`).
 
 > [!NOTE]
 > `bash -c` opens a subshell, and consider the arguments as commands then executes commands
@@ -23,6 +23,8 @@ You can execute an inline subshell script using `bash` built-in command with `-c
 > it is executed at sandbox,
 > 
 > thus it may NOT pollute user-defined variables that exported on shell
+
+`bash -i` built-in command changes it in an interactive shell
 
 ### Examples
 #### Example 1
@@ -62,6 +64,41 @@ executing this script will echo
 $ "D:\workspace\Bash\Bash tutorial\examples\subshell\bash\bash-example-1.bash"
 Hello World
 :``
+```
+
+#### Example 3
+
+`bash-example-3.bash`
+
+```
+main(){
+    local GLOBAL_VAR1=3
+    
+    echo "GLOBAL_VAR1:\`$GLOBAL_VAR1\`"
+    GLOBAL_VAR1=4
+    echo "GLOBAL_VAR1:\`$GLOBAL_VAR1\`"
+    
+    bash -i
+    GLOBAL_VAR2=3
+    echo "GLOBAL_VAR2:\`$GLOBAL_VAR2\`"
+    GLOBAL_VAR2=4
+    echo "GLOBAL_VAR2:\`$GLOBAL_VAR2\`"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/outputs/permissions
+$ "D:\workspace\Bash\Bash tutorial\examples\subshell\bash\bash-example-3.bash"
+GLOBAL_VAR1:`3`
+GLOBAL_VAR1:`4`
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/outputs/permissions
+$
+
 ```
 
 ## CH21-3 -- command grouping
