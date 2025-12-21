@@ -14,25 +14,16 @@ A subshell script is a script inside a shell script.
 
 ## CH21-2 -- execute a subshell script
 ### inline subshell script
-#### bash
+#### `bash`
 You can execute an inline subshell script using `bash` built-in command with `-c` short option.
 
 > [!NOTE]
-> although `bash -c` executes inline subshell script,
+> `bash -c` opens a subshell, and consider the arguments as commands then executes commands
 >
-> the subshell script does NOT be executed at sandbox,
->
-> It uses same environment.
->
-> Thus, NOT ONLY it can access environment variables that exported on shell script,
->
-> BUT ALSO it may pollute environment variables that exported on shell script
->
-> To make the subshell script be executed on a clean environment,
->
-> use command grouping.
->
-> For more details, see CH21-3.
+> it is executed at sandbox,
+> 
+> thus it may NOT pollute user-defined variables that exported on shell
+
 
 ## CH21-3 -- command grouping
 commands inside `()`, which uses command grouping technique, will form a subshell script and is executed in a clean environment, 
