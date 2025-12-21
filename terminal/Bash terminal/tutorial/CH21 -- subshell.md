@@ -59,7 +59,7 @@ main
 executing this script will echo
 
 ```
-$ "D:\workspace\Bash\Bash tutorial\examples\subshell\bash-example-1.bash"
+$ "D:\workspace\Bash\Bash tutorial\examples\subshell\bash\bash-example-1.bash"
 Hello World
 :``
 ```
@@ -88,6 +88,30 @@ All variables defined inside a subshell (including `varA`) will **NOT be unset a
 Thus, after executing commands in the subshell script, when accessing variable `varA`, the Bash will try to find `varA` that is defined inside the subshell script.
 
 Compare following examples for fully understanding.
+
+### Examples
+#### Example 1
+
+`bash-example-2.bash`
+
+```
+main(){
+    export GLOBAL_VAR=3
+    (echo "Hello World"; GLOBAL_VAR=4)
+    echo "$GLOBAL_VAR:\`$GLOBAL_VAR\`"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\subshell\bash\bash-example-2.bash"
+Hello World
+3:`3`
+
+```
 
 ## CH21-4 -- special variable about shell
 
