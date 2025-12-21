@@ -35,6 +35,19 @@ main
 executing this script will echo
 
 ```
+$ "D:\workspace\Bash\Bash tutorial\examples\subshell\bash\bash-example-5.bash"
+The example `/d/workspace/Bash/Bash tutorial/examples/subshell/bash/multi-language-example-1.bash` content:
+main(){
+    echo $"Hello, World!"
+    echo $"Good morning, user."
+    echo "This will not be extracted." # 一般雙引號不會被提取
+}
+
+main
+"Hello, World!"
+"Good morning, user."
+
+```
 
 ## CH26-2 -- create a file
 ### `touch`
