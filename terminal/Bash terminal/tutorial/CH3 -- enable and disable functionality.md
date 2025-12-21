@@ -92,6 +92,39 @@ and
 > `{1..5}` will be `{1..5}`
 > ```
 
+### `shopt` 
+`shopt` built-in command in Bash can be used to enable and disable specific functionalities.
+
+Additionally, you can look at specific functionality is enabled or disabled, and all enabled or disabled functionalities.
+
+```
+shopt -s {option-name}
+```
+
+where 
+
+`{option-name}` is the option (without shorthand) indicates the functionality.
+
+It enables the functionality.
+
+While
+
+```
+shopt -u {option-name}
+```
+
+It disables the functionality.
+
+```
+shopt -q {option-name}
+```
+
+It can check the functionality is enabled.
+
+If the functionality is enabled, it will return exit code 0.
+
+Otherwise, it will return exit code 1.
+
 ### Examples
 #### Example 1
 This example illustrates the behavior when a functionality is enabled and it is disabled respectively
@@ -132,6 +165,309 @@ executing this script will echo
 `{1..5}` will be `{1..5}`
 --------- When Bash commands are enabled (by executing `set -B`) ---------
 `{1..5}` will be `1 2 3 4 5`
+
+```
+
+#### Example 2
+
+utility module:
+
+`look-at-functionalities-status-module.bash`
+
+```
+function look_at_all_enabled_functionalities(){
+    echo "These are enabled functionalities:"
+    shopt -s
+}
+
+function look_at_all_disabled_functionalities(){
+    echo "These are disabled functionalities:"
+    shopt -u
+}
+```
+
+main script
+
+`shopt-example-1.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+
+source "$SCRIPT_DIR/../../utility modules/functionalities active status/look-at-functionalities-status-module.bash"
+
+function func1(){
+    local args="$@"
+    local args_count="$#"
+    local function_name="$0"
+    local args="$1"
+    local arg2="$2"
+    local arg3="$3"
+
+    echo "before shifting"
+    echo "args:$args"
+    echo "args_count:$args_count"
+    echo "function_name:$function_name"
+    echo "arg1:$arg1"
+    echo "arg2:$arg2"
+    echo "arg3:$arg3"
+    
+    shift 2
+
+    local shifted_args="$@"
+    local shifted_args_count="$#"
+    local shifted_function_name="$0"
+    local shifted_args="$1"
+    local shifted_arg2="$2"
+    local shifted_arg3="$3"
+    
+    echo "after shifting"
+    echo "ashifted_argsrgs:$shifted_args"
+    echo "shifted_args_count:$shifted_args_count"
+    echo "shifted_function_name:$shifted_function_name"
+    echo "shifted_args:$arshifted_argsg1"
+    echo "shifted_arg2:$shifted_arg2"
+    echo "shifted_arg3:$shifted_arg3S"
+}
+
+main(){
+    set +e
+
+    look_at_all_enabled_functionalities
+    look_at_all_disabled_functionalities
+
+    func1 "apple" "banana" "orange"
+
+    shopt -s shift_verbose
+
+    look_at_all_enabled_functionalities
+    look_at_all_disabled_functionalities
+
+    func1 "apple" "banana" "orange"
+
+    shopt -u shift_verbose
+
+    look_at_all_enabled_functionalities
+    look_at_all_disabled_functionalities
+
+    set -e
+}
+
+main
+```
+
+executing this main script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\shopt\shopt-example-1.bash"
+These are enabled functionalities:
+checkwinsize    on
+cmdhist         on
+complete_fullquote      on
+extquote        on
+force_fignore   on
+globasciiranges on
+globskipdots    on
+hostcomplete    on
+interactive_comments    on
+patsub_replacement      on
+progcomp        on
+promptvars      on
+sourcepath      on
+These are disabled functionalities:
+autocd          off
+assoc_expand_once       off
+cdable_vars     off
+cdspell         off
+checkhash       off
+checkjobs       off
+compat31        off
+compat32        off
+compat40        off
+compat41        off
+compat42        off
+compat43        off
+compat44        off
+completion_strip_exe    off
+direxpand       off
+dirspell        off
+dotglob         off
+execfail        off
+expand_aliases  off
+extdebug        off
+extglob         off
+failglob        off
+globstar        off
+gnu_errfmt      off
+histappend      off
+histreedit      off
+histverify      off
+huponexit       off
+inherit_errexit off
+lastpipe        off
+lithist         off
+localvar_inherit        off
+localvar_unset  off
+login_shell     off
+mailwarn        off
+no_empty_cmd_completion off
+nocaseglob      off
+nocasematch     off
+noexpand_translation    off
+nullglob        off
+progcomp_alias  off
+restricted_shell        off
+shift_verbose   off
+varredir_close  off
+xpg_echo        off
+before shifting
+args:apple
+args_count:3
+function_name:D:\workspace\Bash\Bash tutorial\examples\shopt\shopt-example-1.bash
+arg1:
+arg2:banana
+arg3:orange
+after shifting
+ashifted_argsrgs:orange
+shifted_args_count:1
+shifted_function_name:D:\workspace\Bash\Bash tutorial\examples\shopt\shopt-example-1.bash
+shifted_args:
+shifted_arg2:
+shifted_arg3:
+These are enabled functionalities:
+checkwinsize    on
+cmdhist         on
+complete_fullquote      on
+extquote        on
+force_fignore   on
+globasciiranges on
+globskipdots    on
+hostcomplete    on
+interactive_comments    on
+patsub_replacement      on
+progcomp        on
+promptvars      on
+shift_verbose   on
+sourcepath      on
+These are disabled functionalities:
+autocd          off
+assoc_expand_once       off
+cdable_vars     off
+cdspell         off
+checkhash       off
+checkjobs       off
+compat31        off
+compat32        off
+compat40        off
+compat41        off
+compat42        off
+compat43        off
+compat44        off
+completion_strip_exe    off
+direxpand       off
+dirspell        off
+dotglob         off
+execfail        off
+expand_aliases  off
+extdebug        off
+extglob         off
+failglob        off
+globstar        off
+gnu_errfmt      off
+histappend      off
+histreedit      off
+histverify      off
+huponexit       off
+inherit_errexit off
+lastpipe        off
+lithist         off
+localvar_inherit        off
+localvar_unset  off
+login_shell     off
+mailwarn        off
+no_empty_cmd_completion off
+nocaseglob      off
+nocasematch     off
+noexpand_translation    off
+nullglob        off
+progcomp_alias  off
+restricted_shell        off
+varredir_close  off
+xpg_echo        off
+before shifting
+args:apple
+args_count:3
+function_name:D:\workspace\Bash\Bash tutorial\examples\shopt\shopt-example-1.bash
+arg1:
+arg2:banana
+arg3:orange
+after shifting
+ashifted_argsrgs:orange
+shifted_args_count:1
+shifted_function_name:D:\workspace\Bash\Bash tutorial\examples\shopt\shopt-example-1.bash
+shifted_args:
+shifted_arg2:
+shifted_arg3:
+These are enabled functionalities:
+checkwinsize    on
+cmdhist         on
+complete_fullquote      on
+extquote        on
+force_fignore   on
+globasciiranges on
+globskipdots    on
+hostcomplete    on
+interactive_comments    on
+patsub_replacement      on
+progcomp        on
+promptvars      on
+sourcepath      on
+These are disabled functionalities:
+autocd          off
+assoc_expand_once       off
+cdable_vars     off
+cdspell         off
+checkhash       off
+checkjobs       off
+compat31        off
+compat32        off
+compat40        off
+compat41        off
+compat42        off
+compat43        off
+compat44        off
+completion_strip_exe    off
+direxpand       off
+dirspell        off
+dotglob         off
+execfail        off
+expand_aliases  off
+extdebug        off
+extglob         off
+failglob        off
+globstar        off
+gnu_errfmt      off
+histappend      off
+histreedit      off
+histverify      off
+huponexit       off
+inherit_errexit off
+lastpipe        off
+lithist         off
+localvar_inherit        off
+localvar_unset  off
+login_shell     off
+mailwarn        off
+no_empty_cmd_completion off
+nocaseglob      off
+nocasematch     off
+noexpand_translation    off
+nullglob        off
+progcomp_alias  off
+restricted_shell        off
+shift_verbose   off
+varredir_close  off
+xpg_echo        off
 
 ```
 
