@@ -566,6 +566,12 @@ main(){
 main
 ```
 
+executing this script will echo
+
+```
+
+
+
 
 ## CH3-2 -- look at all functionalites are turned on or off
 ### `set -o`
