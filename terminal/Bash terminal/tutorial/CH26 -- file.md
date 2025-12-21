@@ -184,6 +184,47 @@ and create empty files `file1.txt`
 
 under directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files`
 
-then copy `file1.txt` from  `file3.txt` `file4.txt` `file5.txt`
+then copy `file1.txt` from old directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/old directory` to new directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/new directory`
+
+#### Example 2
+`file-example-4.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function initialize(){
+    echo "directory of current script:\`$SCRIPT_DIR\`"
+    
+    local old_directory="$SCRIPT_DIR/../../outputs/examples/copy files/old directory"
+    local new_directory="$SCRIPT_DIR/../../outputs/examples/copy files/new directory"
+    local file1_name="file1.txt"
+    local file2_name="file2.txt"
+    cd "$old_directory"
+    touch $file1_name
+    cp $file1_name $file2_name
+}
+
+main(){
+    initialize
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\file\file-example-4.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/file`
+
+```
+
+and create empty files `file1.txt`
+
+under directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files`
+
+then copy `file1.txt` from old directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/old directory` to same new directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/old directory` but named `file2.txt`
+
 ## CH26-4 -- move a file
 ## CH26-5 -- rename a file
