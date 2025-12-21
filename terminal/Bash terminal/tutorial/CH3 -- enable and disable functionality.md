@@ -569,7 +569,84 @@ main
 executing this script will echo
 
 ```
+$ "D:\workspace\Bash\Bash tutorial\examples\shopt\shopt-example-3.bash"
+These are enabled functionalities:
+checkwinsize    on
+cmdhist         on
+complete_fullquote      on
+extquote        on
+force_fignore   on
+globasciiranges on
+globskipdots    on
+hostcomplete    on
+interactive_comments    on
+patsub_replacement      on
+progcomp        on
+promptvars      on
+sourcepath      on
+These are disabled functionalities:
+autocd          off
+assoc_expand_once       off
+cdable_vars     off
+cdspell         off
+checkhash       off
+checkjobs       off
+compat31        off
+compat32        off
+compat40        off
+compat41        off
+compat42        off
+compat43        off
+compat44        off
+completion_strip_exe    off
+direxpand       off
+dirspell        off
+dotglob         off
+execfail        off
+expand_aliases  off
+extdebug        off
+extglob         off
+failglob        off
+globstar        off
+gnu_errfmt      off
+histappend      off
+histreedit      off
+histverify      off
+huponexit       off
+inherit_errexit off
+lastpipe        off
+lithist         off
+localvar_inherit        off
+localvar_unset  off
+login_shell     off
+mailwarn        off
+no_empty_cmd_completion off
+nocaseglob      off
+nocasematch     off
+noexpand_translation    off
+nullglob        off
+progcomp_alias  off
+restricted_shell        off
+shift_verbose   off
+varredir_close  off
+xpg_echo        off
+before shifting
+args:apple
+args_count:3
+function_name:D:\workspace\Bash\Bash tutorial\examples\shopt\shopt-example-3.bash
+arg1:
+arg2:banana
+arg3:orange
+after shifting
+ashifted_argsrgs:orange
+shifted_args_count:1
+shifted_function_name:D:\workspace\Bash\Bash tutorial\examples\shopt\shopt-example-3.bash
+shifted_args:
+shifted_arg2:
+shifted_arg3:
 
+
+```
 
 
 
