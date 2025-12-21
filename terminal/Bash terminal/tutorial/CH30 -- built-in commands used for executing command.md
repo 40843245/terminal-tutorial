@@ -37,3 +37,40 @@ syntax:
 
 > [!NOTE]
 > If any arguments are supplied, they become the positional parameters iff `{file-name}` is executed. Otherwise the positional parameters are unchanged.
+
+### `bash`
+You can execute an inline subshell script using `bash -c`.
+
+> [!NOTE]
+> `bash -c` opens a subshell, and consider the arguments as commands then executes commands
+>
+> it is executed at sandbox,
+> 
+> thus it may NOT pollute user-defined variables that exported on shell
+
+`bash -i` built-in command changes it in an interactive shell
+
+`bash --posix` will execute a shell using POSIX standard.
+
+#### Examples
+##### Example 1
+
+`bash-example-4.bash`
+
+```
+main(){
+    echo "executing \`bash --posix\` will make Bash engine applies the POSIX standard. However, it may disable some extended functionalities that based on Bourne"
+    bash --posix
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\subshell\bash\bash-example-4.bash"
+executing `bash --posix` will make Bash engine applies the POSIX standard. However, it may disable some extended functionalities that based on Bourne
+bash-5.2$
+
+```
