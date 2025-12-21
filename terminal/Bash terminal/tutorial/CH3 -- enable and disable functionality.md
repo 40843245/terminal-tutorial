@@ -374,7 +374,14 @@ hashall         on
 
 ```
 
-## CH3-4 -- look at many functionalities are BOTH enabed 
+## CH3-4 -- look at many functionalities are BOTH enabed
+### `$-`
+`$-` variable stores a string consists of a character where each character represents shorthand of one functionality (that is used for `set`)
+
+### `shopt -q`
+`shopt -q` returns exit code 0 iff the functionalities (used for `shopt`) are all enabled.
+
+Otherwise, returns exit code 1
 ### Examples
 #### Example 1
 
@@ -507,6 +514,73 @@ executing main script will echo
 braceexpand     on
 hashall         on
 `braceexpand,hashall` are BOTH currently enabled in this shell
+
+```
+
+#### Example 2
+
+utility modules:
+
+`shopt-many-functionalities-both-enabled-module.bash`
+
+```
+### 模組
+### 目的:
+### 給定一系列的選項名稱(shopt能接受的選項)，檢查所有功能是否處於啟用狀態
+
+## 主要函式
+## 目的:
+## 給定一系列的選項名稱(shopt能接受的選項)，檢查所有功能是否處於啟用狀態
+## 回傳值:
+## 0: 所有功能是否處於啟用狀態
+## 1:其他
+function is_all_functionalities_enabled(){
+    for item in "$@"; do
+        shopt -q "$item"
+        if [ $? -eq 0 ]; then
+            return 1
+        fi
+    done
+    return 0
+}
+```
+
+main script
+
+`shopt-example-2.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+
+source "$SCRIPT_DIR/../../utility modules/functionality enabled/shopt-many-functionalities-both-enabled-module.bash"
+
+function print_active_status(){
+    local args="$@"
+    declare -i enabled=0;
+    local status_text=""
+    is_all_functionalities_enabled "$@"
+    enabled=$?
+
+    if [[ $enabled -eq 0 ]]; then
+        status_text="These functionalities \`$args\` are both enabled"
+    else
+        status_text="These functionalities \`$args\` are NOT both enabled"
+    fi
+    echo "$status_text"
+}
+
+main(){
+    print_active_status "checkhash" "checkjobs"
+}
+
+main
+```
+
+executing this main script will echo
+
+```
+These functionalities `checkhash checkjobs` are both enabled
 
 ```
 
