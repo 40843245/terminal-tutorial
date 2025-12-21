@@ -24,6 +24,45 @@ You can execute an inline subshell script using `bash` built-in command with `-c
 > 
 > thus it may NOT pollute user-defined variables that exported on shell
 
+### Examples
+#### Example 1
+In interactive shell,
+
+```
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/outputs/permissions
+$ bash -c "export GLOBAL_VAR=3"
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/outputs/permissions
+$ bash -c "echo 'Hello World'; GLOBAL_VAR=4"
+Hello World
+
+<user-name>@<device-name> MINGW64 /d/workspace/Bash/Bash tutorial/outputs/permissions
+$ bash -c "echo '$GLOBAL_VAR:\`$GLOBAL_VAR\`'"
+:``
+
+```
+
+#### Example 2
+
+`bash-example-1.bash`
+
+```
+main(){
+    bash -c "export GLOBAL_VAR=3"
+    bash -c "echo 'Hello World'; GLOBAL_VAR=4"
+    bash -c "echo '$GLOBAL_VAR:\`$GLOBAL_VAR\`'"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\subshell\bash-example-1.bash"
+Hello World
+:``
+```
 
 ## CH21-3 -- command grouping
 commands inside `()`, which uses command grouping technique, will form a subshell script and is executed in a clean environment, 
