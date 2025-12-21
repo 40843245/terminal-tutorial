@@ -13,7 +13,7 @@ extra bonus
 
 
 ## CH3-1 -- enable and disable Bash functionality
-### set
+### `set`
 The built-in command `set` can enable or disable Bash functionalities.
 
 syntax:
@@ -124,6 +124,32 @@ It can check the functionality is enabled.
 If the functionality is enabled, it will return exit code 0.
 
 Otherwise, it will return exit code 1.
+
+### `bash -O`
+`bash -O` can enable functionality.
+
+syntax
+
+```
+bash -O {shopt-option}
+```
+
+where 
+
+`{option-name}` is the option (without shorthand) indicates the functionality.
+
+### `bash +O`
+`bash +O` can disable functionality.
+
+syntax
+
+```
+bash +O {shopt-option}
+```
+
+where 
+
+`{option-name}` is the option (without shorthand) indicates the functionality.
 
 ### Examples
 #### Example 1
@@ -470,6 +496,76 @@ varredir_close  off
 xpg_echo        off
 
 ```
+
+#### Example 3
+`shopt-example-3.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
+
+source "$SCRIPT_DIR/../../utility modules/functionalities active status/look-at-functionalities-status-module.bash"
+
+function func1(){
+    local args="$@"
+    local args_count="$#"
+    local function_name="$0"
+    local args="$1"
+    local arg2="$2"
+    local arg3="$3"
+
+    echo "before shifting"
+    echo "args:$args"
+    echo "args_count:$args_count"
+    echo "function_name:$function_name"
+    echo "arg1:$arg1"
+    echo "arg2:$arg2"
+    echo "arg3:$arg3"
+    
+    shift 2
+
+    local shifted_args="$@"
+    local shifted_args_count="$#"
+    local shifted_function_name="$0"
+    local shifted_args="$1"
+    local shifted_arg2="$2"
+    local shifted_arg3="$3"
+    
+    echo "after shifting"
+    echo "ashifted_argsrgs:$shifted_args"
+    echo "shifted_args_count:$shifted_args_count"
+    echo "shifted_function_name:$shifted_function_name"
+    echo "shifted_args:$arshifted_argsg1"
+    echo "shifted_arg2:$shifted_arg2"
+    echo "shifted_arg3:$shifted_arg3S"
+}
+
+main(){
+    set +e
+
+    look_at_all_enabled_functionalities
+    look_at_all_disabled_functionalities
+
+    func1 "apple" "banana" "orange"
+
+    bash -O shift_verbose
+
+    look_at_all_enabled_functionalities
+    look_at_all_disabled_functionalities
+
+    func1 "apple" "banana" "orange"
+
+    bash +O shift_verbose
+
+    look_at_all_enabled_functionalities
+    look_at_all_disabled_functionalities
+
+    set -e
+}
+
+main
+```
+
 
 ## CH3-2 -- look at all functionalites are turned on or off
 ### `set -o`
