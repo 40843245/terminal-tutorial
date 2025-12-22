@@ -369,6 +369,11 @@ main
 executing this script will echo
 
 ```
+$ "D:\workspace\Bash\Bash tutorial\examples\directory\create-directory-example-1.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
+
 ```
+
+create empty directories `directory1`, `directory2`,`directory3`d
 
 
