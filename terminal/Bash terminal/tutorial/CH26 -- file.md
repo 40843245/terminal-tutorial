@@ -308,6 +308,11 @@ mv {file-name} "{new-directory}/{new-file-name}"
 
 will move the file named `{file-name}` from directory of `{file-name}` to new directory `{new-directory}` and named `{new-file-name}`
 
+### Examples
+#### Example 1
+`file-example-6.bash`
+
+
 ## CH26-5 -- rename a file
 ### `mv`
 `mv` built-in command in Linux will move a file from `old-directory` to `new-directory` and it can rename a file.
