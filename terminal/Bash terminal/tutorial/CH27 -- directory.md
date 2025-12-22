@@ -11,12 +11,31 @@ You will know how to
 
 ## CH27-1 -- list all directories and folders of a directory
 ### `ls`
-`ls` built-in command will list directories and folders of a directory
+`ls` built-in command will list directories and folders of a directory.
+
+> [!IMPORTANT]
+> It will list its directly children rather than its descendants.
+>
+> To list its descendants, use `-R` short option. 
+
+| short-option | description | acceptable arguments |
+| :-- | :-- | :-- |
+| `-lt` | list by time from most recent to earliest | none |
+| `-ltr` | list by time from earliest to most recent | none |
+| `-R` | recursive, it searches file recursively | `n` is a positive integer |
+| `-maxdepth` | max depth, it will ONLY search for at most `n` level | `n` is a positive integer |
 
 ### `find`
 `find` built-in command can find directories and folders of a directory with more filters compared with `ls`. 
 
-| long-option | description | acceptable value |
+> [!IMPORTANT]
+> It will list itself and its descendants rather than its directly children.
+>
+> To list its directly children (exclusive itself), set `-mindepth` as `1`
+>
+> To list its descendants (exclusive itself), set `-mindepth` as `1` and `-maxdepth` as `1`
+
+| long-option | description | acceptable arguments |
 | :-- | :-- | :-- |
 | `-regex` | matching pattern with regex | any pattern |
 | `-regextype` | which standard type of regex will be used | such as `posix-extended` |
