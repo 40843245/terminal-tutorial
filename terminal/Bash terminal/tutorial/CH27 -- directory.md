@@ -73,6 +73,8 @@ You will know how to
 >
 > `-`: less than
 
+short-option about filters
+
 | short-option | description | acceptable arguments |
 | :-- | :-- | :-- |
 | `-regex` | *regex*, the matching pattern with regex | any pattern |
@@ -87,13 +89,22 @@ You will know how to
 | `-perm` | *perm*ission, it will search by permission | a three-digit octal number representing permission |
 | `-mtime` | *m*odified *time*, it will search by modified time | `+` or `-` followed by a positive integer |
 
+short-option about actions for all searched entries after searching
+
+| short-option | description | acceptable value |  notes |
+| :-- | :-- | :-- | :-- |
+| `-print` | printf all searched entries path on screen one-by-one | arguments of `printf` | |
+| `-delete` | delete all searched entries path one-by-one | none | |
+| `-exec` | execute the commands for all searched entries path one-by-one | a string represents command for execution | |
+| `-ls` | printf the detailed info in format as `ls -dils` | none | |
+
 short-option about logical operation
 
-| short-option | description | acceptable arguments | notes |
+| short-option | description | acceptable value | notes |
 | :-- | :-- | :-- | :-- |
-| `-and` (`-a`) | *and*, all conditions are satisfied | its the default short-option |
-| `-or` (`-o`) | *and*, one of conditions is satisfied | |
-| `-not` (`!`) | *not*, negate the condition | |
+| `-and` (`-a`) | *and*, all conditions are satisfied | two conditions | its the default short-option |
+| `-or` (`-o`) | *and*, one of conditions is satisfied | two conditions | |
+| `-not` (`!`) | *not*, negate the condition | one condition | |
 
 ### `tree`
 `tree` command can graph all directories and folders of current working directory
