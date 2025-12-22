@@ -87,6 +87,14 @@ You will know how to
 | `-perm` | *perm*ission, it will search by permission | a three-digit octal number representing permission |
 | `-mtime` | *m*odified *time*, it will search by modified time | `+` or `-` followed by a positive integer |
 
+short-option about logical operation
+
+| short-option | description | acceptable arguments | notes |
+| :-- | :-- | :-- | :-- |
+| `-and` (`-a`) | *and*, all conditions are satisfied | its the default short-option |
+| `-or` (`-o`) | *and*, one of conditions is satisfied | |
+| `-not` (`!`) | *not*, negate the condition | |
+
 ### `tree`
 `tree` command can graph all directories and folders of current working directory
 
