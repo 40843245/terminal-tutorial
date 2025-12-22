@@ -455,4 +455,36 @@ main
 executing this main script will echo
 
 ```
+$ "D:\workspace\Bash\Bash tutorial\examples\directory\delete-directory-example-1.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories):
+Files: 0
+Directories: 0
+Total: 0
+These directories `directory1 directory2 directory3 directory4 directory5` will be created
+After creating empty directories `directory1 directory2 directory3 directory4 directory5`
+Dir:  ./directory1
+Dir:  ./directory2
+Dir:  ./directory3
+Dir:  ./directory4
+Dir:  ./directory5
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories):
+Files: 0
+Directories: 5
+Total: 5
+These directories `directory1 directory2 directory3 directory4 directory5` will be deleted
+After deleting empty directories `directory1 directory2 directory3 directory4 directory5`
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories):
+Files: 0
+Directories: 0
+Total: 0
+
+```
+
+and creates empty directories `directory1` `directory2` `directory3` `directory4` `directory5d
+
+```
 ```
