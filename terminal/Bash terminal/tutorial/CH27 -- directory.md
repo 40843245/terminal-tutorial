@@ -704,5 +704,40 @@ main
 executing this main script will echo
 
 ```
+$ "D:\workspace\Bash\Bash tutorial\examples\directory\copy-directory-example-1.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
+Dir:  ./new directory
+Dir:  ./old directory
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/copy directories):
+Files: 0
+Directories: 2
+Total: 2
+It will create `old directory1` under the directory `/d/workspace/Bash/Bash tutorial/examples/directory/../../outputs/examples/copy directories/old directory`
+
+Dir:  ./new directory
+Dir:  ./old directory
+Dir:  ./old directory/old directory1
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/copy directories):
+Files: 0
+Directories: 3
+Total: 3
+D:\workspace\Bash\Bash tutorial\examples\directory\copy-directory-example-1.bash: line 26: new: command not found
+It will copy `old directory1` under the old directory `/d/workspace/Bash/Bash tutorial/examples/directory/../../outputs/examples/copy directories/old directory` to new directory `/d/workspace/Bash/Bash tutorial/examples/directory/../../outputs/examples/copy directories/new directory` and named it as
+
+Dir:  ./new directory
+Dir:  ./new directory/new directory1
+Dir:  ./old directory
+Dir:  ./old directory/old directory1
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/copy directories):
+Files: 0
+Directories: 4
+Total: 4
+
 ```
 
+and create an empty directory named `old directory1` under `/d/workspace/Bash/Bash tutorial/outputs/examples/copy directories/old directory`
+
+then copy the directory named `old directory1` under `/d/workspace/Bash/Bash tutorial/outputs/examples/copy directories/old directory` to `new directory1` under `/d/workspace/Bash/Bash tutorial/outputs/examples/copy directories/new directory`
