@@ -1,4 +1,4 @@
-# CH28 -- permissions and mask
+# CH29 -- permissions and mask
 ## objectives
 You will know how to 
 
@@ -6,7 +6,7 @@ You will know how to
   + change the permission
   + unmask the permission
 
-## CH28-1 -- a permission in Linux
+## CH29-1 -- a permission in Linux
 In Linux, a permission of a file or directory is represented as a three-digits octal number.
 
 Each digit indicates who (specific role) applies to this permission.
@@ -38,7 +38,7 @@ where
 
 `x`: execute => 2^0 (in octal system)
 
-## CH28-2 -- change the permission
+## CH29-2 -- change the permission
 ### `chmod`
 Built-in command `chomod` (shorthand of *ch*ange *mod*e) changes the permission of a file or directory.
 
@@ -76,7 +76,7 @@ for example,
 sudo chown user:john "D:\workspace\Bash\Bash tutorial\examples\functions\shift\shift-example-1.bash"
 ```
 
-## CH28-3 -- unmask the permission
+## CH29-3 -- unmask the permission
 ### `umask`
 Built-in command `umask` (NOT spelled as `unmask`) sets the default permission when creating a direcory or a file.
 
