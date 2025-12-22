@@ -389,6 +389,8 @@ create empty directories `directory1`, `directory2`,`directory3`,`directory4`,`d
 #### Example 1
 
 
+`print-directories-info-module.bash`
+
 `delete-directory-example-1.bash`
 
 ```
