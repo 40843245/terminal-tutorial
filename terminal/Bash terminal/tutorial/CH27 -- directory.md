@@ -825,4 +825,38 @@ main
 executing this main script will echo
 
 ```
+$ "D:\workspace\Bash\Bash tutorial\examples\directory\move-directory-example-1.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
+Dir:  ./new directory
+Dir:  ./old directory
+
+Summary of current directory (dir_name):
+Files: 0
+Directories: 2
+Total: 2
+It will create `old directory1` under the directory `/d/workspace/Bash/Bash tutorial/examples/directory/../../outputs/examples/move directories/old directory`
+
+Dir:  ./new directory
+Dir:  ./old directory
+Dir:  ./old directory/old directory1
+
+Summary of current directory (dir_name):
+Files: 0
+Directories: 3
+Total: 3
+It will move `old directory1` under the old directory `/d/workspace/Bash/Bash tutorial/examples/directory/../../outputs/examples/move directories/old directory` to new directory `/d/workspace/Bash/Bash tutorial/examples/directory/../../outputs/examples/move directories/new directory` but with same name
+
+Dir:  ./new directory
+Dir:  ./new directory/old directory1
+Dir:  ./old directory
+
+Summary of current directory (dir_name):
+Files: 0
+Directories: 3
+Total: 3
+
 ```
+
+and creates an empty directory named `old directory1` under `/d/workspace/Bash/Bash tutorial/outputs/examples/move directories/old directory`
+
+then moves the empty directory named `old directory1` under `/d/workspace/Bash/Bash tutorial/outputs/examples/move directories/old directory` to new directory `/d/workspace/Bash/Bash tutorial/outputs/examples/move directories/new directory` with same name
