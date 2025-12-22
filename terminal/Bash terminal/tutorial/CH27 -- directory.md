@@ -16,6 +16,13 @@ You will know how to
 ### `find`
 `find` built-in command can find directories and folders of a directory with more filters compared with `ls`. 
 
+| long-option | description | acceptable value |
+| :-- | :-- | :-- |
+| `-regex` | matching pattern with regex | any pattern |
+| `-regextype` | which standard type of regex will be used | such as `posix-extended` |
+| `-mindepth` | min depth, it will ONLY search for at least `n` level | `n` is a positive integer |
+| `-maxdepth` | max depth, it will ONLY search for at most `n` level | `n` is a positive integer |
+
 ### `tree`
 `tree` command can graph all directories and folders of current working directory
 
