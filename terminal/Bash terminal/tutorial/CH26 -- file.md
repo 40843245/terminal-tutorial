@@ -284,4 +284,38 @@ under directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files`
 then copy `file1.txt` from old directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/old directory` to new directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/new directory` but named `file2.txt`
 
 ## CH26-4 -- move a file
+### `mv`
+`mv` built-in command in Linux will move a file from `old-directory` to `new-directory` and it can rename a file.
+
+> [!TIP]
+> Thinking that
+>
+> renaming a file is considered as moving a file under same directory but with different name.
+
+syntax:
+
+```
+mv {file-name} {new-directory}
+```
+
+will move the file named `{file-name}` from directory of `{file-name}` to new directory `{new-directory}` and named `{file-name}`
+
+syntax:
+
+```
+mv {file-name} "{new-directory}/{new-file-name}"
+```
+
+will move the file named `{file-name}` from directory of `{file-name}` to new directory `{new-directory}` and named `{new-file-name}`
+
 ## CH26-5 -- rename a file
+### `mv`
+`mv` built-in command in Linux will move a file from `old-directory` to `new-directory` and it can rename a file.
+
+syntax:
+
+```
+mv {file-name} {new-file-name}
+```
+
+will move the file named `{file-name}` from directory of `{file-name}` to same directory but named `{new-file-name}`.
