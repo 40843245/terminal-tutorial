@@ -68,3 +68,14 @@ Files: 4
 Directories: 2
 Total: 6
 ```
+
+## CH27-2 -- list all directories and folders of a directory
+### `find`
+`find` built-in command can find directories and folder of a directory.
+
+### Examples
+#### Example 1
+`list-directory-example-2.bash`
+
+```
+```
