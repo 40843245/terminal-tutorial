@@ -375,3 +375,53 @@ directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
 ```
 
 create empty directories `directory1`, `directory2`,`directory3`,`directory4`,`directory5` under `/d/workspace/Bash/Bash tutorial/outputs/examples/directory/create directory`
+
+## CH27-4 -- delete a directory
+### `rmdir`
+`rmdir` built-in command will delete one or more empty directories
+
+> [!IMPORTANT]
+> `rmdir` can ONLY delete empty directories.
+>
+> Trying to delete non-empty directories using `rmdir` will cause an error.
+
+### Examples
+#### Example 1
+
+
+`delete-directory-example-1.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../utility modules/directory/print-directories-info-module.bash"
+
+function initialize(){
+    echo "directory of current script:\`$SCRIPT_DIR\`"
+    
+    local base_directory="$SCRIPT_DIR/../../outputs/examples/delete directories"
+    local current_directory=""
+    local directories_name=$(echo directory{1..5})
+    cd "$base_directory"
+    current_directory="$PWD"
+
+    print_directories_info "$current_directory"
+
+    echo "These directories \`$directories_name\` will be created"
+    mkdir $directories_name
+    echo "After creating empty directories \`$directories_name\`"
+    print_directories_info "$current_directory"
+
+    echo "These directories \`$directories_name\` will be deleted"
+    rmdir $directories_name
+    echo "After deleting empty directories \`$directories_name\`"
+    print_directories_info "$current_directory"
+}
+
+main(){
+    initialize
+}
+
+main
+```
