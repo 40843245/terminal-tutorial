@@ -121,6 +121,16 @@ main
 executing this script will graph all directories and folders of current working directory
 
 ```
+$ "D:\workspace\Bash\Bash tutorial\examples\directory\tree-directory-example-1.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
+Folder PATH listing for volume 新增磁碟區
+Volume serial number is <volume-serial-number>
+D:.
+├─markdown
+└─shell script
+
+```
+
 ## CH27-2 -- list all directories and folders of a directory
 ### `findfindind` built-in command can find directories and folder of a directory.
 
