@@ -4,6 +4,7 @@ You will know how to
 
   + list all directories and folders of a directory
   + list specific directories and folders of a directory
+  + create an empty directory
   + delete a directory
   + copy a directory
   + move a directory
@@ -266,8 +267,15 @@ README.md  tutorial.md
 './shell script':
 version-example-2.bash  version-example-2.sh
 
-```# CH27-2 -- list specific directories and folders of a directory
-### `findfindind` built-in command can find directories and folder of a directory.
+```
+
+## CH27-2 -- list specific directories and folders of a directory
+### `ls`
+`ls` built-in command will list directories and folders of a directory.
+
+### `find`
+`find` built-in command can find directories and folder of a directory.
+
 
 ### Examples
 #### Example 1
@@ -326,3 +334,41 @@ Directories: 0
 Total: 2
 
 ```
+
+## CH27-3 -- create an empty directory
+### `mkdir`
+`mkdir` built-in command will create one or more empty directories
+
+### Examples
+#### Example 1
+`create-directory-example-1.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function initialize(){
+    echo "directory of current script:\`$SCRIPT_DIR\`"
+    
+    local base_directory="$SCRIPT_DIR/../../outputs/examples/create directories"
+    local current_directory=""
+    local directories_name=$(echo directory{1..5})
+    cd "$base_directory"
+    current_directory="$PWD"
+
+    mkdir $directories_name
+}
+
+main(){
+    initialize
+}
+
+main
+```
+
+executing this script will echo
+
+```
+```
+
+
