@@ -146,6 +146,23 @@ cd {file-name} {new-directory}
 
 will copy the file named `{file-name}` from directory of `{file-name}` to new directory `{new-directory}`
 
+or
+
+```
+cd {file-name} {new-file-name}
+```
+
+will copy the file named `{file-name}` from directory of `{file-name}` to same directory but with name `{new-file-name}`
+
+
+or
+
+```
+cd {file-name} "{new-directory}/{new-file-name}"
+```
+
+will copy the file named `{file-name}` from directory of `{file-name}` to new directory `{new-directory}` and with name `{new-file-name}`
+
 ### Examples
 #### Example 1
 `file-example-3.bash`
@@ -226,7 +243,7 @@ under directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files`
 
 then copy `file1.txt` from old directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/old directory` to same new directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/old directory` but named `file2.txt`
 
-#### Example 2
+#### Example 3
 `file-example-5.bash`
 
 ```
