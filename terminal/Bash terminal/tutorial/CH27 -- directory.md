@@ -10,8 +10,11 @@ You will know how to
   + rename a directory
 
 ## CH27-1 -- list all directories and folders of a directory
+### `ls`
+`ls` built-in command will list directories and folders of a directory
+
 ### `find`
-`find` built-in command can find directories and folders of a directory. 
+`find` built-in command can find directories and folders of a directory with more filters compared with `ls`. 
 
 ### `tree`
 `tree` command can graph all directories and folders of current working directory
@@ -131,13 +134,57 @@ D:.
 
 ```
 
-## CH27-2 -- list all directories and folders of a directory
+#### Example 3
+`list-directory-example-3.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function initialize(){
+    echo "directory of current script:\`$SCRIPT_DIR\`"
+    
+    local base_directory="$SCRIPT_DIR/../../outputs/examples/list directories"
+    export current_directory=""
+    cd "$base_directory"
+    current_directory="$PWD"
+
+    ls -R | wc -l
+
+    ls -R
+}
+
+main(){
+    initialize
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\directory\list-directory-example-3.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
+11
+.:
+ markdown  'shell script'
+
+./markdown:
+README.md  tutorial.md
+
+'./shell script':
+version-example-2.bash  version-example-2.sh
+
+```# CH27-2 -- list specific directories and folders of a directory
 ### `findfindind` built-in command can find directories and folder of a directory.
 
 ### Examples
-#### Example list-directory-example-2.bashas
+#### Example 1
+
+`list-directory-example-2.bash`
+
 ```
-``
 # Get the directory where the current script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
