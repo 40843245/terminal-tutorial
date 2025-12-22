@@ -388,8 +388,32 @@ create empty directories `directory1`, `directory2`,`directory3`,`directory4`,`d
 ### Examples
 #### Example 1
 
+utility module
 
 `print-directories-info-module.bash`
+
+```
+function print_directories_info(){
+
+    local current_directory="$1"
+    
+    # 使用 -v 將 Shell 的 current_directory 傳給 awk 的內部變數 dir_name
+    find . -mindepth 1 -printf "%y %p\n" | awk -v dir_name="$current_directory" '
+    {
+        type = $1;
+        $1 = ""; 
+        if (type == "f") { files++; print "File:" $0 }
+        else if (type == "d") { dirs++; print "Dir: " $0 }
+    } 
+    END { 
+        printf "\nSummary of current directory ('%s'):\nFiles: %d\nDirectories: %d\nTotal: %d\n",
+        dir_name, files, dirs, files+dirs 
+    }'
+}
+
+```
+
+main script:
 
 `delete-directory-example-1.bash`
 
@@ -426,4 +450,9 @@ main(){
 }
 
 main
+```
+
+executing this main script will echo
+
+```
 ```
