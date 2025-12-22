@@ -612,3 +612,97 @@ Total: 0
 and creates empty directories `directory1` `directory2` `directory3` `directory4` `directory5` under `/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories`
 
 then deletes empty directories `directory1` `directory2` `directory3` `directory4` `directory5` under `/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories`
+
+## CH27-5 -- copy a directory
+### `cp`
+`cp` built-in command can also copy a directory.
+
+> [!NOTE]
+> You must copy entries recursively,
+>
+> thus, `-r` short-option is needed (`cp -r`)
+
+syntax:
+
+```
+cp -r "{old-directory}" "{new directory}"
+```
+
+It will copy all entries from old directory `"{old-directory}"` to new directory `"{new directory}"` 
+
+### Examples
+#### Example 1
+utility module
+
+`print-directories-info-module.bash`
+
+```
+function print_directories_info(){
+
+    local current_directory="$1"
+    
+    # 使用 -v 將 Shell 的 current_directory 傳給 awk 的內部變數 dir_name
+    find . -mindepth 1 -printf "%y %p\n" | awk -v dir_name="$current_directory" '
+    {
+        type = $1;
+        $1 = ""; 
+        if (type == "f") { files++; print "File:" $0 }
+        else if (type == "d") { dirs++; print "Dir: " $0 }
+    } 
+    END { 
+        printf "\nSummary of current directory ('%s'):\nFiles: %d\nDirectories: %d\nTotal: %d\n",
+        dir_name, files, dirs, files+dirs 
+    }'
+}
+
+```
+
+main script
+
+`copy-directory-example-1.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../utility modules/directory/print-directories-info-module.bash"
+
+function initialize(){
+    echo "directory of current script:\`$SCRIPT_DIR\`"
+    
+    local base_directory="$SCRIPT_DIR/../../outputs/examples/copy directories"
+    local old_directory="$base_directory/old directory"
+    local new_directory="$base_directory/new directory"
+    local current_directory=""
+    local old_directory_name="old directory1"
+    local new_directory_name="new directory1"
+    cd "$base_directory"
+    current_directory="$PWD"
+
+    print_directories_info "$current_directory"
+    
+    echo "It will create \`$old_directory_name\` under the directory \`$old_directory\`"
+    echo ""
+    mkdir "$old_directory/$old_directory_name"
+
+    print_directories_info "$current_directory"
+
+    echo "It will copy \`$old_directory_name\` under the old directory \`$old_directory\` to new directory \`$new_directory\` and named it as `$new_directory_name`" 
+    echo ""
+    cp -r "$old_directory/$old_directory_name" "$new_directory/$new_directory_name"
+
+    print_directories_info "$current_directory"
+}
+
+main(){
+    initialize
+}
+
+main
+```
+
+executing this main script will echo
+
+```
+```
+
