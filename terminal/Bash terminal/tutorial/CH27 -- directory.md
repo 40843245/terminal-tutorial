@@ -866,4 +866,115 @@ then moves the empty directory named `old directory1` under `/d/workspace/Bash/B
 ## CH27-6 -- rename a directory
 `mv` also can rename a directory.
 
-Just move 
+Just move it on same directory but with different name
+
+### Examples
+#### Example 1
+
+utility module
+
+`print-directories-info-module.bash`
+
+```
+function print_directories_info(){
+
+    local current_directory="$1"
+    
+    # 使用 -v 將 Shell 的 current_directory 傳給 awk 的內部變數 dir_name
+    find . -mindepth 1 -printf "%y %p\n" | awk -v dir_name="$current_directory" '
+    {
+        type = $1;
+        $1 = ""; 
+        if (type == "f") { files++; print "File:" $0 }
+        else if (type == "d") { dirs++; print "Dir: " $0 }
+    } 
+    END { 
+        printf "\nSummary of current directory ('%s'):\nFiles: %d\nDirectories: %d\nTotal: %d\n",
+        dir_name, files, dirs, files+dirs 
+    }'
+}
+
+```
+
+main script
+
+`rename-directory-example-1.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../utility modules/directory/print-directories-info-module.bash"
+
+function initialize(){
+    echo "directory of current script:\`$SCRIPT_DIR\`"
+    
+    local base_directory="$SCRIPT_DIR/../../outputs/examples/rename directories"
+    local old_directory="$base_directory/old directory"
+    local new_directory="$base_directory/new directory"
+    local current_directory=""
+    local old_directory_name="old directory1"
+    local new_directory_name="new directory1"
+    cd "$base_directory"
+    current_directory="$PWD"
+
+    print_directories_info "$current_directory"
+    
+    echo "It will create \`$old_directory_name\` under the directory \`$old_directory\`"
+    echo ""
+    mkdir "$old_directory/$old_directory_name"
+
+    print_directories_info "$current_directory"
+
+    echo "It will rename \`$old_directory_name\` under the old directory \`$old_directory\` to \`$new_directory_name\`" 
+    echo ""
+    if [ -d "$old_directory/$new_directory_name" ]; then
+        rm -rf "$old_directory/$new_directory_name"
+    fi
+    mv "$old_directory/$old_directory_name" "$old_directory/$new_directory_name"
+
+    print_directories_info "$current_directory"
+}
+
+main(){
+    initialize
+}
+
+main
+```
+
+executing this main script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\directory\rename-directory-example-1.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
+Dir:  ./old directory
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/rename directories):
+Files: 0
+Directories: 1
+Total: 1
+It will create `old directory1` under the directory `/d/workspace/Bash/Bash tutorial/examples/directory/../../outputs/examples/rename directories/old directory`
+
+Dir:  ./old directory
+Dir:  ./old directory/old directory1
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/rename directories):
+Files: 0
+Directories: 2
+Total: 2
+It will rename `old directory1` under the old directory `/d/workspace/Bash/Bash tutorial/examples/directory/../../outputs/examples/rename directories/old directory` to `new directory1`
+
+Dir:  ./old directory
+Dir:  ./old directory/new directory1
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/rename directories):
+Files: 0
+Directories: 2
+Total: 2
+
+```
+
+and creates an empty directory named `old directory1` under `/d/workspace/Bash/Bash tutorial/outputs/examples/move directories/old directory`
+
+then renames the empty directory from `old directory1` under `/d/workspace/Bash/Bash tutorial/outputs/examples/move directories/old directory` to new name `new directory1`
