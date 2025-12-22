@@ -51,4 +51,20 @@ main(){
 main
 ```
 
-executing this script will echo all files, all directories, number of files, number of directories, total count of children under a directory 
+executing this script will echo all files, all directories, number of files, number of directories, total count of children under a directory. Format as follows
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\directory\list-directory-example-1.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
+Dir:  ./markdown
+File: ./markdown/README.md
+File: ./markdown/tutorial.md
+Dir:  ./shell script
+File: ./shell script/version-example-2.bash
+File: ./shell script/version-example-2.sh
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/list directories):
+Files: 4
+Directories: 2
+Total: 6
+```
