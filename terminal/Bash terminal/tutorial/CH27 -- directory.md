@@ -16,14 +16,47 @@ You will know how to
 > [!IMPORTANT]
 > It will list its directly children rather than its descendants.
 >
-> To list its descendants, use `-R` short option. 
+> To list its descendants, use `-R` short option.
+
+> [!IMPORTANT]
+> It will list its directly children for itself and its any entry in one line.
+>
+> To list one entry in one line, use `-1` short-option.
+
+> [!IMPORTANT]
+> It is allowed to combine many short-options into one short-option 
+>
+> For example,
+>
+> `ls -ltr` *l*ists by *t*ime from earliest to most recent
+
+> [!NOTE]
+> Classify symbol is used for classifying the entry
+>
+> When the entries is directory, it is `/`
+>
+> When the entries is executable, it is `*`
 
 | short-option | description | acceptable arguments |
 | :-- | :-- | :-- |
-| `-lt` | list by time from most recent to earliest | none |
-| `-ltr` | list by time from earliest to most recent | none |
-| `-R` | recursive, it searches file recursively | `n` is a positive integer |
-| `-maxdepth` | max depth, it will ONLY search for at most `n` level | `n` is a positive integer |
+| `-l` | *l*ong format, list entries in long format (including permission, owner, group, file size, modified time, file name) | none |
+| `-h` | *n*uman-readable format, the file size is represented with unit (such as `1KB`, `23GB`) | none |
+| `-a` | *a*ll, list all entries including hidden entries (i.e. entries that start with `.`)   | none |
+| `-A` | *a*lmost-all, list all entries except that current directory (i.e. `.`) and parent directory (i.e. `..`)  | none |
+| `-r` | *r*eversely | none |
+| `-t` | *t*ime, list by time descendantly (i.e. from most recent to earliest) | none |
+| `-S` | file size, list by file size descendantly (i.e. from largest to smallest) | none |
+| `-R` | *r*ecursive, it searches file recursively | none |
+| `-d` | *d*irectory, it will ONLY search directories | `none |
+| `-X` | e*x*tension, list by file extension descendantly in alphabetic order | `none |
+| `-u` | access time, list by access time ascendantly (i.e. from earliest to most recent) | `none |
+| `-1` | per *one* line, list one entry in one line | `none |
+| `-i` | *i*node (index node), list index node for all entries | `none |
+| `-F` | classify, append classify symbol at the end of entry name | `none |
+
+| short-option | description | acceptable arguments |
+| :-- | :-- | :-- |
+| `-u -t` | lastest access time, list by access time descendantly (i.e. from most recent to earliest) | `none |
 
 ### `find`
 `find` built-in command can find directories and folders of a directory with more filters compared with `ls`. 
