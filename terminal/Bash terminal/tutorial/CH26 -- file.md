@@ -312,6 +312,42 @@ will move the file named `{file-name}` from directory of `{file-name}` to new di
 #### Example 1
 `file-example-6.bash`
 
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function initialize(){
+    echo "directory of current script:\`$SCRIPT_DIR\`"
+    
+    local old_directory="$SCRIPT_DIR/../../outputs/examples/move files/old directory"
+    local new_directory="$SCRIPT_DIR/../../outputs/examples/move files/new directory"
+    local file1_name="file1.txt"
+    local file2_name="file2.txt"
+    cd "$old_directory"
+    touch $file1_name
+    mv $file1_name "$new_directory"
+}
+
+main(){
+    initialize
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\file\file-example-6.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/file`
+
+```
+
+and create empty files `file1.txt`
+
+under directory `/d/workspace/Bash/Bash tutorial/outputs/examples/ files`
+
+then copy `file1.txt` from old directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/old directory` to new directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/new directory`
 
 ## CH26-5 -- rename a file
 ### `mv`
