@@ -360,3 +360,36 @@ mv {file-name} {new-file-name}
 ```
 
 will move the file named `{file-name}` from directory of `{file-name}` to same directory but named `{new-file-name}`.
+
+### Examples
+#### Example 1
+`file-example-7.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+function initialize(){
+    echo "directory of current script:\`$SCRIPT_DIR\`"
+    
+    local old_directory="$SCRIPT_DIR/../../outputs/examples/move files/old directory"
+    local new_directory="$SCRIPT_DIR/../../outputs/examples/move files/new directory"
+    local file1_name="file1.txt"
+    local file2_name="file2.txt"
+    cd "$old_directory"
+    touch $file1_name
+    mv $file1_name "$file2_name"
+}
+
+main(){
+    initialize
+}
+
+main
+```
+
+executing this script will echo
+
+```
+```
+
