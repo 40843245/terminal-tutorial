@@ -68,12 +68,24 @@ You will know how to
 >
 > To list its descendants (exclusive itself), set `-mindepth` as `1` and `-maxdepth` as `1`
 
-| long-option | description | acceptable arguments |
+> [!TIP]
+> `+`: more than
+>
+> `-`: less than
+
+| short-option | description | acceptable arguments |
 | :-- | :-- | :-- |
-| `-regex` | matching pattern with regex | any pattern |
-| `-regextype` | which standard type of regex will be used | such as `posix-extended` |
-| `-mindepth` | min depth, it will ONLY search for at least `n` level | `n` is a positive integer |
-| `-maxdepth` | max depth, it will ONLY search for at most `n` level | `n` is a positive integer |
+| `-regex` | *regex*, the matching pattern with regex | any pattern |
+| `-regextype` | *regex type*, which standard type of regex will be used | such as `posix-extended` |
+| `-mindepth` | *min depth*, it will ONLY search for at least `n` level | `n` is a positive integer |
+| `-maxdepth` | *max depth*, it will ONLY search for at most `n` level | `n` is a positive integer |
+| `-name` | *name*, it will search by name in case-sensitive | file name |
+| `-iname` | case-*i*nsensitive *name*, it will search by name in case-insensitive | file name |
+| `-type` | *type*, it will search by type | `f` for files , `d` for directories, `l` for linkes |
+| `-size` | *size*, it will search by size | ``+` or `-` followed by a string presenting file size |
+| `-user` | *user*, it will search by owner | owner name |
+| `-perm` | *perm*ission, it will search by permission | a three-digit octal number representing permission |
+| `-mtime` | *m*odified *time*, it will search by modified time | `+` or `-` followed by a positive integer |
 
 ### `tree`
 `tree` command can graph all directories and folders of current working directory
