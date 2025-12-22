@@ -345,9 +345,9 @@ directory of current script:`/d/workspace/Bash/Bash tutorial/examples/file`
 
 and create empty files `file1.txt`
 
-under directory `/d/workspace/Bash/Bash tutorial/outputs/examples/ files`
+under directory `/d/workspace/Bash/Bash tutorial/outputs/examples/move files`
 
-then copy `file1.txt` from old directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/old directory` to new directory `/d/workspace/Bash/Bash tutorial/outputs/examples/create files/new directory`
+then copy `file1.txt` from old directory `/d/workspace/Bash/Bash tutorial/outputs/examples/move files/old directory` to new directory `/d/workspace/Bash/Bash tutorial/outputs/examples/move files/new directory`
 
 ## CH26-5 -- rename a file
 ### `mv`
