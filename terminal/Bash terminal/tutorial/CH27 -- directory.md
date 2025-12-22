@@ -130,8 +130,7 @@ short-option about logical operation
 
 ### Examples
 #### Example 1
-
-`list-directory-example-1.bash`
+```list-directory-example-1.bash
 
 ```
 # Get the directory where the current script is located
