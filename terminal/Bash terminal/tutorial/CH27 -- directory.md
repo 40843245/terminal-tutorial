@@ -484,7 +484,8 @@ Total: 0
 
 ```
 
-and creates empty directories `directory1` `directory2` `directory3` `directory4` `directory5d
+and creates empty directories `directory1` `directory2` `directory3` `directory4` `directory5` under `/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories`
 
+then deletes empty directories `directory1` `directory2` `directory3` `directory4` `directory5` under `/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories`
 ```
 ```
