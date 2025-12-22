@@ -403,6 +403,13 @@ create empty directories `directory1`, `directory2`,`directory3`,`directory4`,`d
 > `rmdir` can ONLY delete empty directories.
 >
 > Trying to delete non-empty directories using `rmdir` will cause an error.
+>
+> To do so, use `rm` with short-option `-r` instead
+
+### `rm`
+`rm` built-in command can remove files.
+
+Additionally, it can remove directories using `rm` with short-option `-r` (meaning delete all entries of a directory)
 
 ### Examples
 #### Example 1
@@ -506,5 +513,102 @@ Total: 0
 and creates empty directories `directory1` `directory2` `directory3` `directory4` `directory5` under `/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories`
 
 then deletes empty directories `directory1` `directory2` `directory3` `directory4` `directory5` under `/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories`
+
+#### Example 2
+`print-directories-info-module.bash`
+
 ```
+function print_directories_info(){
+
+    local current_directory="$1"
+    
+    # 使用 -v 將 Shell 的 current_directory 傳給 awk 的內部變數 dir_name
+    find . -mindepth 1 -printf "%y %p\n" | awk -v dir_name="$current_directory" '
+    {
+        type = $1;
+        $1 = ""; 
+        if (type == "f") { files++; print "File:" $0 }
+        else if (type == "d") { dirs++; print "Dir: " $0 }
+    } 
+    END { 
+        printf "\nSummary of current directory ('%s'):\nFiles: %d\nDirectories: %d\nTotal: %d\n",
+        dir_name, files, dirs, files+dirs 
+    }'
+}
+
 ```
+
+main script:
+
+`delete-directory-example-2.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../utility modules/directory/print-directories-info-module.bash"
+
+function initialize(){
+    echo "directory of current script:\`$SCRIPT_DIR\`"
+    
+    local base_directory="$SCRIPT_DIR/../../outputs/examples/delete directories"
+    local current_directory=""
+    local directories_name=$(echo directory{1..5})
+    cd "$base_directory"
+    current_directory="$PWD"
+
+    print_directories_info "$current_directory"
+
+    echo "These directories \`$directories_name\` will be created"
+    mkdir $directories_name
+    echo "After creating empty directories \`$directories_name\`"
+    print_directories_info "$current_directory"
+
+    echo "These directories \`$directories_name\` will be deleted"
+    rm -r $directories_name
+    echo "After deleting empty directories \`$directories_name\`"
+    print_directories_info "$current_directory"
+}
+
+main(){
+    initialize
+}
+
+main
+```
+
+executing this main script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\directory\delete-directory-example-2.bash"
+directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories):
+Files: 0
+Directories: 0
+Total: 0
+These directories `directory1 directory2 directory3 directory4 directory5` will be created
+After creating empty directories `directory1 directory2 directory3 directory4 directory5`
+Dir:  ./directory1
+Dir:  ./directory2
+Dir:  ./directory3
+Dir:  ./directory4
+Dir:  ./directory5
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories):
+Files: 0
+Directories: 5
+Total: 5
+These directories `directory1 directory2 directory3 directory4 directory5` will be deleted
+After deleting empty directories `directory1 directory2 directory3 directory4 directory5`
+
+Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories):
+Files: 0
+Directories: 0
+Total: 0
+
+```
+
+and creates empty directories `directory1` `directory2` `directory3` `directory4` `directory5` under `/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories`
+
+then deletes empty directories `directory1` `directory2` `directory3` `directory4` `directory5` under `/d/workspace/Bash/Bash tutorial/outputs/examples/delete directories`
