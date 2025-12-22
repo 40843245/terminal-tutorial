@@ -200,6 +200,7 @@ Summary of current directory (/d/workspace/Bash/Bash tutorial/outputs/examples/l
 Files: 4
 Directories: 2
 Total: 6
+
 ```
 
 #### Example 2
