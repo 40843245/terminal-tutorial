@@ -374,6 +374,4 @@ directory of current script:`/d/workspace/Bash/Bash tutorial/examples/directory`
 
 ```
 
-create empty directories `directory1`, `directory2`,`directory3`d
-
-
+create empty directories `directory1`, `directory2`,`directory3`,`directory4`,`directory5` under `/d/workspace/Bash/Bash tutorial/outputs/examples/directory/create directory`
