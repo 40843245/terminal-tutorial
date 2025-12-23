@@ -81,6 +81,10 @@ where
 
 `<exit_code>` is a nonnegative integer 0~255.
 
+0 means success (boolean true)
+
+non-zero means failure (boolean false)
+
 > [!IMPORTANT]
 > You can ONLY return an exit code an nonnegative integer 0~255. 
 >
