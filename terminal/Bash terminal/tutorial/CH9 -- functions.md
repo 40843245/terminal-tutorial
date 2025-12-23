@@ -19,7 +19,7 @@ You just can define a function name without parameters.
 syntax:
 
 ```
-<function_name>() {compound-command}?{
+{function_name}(){compound-command}?{
     # function body
     # defines statements here
 }
@@ -28,7 +28,7 @@ syntax:
 or
 
 ```
-function <function_name>() {compound-command}?{
+function {function_name}() {compound-command}?{
     # function body
     # defines statements here
 }
@@ -37,7 +37,7 @@ function <function_name>() {compound-command}?{
 or
 
 ```
-function <function_name> {compound-command}?{
+function {function_name} {compound-command}?{
     # function body
     # defines statements here
 }
@@ -51,8 +51,22 @@ where
 To invoke a function, simply execute the command
 
 ```
-<function_name> (<flags> <arguments_value>?)*
+{function_name} ({option} {arguments_value}?)*
 ```
+
+where
+
+```
+{option}:= {short-option} | {long-option}
+
+{short-option}:= available short option of the user-defined function or command
+{long-option}:= available long option of the user-defined function or command
+```
+
+> [!IMPORTANT]
+> short option always starts with `-` but not start with `--` 
+>
+> long option always starts with `--`
 
 ## CH9-3 -- return an exit code
 To return an exit code, simply use `return` keyword.
