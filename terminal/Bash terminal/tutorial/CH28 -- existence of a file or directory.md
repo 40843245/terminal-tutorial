@@ -136,6 +136,7 @@ if the file descriptor returned in the program is `0`, then the file is streamed
 ### `-e`
 same as `-a`
 
+<!-- TOC --><a name="ch28-6-check-a-directory-exists"></a>
 ## CH28-6 -- check a file exists
 ### `-d`
 `-d {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a directory
