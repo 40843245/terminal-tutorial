@@ -89,3 +89,25 @@ Stores the group id who can access the entry. When one user tries to access the 
 
 ### sticky bit
 Iff the stick bit of the file or directory is set, then ONLY one with root role who is owner of creator can access the file, or entries of the directory (including itself).  
+
+## CH28-4 -- file management
+### inode number, index node number
+The inode number of a file stores some metadata, including
+
+  + file size
+  + permission
+  + modified time
+  + location of file (the location where stores the data)
+    
+The indoe number of a file behaves like a ID (identity) card number of a person.
+
+### file descriptor
+The file descriptor of a file describes the type file stream
+
+In Linux, when one executables a file,
+
+if the file descriptor returned in the program is `0`, then the file is streamed in from `stdin` standard input stream.
+
+if the file descriptor returned in the program is `1`, then the file is streamed out from `stdout` standard output stream.
+
+if the file descriptor returned in the program is `0`, then the file is streamed out from `stderr` standard error stream.
