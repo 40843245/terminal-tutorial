@@ -159,8 +159,8 @@ same as `-h`
 `-w {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is writable.
 
 ## CH28-15 -- check a file is executable
-### `-w`
-`-w {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is executable.
+### `-e`
+`-e {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is executable.
 
 ## CH28-16 -- check sticky bit of a file is set
 ### `-k`
@@ -170,35 +170,56 @@ same as `-h`
 ### `-u`
 `-u {file1_name}` returns true iff the file named `{file1_name}` exists and the SUID (set-user-id) bit of `{file1_name}` is set.
 
-## CH28-18 -- check a file is owned by its EUID (effective user id)
+## CH28-18 -- check GUID (set-group-id) bit of a file is set
+### `-g`
+`-g {file1_name}` returns true iff the file named `{file1_name}` exists and the GUID (set-group-id) bit of `{file1_name}` is set.
+
+## CH28-19 -- check a file is owned by its EUID (effective user id)
 ### `-O`
 `-O {file1_name}` returns true iff the file named `{file1_name}` exists and the file named `{file1_name}` is owned by its EUID (effective user id).
 
-## CH28-19 -- check a file is owned by its EGID (effective group id)
+## CH28-20 -- check a file is owned by its EGID (effective group id)
 ### `-G`
 `-G {file1_name}` returns true iff the file named `{file1_name}` exists and the file named `{file1_name}` is owned by its EGID (effective group id).
 
-## CH28-20 -- check a file has been modified since it was last accessed.
+## CH28-21 -- check a file has been modified since it was last accessed.
 ### `-N`
 `-N {file1_name}` returns true iff the file named `{file1_name}` exists and it has been modified since it was last accessed.
 
-## CH28-21 -- check a file is newer than an another file.
+## CH28-22 -- check a file is newer than an another file.
 ### `-nt`
-`-nt {file1_name} {file2_name}` returns true iff one of conditions are met
+`{file1_name} -nt {file2_name}` returns true iff one of conditions are met
 
 + the file named `{file1_name}` exists and the file named `{file2_name}` does NOT exist.
 + the file named `{file1_name}` is newer (according to modification date) than the file named `{file2_name}`.
 
-## CH28-22 -- check a file is older than an another file.
+## CH28-23 -- check a file is older than an another file.
 ### `-ot`
-`-ot {file1_name} {file2_name}` returns true iff one of conditions are met
+`{file1_name} -ot {file2_name}` returns true iff one of conditions are met
 
 + the file named `{file2_name}` exists and the file named `{file1_name}` does NOT exist.
 + the file named `{file1_name}` is older (according to modification date) than the file named `{file2_name}`.
 
-## CH28-23 -- check a file and an another file refer same device and same inode number
+## CH28-24 -- check a file and an another file refer same device and same inode number
 ### `-ef`
-`-ef {file1_name} {file2_name}` returns true iff all conditions are met
+`{file1_name} -ef {file2_name}` returns true iff all conditions are met
 
 + the file named `{file1_name}` and the file named `{file2_name}` refer same device.
 + the file named `{file1_name}` and the file named `{file2_name}` refer inode number.
+
+## CH28-25 -- check a file has size greater than zero
+### `-s`
+`-s {file1_name}` returns true iff the file named `{file1_name}` exists and its file size greater than zero (which indicates that its data is NOT empty).
+
+> [!NOTE]
+> In Linux, its data is NOT neccessary equivalent to its content.
+>
+> Thus, I use the word `its data` rather than `its content` in context of
+>
+> ```
+> which indicates that its data is NOT empty
+> ```
+
+## CH28-26 -- check the file descriptor of a file is open and refers to terminal
+### `-t`
+`-t {file1_name}` returns true iff the file named `{file1_name}` exists and file descriptor of the file named `{file1_name}` is open and refers to terminal.
