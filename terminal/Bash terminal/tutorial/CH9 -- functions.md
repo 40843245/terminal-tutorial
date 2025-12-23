@@ -173,7 +173,13 @@ When quotated by double quotations, it will expand a string and it will be split
 
 `$#`: number of all passed arguments
 
-`${0}` or `$0`: the called function name (inside a function) or shell script name (inside a top level of shell script)
+`$FUNCNAME`: a special variable stores current function stack trace (Like stack trace in `C#`)
+
+`${FUNCNAME[0]}`: the invoking function (if it is access inside a function) or null value (if it is access at top level)
+
+`${FUNCNAME[1]}`: the caller who call the function or null value (if it is access at top level or invoked at top level)
+
+`${0}` or `$0`: shell script name
 
 `${1}` or `$1`: the first passed argument (zero-based index)
 
