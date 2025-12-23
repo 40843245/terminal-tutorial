@@ -161,7 +161,7 @@ End of the function named `func1` call.
 ```
 
 ## CH9-4 -- special variables about functions
-`\`@`: all passed arguments separator by first character o` `$I.
+`\@`: all passed arguments separator by first character of `$IFS`.
 
 `$*`: all passed arguments that are expanded as a string. 
 
