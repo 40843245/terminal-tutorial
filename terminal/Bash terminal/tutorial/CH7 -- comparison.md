@@ -69,7 +69,24 @@ if ((STATUS_CODE == 0));
 ```
 
 ## CH7-2 -- compare two strings
+<details>
+<summary>
+inside `[[]]`
+</summary>
+  
+| flag | description |
+| :-- | :-- |
+| `==` | equal to |
+| `!=` | not equal to |
+| `` | non-zero length |
+| `-n` | non-zero length |
+| `-z` | zero-length |
+
+</details>
+
 see [bash的string testing](https://docs.google.com/spreadsheets/d/1_lipmlEwKus0CVZgdS93Zda5gASe4g2bqrd4JsmQZM4/edit?gid=1895558629#gid=1895558629)
 
 ## CH7-3 -- check a file
 see [bash的File Testing](https://docs.google.com/spreadsheets/d/1sSjh6nQffVeyuqQo4JFjFje6DZ7LzkrtOl_s688bUEM/edit?gid=1954033718#gid=1954033718)
+
+and [CH28](https://github.com/40843245/terminal-tutorial/blob/main/terminal/Bash%20terminal/tutorial/CH28%20--%20existence%20of%20a%20file%20or%20directory_TOC.md) for more details
