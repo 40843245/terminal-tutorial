@@ -78,4 +78,4 @@ For a file (but NOT belongs to a directory), iff set-user-id bit of the file is 
 For a directory, iff set-user-id bit of the directory is set, then the newly created file will inherit attributes from the group of the directory rather than from the group of creator.
 
 ### sticky bit
-Iff the stick bit of the file or directory is set, then ONLY  
+Iff the stick bit of the file or directory is set, then ONLY one with root role who is owner of creator can access the file, or entries of the directory (including itself).  
