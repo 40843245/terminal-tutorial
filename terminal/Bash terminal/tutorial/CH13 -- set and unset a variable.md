@@ -215,16 +215,56 @@ Then it checks the variable name with expanded value `{expanded-variable-value}`
 
 Case 2: `{expanded-variable-value}` is expanded from a variable with index array type
 
-Then it checks the 0th of the index array variable is set or not.
+Then it checks the 0th of the variable name with type index array is set or not.
 
 Case 3: `{expanded-variable-value}` is expanded from a variable with associative array type
 
-Then it checks the `"0"` key of associative array is set or not.
+Then it checks the `"0"` key of variable named with type associative array is set or not.
 
 > [!TIP]
-> Analogize it in `C#`,
+> Analogize it in `C#` 8.0 or above.
 >
+> Case 1:
 > 
+> ```
+> declare -i integer1=1
+> if [[ -v integer1 ]];
+> ```
+>
+> likes
+>
+> ```
+> int? integer1=5;
+> if( integer1 != null )
+> ```
+>
+> Case 2:
+>
+> ```
+> declare -a index_array_1=("value1" "value2")
+> if [[ -v index_array_1 ]];
+> ```
+>
+> likes
+>
+> ```
+> string? [] index_array_1=new string []{"value1","value2"};
+> if(index_array_1 != null && index_array_1.length > 0 && index_array_1[0] != null)
+> ```
+>
+> Case 3:
+>
+> ```
+> declare -A associative_array_2=(["key1"]="value1" ["key2"]="value2" ["0"]="0")
+> if [[ -v associative_array_2 ]];
+> ```
+>
+> likes
+>
+> ```
+> Dictionary<string,string> associative_array_2=new Dictionary<string,string>(){["key1"]="value1",["key2"]="value2",["0"]="0"};
+> if(associative_array_2 != null && associative_array_2.Contains("0"))
+> ```
 
 ### Examples
 #### Example 1
