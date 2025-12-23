@@ -314,20 +314,22 @@ ENVIRONMENT_VAR: I am exported
 
 ## CH2-2 -- access a variable
 
-To access a variable, you have to simply add `$` followed by a variable.
+To access a variable value, you have to simply add `$` followed by a variable.
 
-for example
+It will perform variable expansion (see CH11 for more details)
+
+For example
 
 ```
 COUNT=1
-$COUNT # access the variable `COUNT`
+echo "$COUNT" # expand the value of variable `COUNT`
 ```
 
 and 
  
 ```
 COUNT
-$COUNT # access the variable `COUNT` which is NULL value
+echo "$COUNT" # expand the value of variable `COUNT` which is Null value (considered as empty string)
 ```
 
 > [!NOTE]
