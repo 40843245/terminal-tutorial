@@ -19,15 +19,15 @@ An expression contains math operation, string operation.
 ### Examples
 #### Example 1
 ```
-integer1 = 2
-integer2 = 3
+declare -i integer1 = 2
+declare -i integer2 = 3
 
-$integer1 + $integer2 # <-- this is an expression
+$(integer1 + integer2) # <-- this is an expression
 ```
 
 #### Example 2
 ```
-integer1 = 2
+declare -i integer1 = 2
 
 $integer1 # <-- this is an expression
 ```
@@ -55,7 +55,7 @@ main(){
 }
 ```
 
-## CH4-2 -- an expression about logical operator
+## CH5-2 -- an expression about logical operator
 
 | expression | type | description | pros | cons | notes |
 | :-- | :-- | :-- | :-- | :-- | :-- |
@@ -175,7 +175,7 @@ you can't write it instead
 [ $VERSION_TAG =~ $version_regex ]
 ```
 
-## CH5-2 -- arithmetic operation
+## CH5-3 -- arithmetic operation
 
 To do an arithmetic operation,
 
@@ -185,7 +185,23 @@ use `let` built-in command, or
 
 use `$(( ... ))` arithmetically spread operator.
 
-### Examples
+Some of arithmetic operators like that in `C++`
+
+| type | arithmetic operator | meaning | syntax | description |
+| :-- | :-- | :-- | :-- | :-- |
+| unary operator | `-` | unary minus | `-{value}` | return the opposite number of `{value}` |
+| unary operator | `+` | unary plus | `+{value}` | same as `{value}`|
+| unary operator | `++` | prefix increment | `++{variable}` | plus `{variable}` by 1 then return the value of `{variable}` |
+| unary operator | `++` | postfix increment | `{variable}++` | return the value of `{variable}` first then plus `{variable}` by 1 |
+| unary operator | `--` | prefix decrement | `--{variable}` | subtract `{variable}` by 1 then return the value of `{variable}` |
+| unary operator | `--` | postfix decrement | `{variable}--` | return the value of `{variable}` first then subtract `{variable}` by 1 |
+| binary operator | `+` | plus two numbers | `{value1}+{value2}` | return the resultant of plus `{value1}` by `{value2}` |
+| binary operator | `-` | subtract one number by another number | `{value1}-{value2}` | return the resultant of subtract `{value1}` by `{value2}` |
+| binary operator | `*` | multiplication | `{value1}*{value2}` | return the resultant of {value1} times {value2} |
+| binary operator | `/` | integer division | `{value1}/{value2}` | return the resultant of dividing `{value2}` by `{value1}` |
+| binary operator | `%` | modulus | `{value1}%{value2}` | `{value1}` modulus `{value2}`, take the remainder of `{value2}` from `{value1}`  |
+| binary operator | `**` | exponent | `{value1}**{value2}` | `{value1}` power of `{value2}` |
+
 
 #### Example 1
 
