@@ -79,8 +79,10 @@ For a directory, iff set-user-id bit of the directory is set, then the newly cre
 ### EUID (effective-user-id)
 Stores the user id who can access the entry. When one user tries to access the entry, the system will check the user's id is same as EUID.
 
-> [!TIP]
-> 
+> [!NOTE]
+> Typically, EUID is same as the login user for executables.
+>
+> EUID is the UID (user-id) of owner for executable that has SUID bit.
 
 ### EGID (effective-group-id)
 Stores the group id who can access the entry. When one user tries to access the entry, the system will check the user's id is same as one of membership of the group whose group id is EGID.
