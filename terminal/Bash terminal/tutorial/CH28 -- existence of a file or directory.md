@@ -138,19 +138,67 @@ same as `-h`
 ### `-c`
 `-c {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a character special file.
 
-## CH28-10-- check a file is a regular file
+## CH28-10 -- check a file is a regular file
 ### `-f`
 `-f {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a regular file.
 
-## CH28-11-- check a file is a named pipe
+## CH28-11 -- check a file is a named pipe
 ### `-p`
 `-p {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a named pipe.
 
-## CH28-12-- check a file is readable
-### `-r`
-`-r {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a readable.
+## CH28-12 -- check a file is a socket
+### `-S`
+`-S {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a socket.
 
-## CH28-15 -- check sticky bit of a file is set
+## CH28-13 -- check a file is readable
+### `-r`
+`-r {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is readable.
+
+## CH28-14 -- check a file is writable
+### `-w`
+`-w {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is writable.
+
+## CH28-15 -- check a file is executable
+### `-w`
+`-w {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is executable.
+
+## CH28-16 -- check sticky bit of a file is set
 ### `-k`
 `-k {file1_name}` returns true iff the file named `{file1_name}` exists and the sticky bit of `{file1_name}` is set.
 
+## CH28-17 -- check SUID (set-user-id) bit of a file is set
+### `-u`
+`-u {file1_name}` returns true iff the file named `{file1_name}` exists and the SUID (set-user-id) bit of `{file1_name}` is set.
+
+## CH28-18 -- check a file is owned by its EUID (effective user id)
+### `-O`
+`-O {file1_name}` returns true iff the file named `{file1_name}` exists and the file named `{file1_name}` is owned by its EUID (effective user id).
+
+## CH28-19 -- check a file is owned by its EGID (effective group id)
+### `-G`
+`-G {file1_name}` returns true iff the file named `{file1_name}` exists and the file named `{file1_name}` is owned by its EGID (effective group id).
+
+## CH28-20 -- check a file has been modified since it was last accessed.
+### `-N`
+`-N {file1_name}` returns true iff the file named `{file1_name}` exists and it has been modified since it was last accessed.
+
+## CH28-21 -- check a file is newer than an another file.
+### `-nt`
+`-nt {file1_name} {file2_name}` returns true iff one of conditions are met
+
++ the file named `{file1_name}` exists and the file named `{file2_name}` does NOT exist.
++ the file named `{file1_name}` is newer (according to modification date) than the file named `{file2_name}`.
+
+## CH28-22 -- check a file is older than an another file.
+### `-ot`
+`-ot {file1_name} {file2_name}` returns true iff one of conditions are met
+
++ the file named `{file2_name}` exists and the file named `{file1_name}` does NOT exist.
++ the file named `{file1_name}` is older (according to modification date) than the file named `{file2_name}`.
+
+## CH28-23 -- check a file and an another file refer same device and same inode number
+### `-ef`
+`-ef {file1_name} {file2_name}` returns true iff all conditions are met
+
++ the file named `{file1_name}` and the file named `{file2_name}` refer same device.
++ the file named `{file1_name}` and the file named `{file2_name}` refer inode number.
