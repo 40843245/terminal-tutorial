@@ -57,8 +57,6 @@ In Linux, there are these permissions
   + read permission
   + write permission
   + execute permission
-  + SUID (set-user-id)
-  + SGID (set-group-id)
 
 ## read permission
 IfF one has read permission, one can read data of file.
@@ -69,6 +67,7 @@ IfF one has write permission, one can modify data of file.
 ### execute permission
 IfF one has execute permission, one can execute the file.
 
+## CH28-3 -- terms about role and role id
 ### SUID (set-user-id)
 Iff set-user-id bit of the executable is set, one will execute the executable using Owner role of the executable (even if the one is NOT the owner of the executable)
 
@@ -76,6 +75,15 @@ Iff set-user-id bit of the executable is set, one will execute the executable us
 For a file (but NOT belongs to a directory), iff set-user-id bit of the file is set, one will execute the executable using the group of the file (even if the one is NOT one of members in the group of the file)
 
 For a directory, iff set-user-id bit of the directory is set, then the newly created file will inherit attributes from the group of the directory rather than from the group of creator.
+
+### EUID (effective-user-id)
+Stores the user id who can access the entry. When one user tries to access the entry, the system will check the user's id is same as EUID.
+
+> [!TIP]
+> 
+
+### EGID (effective-group-id)
+Stores the group id who can access the entry. When one user tries to access the entry, the system will check the user's id is same as one of membership of the group whose group id is EGID.
 
 ### sticky bit
 Iff the stick bit of the file or directory is set, then ONLY one with root role who is owner of creator can access the file, or entries of the directory (including itself).  
