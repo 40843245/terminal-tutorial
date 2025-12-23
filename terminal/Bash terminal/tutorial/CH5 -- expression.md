@@ -202,7 +202,7 @@ Some of arithmetic operators like that in `C++`
 | binary operator | `%` | modulus | `{value1}%{value2}` | `{value1}` modulus `{value2}`, take the remainder of `{value2}` from `{value1}`  |
 | binary operator | `**` | exponent | `{value1}**{value2}` | `{value1}` power of `{value2}` |
 
-
+### Examples
 #### Example 1
 
 To increase `COUNT` global variable by 1,
@@ -221,6 +221,263 @@ also, you can use `let` built-in command
 also, you can use `$(( ... ))` arithmetically spread operator.
 
     COUNT=(($COUNT+1))
+
+#### Example 2
+
+`arthimetic-operators-example-1.bash`
+
+```
+function perform_binary_arthimetic_operation(){
+    declare -i result_after_unary_plus
+    declare -i result_after_unary_minus
+    declare -i result_after_addition
+    declare -i result_after_subtraction
+    declare -i result_after_multiplication
+    declare -i result_after_integer_division
+    declare -i result_after_exponentation
+    declare -i result_after_modulus
+    
+    declare -i value1=$1
+    declare -i value2=$2
+
+    result_after_addition=$(( value1 + value2 ))
+
+    echo "=============================================="
+    printf "====== perform an binary operation for value:\`%d\` and \`%d\` ======" $value1 $value2
+    echo ""
+
+    printf "Plus from \`%d\` to \`%d\` equals to \`%d\`" $value1 $value2 $result_after_addition
+    echo ""
+    echo ""
+
+    result_after_subtraction=$(( value1 - value2 ))
+
+    printf "Subtracts from \`%d\` to \`%d\` equals to \`%d\`" $value1 $value2 $result_after_subtraction
+    echo ""
+    echo ""
+
+    result_after_multiplication=$(( value1 * value2 ))
+
+    printf "\`%d\` times \`%d\` equals to \`%d\`" $value1 $value2 $result_after_multiplication
+    echo ""
+    echo ""
+
+    result_after_integer_division=$(( value1 / value2 ))
+
+    printf "\`%d\` integer divided by \`%d\` equals to \`%d\`" $value1 $value2 $result_after_integer_division
+    echo ""
+    echo ""
+
+    result_after_exponentation=$(( value1 ** value2 ))
+
+    printf "\`%d\` power of \`%d\` equals to \`%d\`" $value1 $value2 $result_after_exponentation
+    echo ""
+    echo ""
+
+    result_after_modulus=$(( value1 % value2 ))
+
+    printf "\`%d\` modulus \`%d\` equals to \`%d\`" $value1 $value2 $result_after_modulus
+    echo ""
+    echo ""   
+
+    echo "=============================================="
+}
+
+function perform_unary_arthimetic_operation(){
+    declare -i result_after_unary_plus
+    declare -i result_after_unary_minus
+
+    declare -i result_after_prefix_increment
+    declare -i result_after_postfix_increment
+    declare -i result_after_prefix_decrement
+    declare -i result_after_postfix_decrement
+    
+    declare -i value1=$1
+    declare -i value1_backup=value1
+
+    echo "=============================================="
+    printf "====== perform an unary operation for value:\`%d\` ======" $value1
+    echo ""
+
+    echo "Before performing unary plus,"
+    printf "value1:\`%d\`" $value1 
+    echo ""
+    echo ""
+
+    result_after_unary_plus=$((+value1))
+
+    echo "After performing prefix increment,"
+    printf "The returned value:\`%d\`" $result_after_prefix_increment
+    echo ""
+    printf "value1:\`%d\`" $value1 
+    echo ""
+
+    echo "Before performing unary minus,"
+    printf "value1:\`%d\`" $value1 
+    echo ""
+
+    result_after_unary_minus=$((-value1))
+
+    echo "After performing prefix increment,"
+    printf "The returned value:\`%d\`" $result_after_unary_minus
+    echo ""
+    printf "value1:\`%d\`" $value1 
+    echo ""
+    echo ""
+
+    echo "Before performing prefix increment,"
+    printf "value1:\`%d\`" $value1 
+    echo ""
+    echo ""
+
+    # backup value from `value1` to `value1_backup`
+    value1_backup=$((value1))
+    
+    result_after_prefix_increment=$(( ++value1 ))
+
+    echo "After performing prefix increment,"
+    printf "The returned value:\`%d\`" $result_after_prefix_increment
+    echo ""
+    printf "value1:\`%d\`" $value1 
+    echo ""
+    echo ""
+
+    # restore value from `value1_backup` to `value1`
+    value1=$((value1_backup))
+
+    echo "Before performing postfix increment,"
+    printf "value1:\`%d\`" $value1 
+    echo ""
+    echo ""
+
+    # backup value from `value1` to `value1_backup`
+    value1_backup=$((value1))
+
+    result_after_postfix_increment=$(( value1++ ))
+
+    echo "After performing postfix increment,"
+    printf "The returned value:\`%d\`" $result_after_postfix_increment
+    echo ""
+    printf "value1:\`%d\`" $value1 
+    echo ""
+    echo ""
+
+    # restore value from `value1_backup` to `value1`
+    value1=$((value1_backup))
+
+    echo "Before performing prefix decrement,"
+    printf "value1:\`%d\`" $value1 
+    echo ""
+    echo ""
+
+    # backup value from `value1` to `value1_backup`
+    value1_backup=$((value1))
+
+    result_after_prefix_increment=$(( --value1 ))
+
+    echo "After performing prefix decrement,"
+    printf "The returned value:\`%d\`" $result_after_prefix_increment
+    echo ""
+    printf "value1:\`%d\`" $value1 
+    echo ""
+    echo ""
+
+    # restore value from `value1_backup` to `value1`
+    value1=$((value1_backup))
+
+    echo "Before performing postfix decrement,"
+    printf "value1:\`%d\`" $value1 
+    echo ""
+    echo ""
+
+    # backup value from `value1` to `value1_backup`
+    value1_backup=$((value1))
+
+    result_after_postfix_decrement=$(( --value1 ))
+
+    echo "After performing postfix decrement,"
+    printf "The returned value:\`%d\`" $result_after_postfix_decrement
+    echo ""
+    printf "value1:\`%d\`" $value1 
+    echo ""
+
+    # backup value from `value1` to `value1_backup`
+    value1_backup=$((value1))
+
+    echo "=============================================="
+}
+
+main(){
+    perform_unary_arthimetic_operation 2 
+    perform_binary_arthimetic_operation 2 3
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\operations\arthimetic operators\arthimetic-operators-example-1.bash"
+==============================================
+====== perform an unary operation for value:`2` ======
+Before performing unary plus,
+value1:`2`
+
+After performing prefix increment,
+The returned value:`0`
+value1:`2`
+Before performing unary minus,
+value1:`2`
+After performing prefix increment,
+The returned value:`-2`
+value1:`2`
+
+Before performing prefix increment,
+value1:`2`
+
+After performing prefix increment,
+The returned value:`3`
+value1:`3`
+
+Before performing postfix increment,
+value1:`2`
+
+After performing postfix increment,
+The returned value:`2`
+value1:`3`
+
+Before performing prefix decrement,
+value1:`2`
+
+After performing prefix decrement,
+The returned value:`1`
+value1:`1`
+
+Before performing postfix decrement,
+value1:`2`
+
+After performing postfix decrement,
+The returned value:`1`
+value1:`1`
+==============================================
+==============================================
+====== perform an binary operation for value:`2` and `3` ======
+Plus from `2` to `3` equals to `5`
+
+Subtracts from `2` to `3` equals to `-1`
+
+`2` times `3` equals to `6`
+
+`2` integer divided by `3` equals to `0`
+
+`2` power of `3` equals to `8`
+
+`2` modulus `3` equals to `2`
+
+==============================================
+
+```
 
 ## CH5-3 -- get length of string
 To get length of string, just simply use `#` followed by a varible then wrapped with `${}`
