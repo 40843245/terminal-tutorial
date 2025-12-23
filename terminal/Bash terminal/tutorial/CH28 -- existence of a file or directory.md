@@ -111,3 +111,46 @@ if the file descriptor returned in the program is `0`, then the file is streamed
 if the file descriptor returned in the program is `1`, then the file is streamed out from `stdout` standard output stream.
 
 if the file descriptor returned in the program is `0`, then the file is streamed out from `stderr` standard error stream.
+
+## CH28-5 -- check a file exists
+### `-a`
+`-a {file1_name}` returns true iff the file named `{file1_name}` exists.
+
+### `-e`
+same as `-a`
+
+## CH28-6 -- check a file exists
+### `-d`
+`-d {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a directory
+
+## CH28-7 -- check a symbolic link exists
+### `-h`
+`-h {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a symbolic link
+
+### `-L`
+same as `-h`
+
+## CH28-8 -- check a file is a block special file
+### `-b`
+`-b {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a block special file.
+
+## CH28-9 -- check a file is a character special file
+### `-c`
+`-c {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a character special file.
+
+## CH28-10-- check a file is a regular file
+### `-f`
+`-f {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a regular file.
+
+## CH28-11-- check a file is a named pipe
+### `-p`
+`-p {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a named pipe.
+
+## CH28-12-- check a file is readable
+### `-r`
+`-r {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a readable.
+
+## CH28-15 -- check sticky bit of a file is set
+### `-k`
+`-k {file1_name}` returns true iff the file named `{file1_name}` exists and the sticky bit of `{file1_name}` is set.
+
