@@ -2,12 +2,28 @@
 ## objectives
 You will learn how to
 
-  + check a file exists
-  + check a directory exists
-  + check a symbolic link exists
-  + check it is a block special file
-  + check it is a character special file
-  + check it is a regular file
+   * [check a file exists](#ch28-5-check-a-file-exists)
+   * [check a directory exists](#ch28-6-check-a-directory-exists)
+   * [check a symbolic link exists](#ch28-7-check-a-symbolic-link-exists)
+   * [check a file is a block special file](#ch28-8-check-a-file-is-a-block-special-file)
+   * [check a file is a character special file](#ch28-9-check-a-file-is-a-character-special-file)
+   * [check a file is a regular file](#ch28-10-check-a-file-is-a-regular-file)
+   * [check a file is a named pipe](#ch28-11-check-a-file-is-a-named-pipe)
+   * [check a file is a socket](#ch28-12-check-a-file-is-a-socket)
+   * [check a file is readable](#ch28-13-check-a-file-is-readable)
+   * [check a file is writable](#ch28-14-check-a-file-is-writable)
+   * [check a file is executable](#ch28-15-check-a-file-is-executable)
+   * [check sticky bit of a file is set](#ch28-16-check-sticky-bit-of-a-file-is-set)
+   * [check SUID (set-user-id) bit of a file is set](#ch28-17-check-suid-set-user-id-bit-of-a-file-is-set)
+   * [check GUID (set-group-id) bit of a file is set](#ch28-18-check-guid-set-group-id-bit-of-a-file-is-set)
+   * [check a file is owned by its EUID (effective user id)](#ch28-19-check-a-file-is-owned-by-its-euid-effective-user-id)
+   * [check a file is owned by its EGID (effective group id)](#ch28-20-check-a-file-is-owned-by-its-egid-effective-group-id)
+   * [check a file has been modified since it was last accessed.](#ch28-21-check-a-file-has-been-modified-since-it-was-last-accessed)
+   * [check a file is newer than an another file.](#ch28-22-check-a-file-is-newer-than-an-another-file)
+   * [check a file is older than an another file.](#ch28-23-check-a-file-is-older-than-an-another-file)
+   * [check a file and an another file refer same device and same inode number](#ch28-24-check-a-file-and-an-another-file-refer-same-device-and-same-inode-number)
+   * [check a file has size greater than zero](#ch28-25-check-a-file-has-size-greater-than-zero)
+   * [check the file descriptor of a file is open and refers to terminal](#ch28-26-check-the-file-descriptor-of-a-file-is-open-and-refers-to-terminal)
 
 Also you will know these terms.
 
