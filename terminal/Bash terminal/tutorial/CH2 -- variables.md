@@ -450,6 +450,7 @@ At top level, after invoking func1, var = func1 local
 We can see the variable named `var` is polluted when invoking `func1`.
 
 ## CH2-3 -- assign a value to a variable
+### assignment
 > [!IMPORTANT]
 > When assigning value (including `initializing`)  with assignment operator `=`,
 >
@@ -457,8 +458,45 @@ We can see the variable named `var` is polluted when invoking `func1`.
 
 To assign a value into a variable, just use assignment operator `=`
 
+syntax:
+
+```
+{left-hand-side-variable}={right-hand-side-expression}
+```
+
+It will assign the value expanded from the expression that is right hand side of `=` into the variable `{left-hand-side-variable}`  
+
 ```
 COUNT=1 # define COUNT global variable and initialize COUNT as 1  
 $COUNT
 COUNT=2 # assign 2 to COUNT variable.
+```
+
+### compound assignment
+Like C, for binary arthimetic operator and binary bitwise operator, the expression can be simplified using compound assignment operator.
+
+A compound assignment operator consists of one of binary arthimetic operator, binary bitwise operator followed by assignment operator `=`
+
+> [!NOTE]
+> Like in `C`, it is NOT allowed to leave whitespace between binary arthimetic operator, binary bitwise operator and the followed assignment operator `=`
+
+syntax:
+
+```
+{left-hand-side-variable}{part-of-compound-assignment}={right-hand-side-expression}
+```
+
+where
+
+```
+{part-of-compound-assignment}:= {logical-operator} | {bitwise-operator}
+
+{logical-operator}:= one of binary logical operators # see CH5 for more details
+{bitwise-operator}:= one of binary bitwise operators # see CH5 for more details
+```
+
+is equivalent to
+
+```
+{left-hand-side-variable}={left-hand-side-variable}{part-of-compound-assignment}{right-hand-side-expression}
 ```
