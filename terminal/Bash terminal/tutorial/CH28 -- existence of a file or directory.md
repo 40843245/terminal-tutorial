@@ -141,6 +141,7 @@ same as `-a`
 ### `-d`
 `-d {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a directory
 
+<!-- TOC --><a name="ch28-7-check-a-symbolic-link-exists"></a>
 ## CH28-7 -- check a symbolic link exists
 ### `-h`
 `-h {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a symbolic link
@@ -148,62 +149,77 @@ same as `-a`
 ### `-L`
 same as `-h`
 
+<!-- TOC --><a name="ch28-8-check-a-file-is-a-block-special-file"></a>
 ## CH28-8 -- check a file is a block special file
 ### `-b`
 `-b {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a block special file.
 
+<!-- TOC --><a name="ch28-9-check-a-file-is-a-character-special-file"></a>
 ## CH28-9 -- check a file is a character special file
 ### `-c`
 `-c {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a character special file.
 
+<!-- TOC --><a name="ch28-10-check-a-file-is-a-regular-file"></a>
 ## CH28-10 -- check a file is a regular file
 ### `-f`
 `-f {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a regular file.
 
+<!-- TOC --><a name="ch28-11-check-a-file-is-a-named-pipe"></a>
 ## CH28-11 -- check a file is a named pipe
 ### `-p`
 `-p {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a named pipe.
 
+<!-- TOC --><a name="ch28-12-check-a-file-is-a-socket"></a>
 ## CH28-12 -- check a file is a socket
 ### `-S`
 `-S {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is a socket.
 
+<!-- TOC --><a name="ch28-13-check-a-file-is-readable"></a>
 ## CH28-13 -- check a file is readable
 ### `-r`
 `-r {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is readable.
 
+<!-- TOC --><a name="ch28-14-check-a-file-is-writable"></a>
 ## CH28-14 -- check a file is writable
 ### `-w`
 `-w {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is writable.
 
+<!-- TOC --><a name="ch28-15-check-a-file-is-executable"></a>
 ## CH28-15 -- check a file is executable
 ### `-e`
 `-e {file1_name}` returns true iff the file named `{file1_name}` exists and `{file1_name}` is executable.
 
+<!-- TOC --><a name="ch28-16-check-sticky-bit-of-a-file-is-set"></a>
 ## CH28-16 -- check sticky bit of a file is set
 ### `-k`
 `-k {file1_name}` returns true iff the file named `{file1_name}` exists and the sticky bit of `{file1_name}` is set.
 
+<!-- TOC --><a name="ch28-17-check-suid-set-user-id-bit-of-a-file-is-set"></a>
 ## CH28-17 -- check SUID (set-user-id) bit of a file is set
 ### `-u`
 `-u {file1_name}` returns true iff the file named `{file1_name}` exists and the SUID (set-user-id) bit of `{file1_name}` is set.
 
+<!-- TOC --><a name="ch28-18-check-guid-set-group-id-bit-of-a-file-is-set"></a>
 ## CH28-18 -- check GUID (set-group-id) bit of a file is set
 ### `-g`
 `-g {file1_name}` returns true iff the file named `{file1_name}` exists and the GUID (set-group-id) bit of `{file1_name}` is set.
 
+<!-- TOC --><a name="ch28-19-check-a-file-is-owned-by-its-euid-effective-user-id"></a>
 ## CH28-19 -- check a file is owned by its EUID (effective user id)
 ### `-O`
 `-O {file1_name}` returns true iff the file named `{file1_name}` exists and the file named `{file1_name}` is owned by its EUID (effective user id).
 
+<!-- TOC --><a name="ch28-20-check-a-file-is-owned-by-its-egid-effective-group-id"></a>
 ## CH28-20 -- check a file is owned by its EGID (effective group id)
 ### `-G`
 `-G {file1_name}` returns true iff the file named `{file1_name}` exists and the file named `{file1_name}` is owned by its EGID (effective group id).
 
+<!-- TOC --><a name="ch28-21-check-a-file-has-been-modified-since-it-was-last-accessed"></a>
 ## CH28-21 -- check a file has been modified since it was last accessed.
 ### `-N`
 `-N {file1_name}` returns true iff the file named `{file1_name}` exists and it has been modified since it was last accessed.
 
+<!-- TOC --><a name="ch28-22-check-a-file-is-newer-than-an-another-file"></a>
 ## CH28-22 -- check a file is newer than an another file.
 ### `-nt`
 `{file1_name} -nt {file2_name}` returns true iff one of conditions are met
@@ -211,6 +227,7 @@ same as `-h`
 + the file named `{file1_name}` exists and the file named `{file2_name}` does NOT exist.
 + the file named `{file1_name}` is newer (according to modification date) than the file named `{file2_name}`.
 
+<!-- TOC --><a name="ch28-23-check-a-file-is-older-than-an-another-file"></a>
 ## CH28-23 -- check a file is older than an another file.
 ### `-ot`
 `{file1_name} -ot {file2_name}` returns true iff one of conditions are met
@@ -218,6 +235,7 @@ same as `-h`
 + the file named `{file2_name}` exists and the file named `{file1_name}` does NOT exist.
 + the file named `{file1_name}` is older (according to modification date) than the file named `{file2_name}`.
 
+<!-- TOC --><a name="ch28-24-check-a-file-and-an-another-file-refer-same-device-and-same-inode-number"></a>
 ## CH28-24 -- check a file and an another file refer same device and same inode number
 ### `-ef`
 `{file1_name} -ef {file2_name}` returns true iff all conditions are met
@@ -225,6 +243,7 @@ same as `-h`
 + the file named `{file1_name}` and the file named `{file2_name}` refer same device.
 + the file named `{file1_name}` and the file named `{file2_name}` refer inode number.
 
+<!-- TOC --><a name="ch28-25-check-a-file-has-size-greater-than-zero"></a>
 ## CH28-25 -- check a file has size greater than zero
 ### `-s`
 `-s {file1_name}` returns true iff the file named `{file1_name}` exists and its file size greater than zero (which indicates that its data is NOT empty).
@@ -238,6 +257,7 @@ same as `-h`
 > which indicates that its data is NOT empty
 > ```
 
+<!-- TOC --><a name="ch28-26-check-the-file-descriptor-of-a-file-is-open-and-refers-to-terminal"></a>
 ## CH28-26 -- check the file descriptor of a file is open and refers to terminal
 ### `-t`
 `-t {file1_name}` returns true iff the file named `{file1_name}` exists and file descriptor of the file named `{file1_name}` is open and refers to terminal.
