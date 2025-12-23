@@ -128,6 +128,7 @@ if the file descriptor returned in the program is `1`, then the file is streamed
 
 if the file descriptor returned in the program is `0`, then the file is streamed out from `stderr` standard error stream.
 
+<!-- TOC --><a name="ch28-5-check-a-file-exists"></a>
 ## CH28-5 -- check a file exists
 ### `-a`
 `-a {file1_name}` returns true iff the file named `{file1_name}` exists.
