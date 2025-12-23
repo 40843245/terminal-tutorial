@@ -446,6 +446,34 @@ NOTICE: The variable `ghost_variable` is unset.
 
 ```
 
+### `-R`
+> [!NOTE]
+> `-R` must be wrapped in `[[]]`
+>
+> Valid example,
+>
+> ```
+> if [[ -R $var_name ]]; then
+>   return 0
+> else
+>   return 1
+> fi
+> ```
+>
+> will NOT throw an error at runtime
+>
+> Invalid example,
+>
+> ```
+> -R $var_name # will throw an error
+> local is_set=$?
+> ```
+>
+> will throw an error at runtime
+
+syntax:
+
+‵‵‵```-R {variable-nam checks
 ## CH13-4 -- extra bonus
 ### Q1 -- check a variable is in unset state and it has been unset by `unset` command
 Q1: 
