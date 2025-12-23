@@ -178,6 +178,234 @@ variable5 is NOT in unset state and its value is NOT an empty string
 
 ```
 
+### `-v`
+> [!NOTE]
+> `-v` must be wrapped in `[[]]`
+>
+> Valid example,
+>
+> ```
+> if [[ -v $var_name ]]; then
+>   return 0
+> else
+>   return 1
+> fi
+> ```
+>
+> will NOT throw an error at runtime
+>
+> Invalid example,
+>
+> ```
+> -v $var_name # will throw an error
+> local is_set=$?
+> ```
+>
+> will throw an error at runtime
+
+syntax:
+
+```
+-v {expanded-variable-value}
+```
+
+Case 1: `{expanded-variable-value}` is expanded from a variable with scalar type (such as integer, string)
+
+Then it checks the variable name with expanded value `{expanded-variable-value}` is set.
+
+Case 2: `{expanded-variable-value}` is expanded from a variable with index array type
+
+Then it checks the 0th of the index array variable is set or not.
+
+Case 3: `{expanded-variable-value}` is expanded from a variable with associative array type
+
+Then it checks the `"0"` key of associative array is set or not.
+
+> [!TIP]
+> Analogize it in `C#`,
+>
+> 
+
+### Examples
+#### Example 1
+
+utility module:
+
+`get-variable-type-module.bash`
+
+```
+function get_variable_type() {
+    local var_name=$1    
+    local -n out_var=$2  # nameref of returned value
+
+    local attrs=${!var_name@a}
+
+    case "$attrs" in
+        *A*) out_var="ASSOCIATIVE_ARRAY" ;;
+        *a*) out_var="INDEXED_ARRAY"     ;;
+        *)   out_var="SCALAR"            ;;
+    esac
+}
+```
+
+main script:
+
+`variable-handling-example-1.bash`
+
+```
+# Get the directory where the current script is located 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+# Define the module path 
+MODULE_PATH="$SCRIPT_DIR/../../utility modules/variable handling/variable type/get-variable-type-module.bash"
+
+# Robustly source the module
+if [[ -f "$MODULE_PATH" ]]; then
+    source "$MODULE_PATH"
+else
+    echo "Error: Required module not found at $MODULE_PATH"
+    exit 1
+fi
+
+function print_variable_info() {
+    # Check if an argument was actually provided
+    if [[ -z "$1" ]]; then
+        echo "Error: No variable name provided to print_variable_info."
+        return 1
+    fi
+
+    local var_name=$1
+    local var_type="UNKNOWN"
+
+    # Only attempt to get the type if the variable actually exists
+    if declare -F get_variable_type > /dev/null; then
+        get_variable_type "$var_name" var_type
+    else
+        printf "NOTICE: The variable \`%s\` does NOT exist.\n" "$var_name"
+        return 1
+    fi
+
+    # We use $var_name so Bash checks the name contained in that string.
+    if [[ -v $var_name ]]; then
+        if [[ "$var_type" == "SCALAR" ]]; then
+            printf "SUCCESS: The variable \`%s\` (Type: %s) is set.\n" "$var_name" "$var_type"
+        elif [[ "$var_type" == "INDEXED_ARRAY" ]]; then
+            printf "SUCCESS: The 0th element of variable \`%s\` (Type: %s) is set.\n" "$var_name" "$var_type"
+        elif [[ "$var_type" == "ASSOCIATIVE_ARRAY" ]]; then
+            printf "SUCCESS: The entry with key \"0\" of variable \`%s\` (Type: %s) is set.\n" "$var_name" "$var_type"
+        fi
+        return 0
+    else
+        if [[ "$var_type" == "SCALAR" ]]; then
+            printf "NOTICE: The variable \`%s\` is unset.\n" "$var_name"
+        elif [[ "$var_type" == "INDEXED_ARRAY" ]]; then
+            printf "NOTICE: The 0th element of variable \`%s\` is unset.\n" "$var_name"
+        elif [[ "$var_type" == "ASSOCIATIVE_ARRAY" ]]; then
+            printf "NOTICE: The entry with key \"0\" of variable \`%s\` is unset.\n" "$var_name"
+        fi
+        return 1
+    fi
+}
+
+main() {
+    # Define various variable types
+    declare -A associative_array_1=(["key1"]="value1" ["key2"]="value2")
+    declare -A associative_array_2=(["key1"]="value1" ["key2"]="value2" ["0"]="0")
+    declare -A associative_array_3=(["key1"]="value1" ["key2"]="value2" [0]="0")
+    declare -A associative_array_4=()
+    declare -A associative_array_5=
+    declare -A associative_array_6
+    declare -A associative_array_7=(["key1"]="value1" ["key2"]="value2" ["0"]="0")
+    
+    declare -a index_array_1=("value1" "value2")
+    declare -a index_array_2=()
+    declare -a index_array_3=
+    declare -a index_array_4
+    declare -a index_array_5=("value1" "value2")
+
+    declare -i integer1=3
+    declare -i integer2=
+    declare -i integer3
+    declare -i integer4=5
+
+    local str1="string1"
+    local str2=""
+    local str3=
+    local str4
+    local str5="string5"
+
+    # unset some variables
+    unset associative_array_7
+
+    unset index_array_5
+
+    unset integer4
+
+    unset str5
+
+    echo "--- Checking Existing Variables ---"
+    # Calling the function for each defined variable
+    print_variable_info "str1"
+    print_variable_info "str2"
+    print_variable_info "str3"
+    print_variable_info "str4"
+    print_variable_info "str5"
+    print_variable_info "integer1"
+    print_variable_info "integer2"
+    print_variable_info "integer3"
+    print_variable_info "integer4"
+    print_variable_info "index_array_1"
+    print_variable_info "index_array_2"
+    print_variable_info "index_array_3"
+    print_variable_info "index_array_4"
+    print_variable_info "index_array_5"
+    print_variable_info "associative_array_1"
+    print_variable_info "associative_array_2"
+    print_variable_info "associative_array_3"
+    print_variable_info "associative_array_4"
+    print_variable_info "associative_array_5"
+    print_variable_info "associative_array_6"
+    print_variable_info "associative_array_7"
+
+    echo -e "\n--- Checking Non-Existent Variable ---"
+    print_variable_info "ghost_variable"
+}
+
+main
+```
+
+executing this main script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\variable handling\variable-handling-example-1.bash"
+--- Checking Existing Variables ---
+SUCCESS: The variable `str1` (Type: SCALAR) is set.
+SUCCESS: The variable `str2` (Type: SCALAR) is set.
+SUCCESS: The variable `str3` (Type: SCALAR) is set.
+NOTICE: The variable `str4` is unset.
+NOTICE: The variable `str5` is unset.
+SUCCESS: The variable `integer1` (Type: SCALAR) is set.
+SUCCESS: The variable `integer2` (Type: SCALAR) is set.
+NOTICE: The variable `integer3` is unset.
+NOTICE: The variable `integer4` is unset.
+SUCCESS: The 0th element of variable `index_array_1` (Type: INDEXED_ARRAY) is set.
+NOTICE: The 0th element of variable `index_array_2` is unset.
+SUCCESS: The 0th element of variable `index_array_3` (Type: INDEXED_ARRAY) is set.
+NOTICE: The variable `index_array_4` is unset.
+NOTICE: The variable `index_array_5` is unset.
+NOTICE: The entry with key "0" of variable `associative_array_1` is unset.
+SUCCESS: The entry with key "0" of variable `associative_array_2` (Type: ASSOCIATIVE_ARRAY) is set.
+SUCCESS: The entry with key "0" of variable `associative_array_3` (Type: ASSOCIATIVE_ARRAY) is set.
+NOTICE: The entry with key "0" of variable `associative_array_4` is unset.
+SUCCESS: The entry with key "0" of variable `associative_array_5` (Type: ASSOCIATIVE_ARRAY) is set.
+NOTICE: The variable `associative_array_6` is unset.
+NOTICE: The variable `associative_array_7` is unset.
+
+--- Checking Non-Existent Variable ---
+NOTICE: The variable `ghost_variable` is unset.
+
+```
+
 ## CH13-4 -- extra bonus
 ### Q1 -- check a variable is in unset state and it has been unset by `unset` command
 Q1: 
