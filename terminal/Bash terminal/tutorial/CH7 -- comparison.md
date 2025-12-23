@@ -65,7 +65,7 @@ if [[ $STATUS_CODE -eq 0 ]];
 or equivalently
 
 ```
-if (($STATUS_CODE == 0)); 
+if ((STATUS_CODE == 0)); 
 ```
 
 ## CH7-2 -- compare two strings
