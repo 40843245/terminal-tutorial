@@ -479,12 +479,167 @@ Subtracts from `2` to `3` equals to `-1`
 
 ```
 
-## CH5-3 -- get length of string
+## CH5-3 -- bitwise operation
+
+| type | bitwise operator | syntax | meaning | description |
+| :-- | :-- | :-- | :-- | :-- |
+| unary operator | `~` | `~{value}` | bitwise negation | bitwise negation of `{value}`, perform 1's complementation. |
+| binary operator | `&` | `{value1}&{value2}` | bitwise and | bitwise and of `{value1}` and `{value2}`, perform and operation bit-by-bit |
+| binary operator | `|` | `{value1}|{value2}` | bitwise or | bitwise or of `{value1}` and `{value2}`, perform or operation bit-by-bit |
+| binary operator | `^` | `{value1}^{value2}` | bitwise or | bitwise exclusive or of `{value1}` and `{value2}`, perform exclusive or operation bit-by-bit |
+| binary operator | `>>` | `{value1}>>{offset}` | bitwise right-shiftment | shifts `{offset}` bits right of `{value1}` |
+| binary operator | `<<` | `{value1}<<{offset}` | bitwise left-shiftment | shifts `{offset}` bits left of `{value1}` |
+
+### Examples
+#### Example 1
+`bitwise-operators-example-1.bash`
+
+```
+function perform_binary_bitwise_operation(){
+    declare -i result_after_bitwise_and
+    declare -i result_after_bitwise_or
+    declare -i result_after_bitwise_exclusive_or
+    declare -i result_after_bitwise_right_shiftment
+    declare -i result_after_bitwise_left_shiftment
+
+    declare -i value1=$1
+    declare -i value2=$2
+
+    echo "=============================================="
+    printf "====== perform an binary operation for value:\`%d\` and \`%d\` ======" $value1 $value2
+    echo ""
+
+    result_after_bitwise_and=$(( value1 & value2 ))
+
+    printf "perform bitwise AND of \`%d\`,\`%d\` equals to \`%d\`" $value1 $value2 $result_after_bitwise_and
+    echo ""
+    echo ""
+
+    result_after_bitwise_or=$(( value1 | value2 ))
+
+    printf "perform bitwise OR of \`%d\`,\`%d\` equals to \`%d\`" $value1 $value2 $result_after_bitwise_or
+    echo ""
+    echo ""
+
+    result_after_bitwise_exclusive_or=$(( value1 ^ value2 ))
+
+    printf "perform bitwise exclusive OR of \`%d\`,\`%d\` equals to \`%d\`" $value1 $value2 $result_after_bitwise_exclusive_or
+    echo ""
+    echo ""
+
+    result_after_bitwise_right_shiftment=$(( value1 >> value2 ))
+
+    printf "bitwise right shiftment \`%d\` bits of \`%d\` equals to \`%d\`" $value1 $value2 $result_after_bitwise_right_shiftment
+    echo ""
+    echo ""
+
+    result_after_bitwise_left_shiftment=$(( value1 << value2 ))
+
+    printf "bitwise left shiftment \`%d\` bits of \`%d\` equals to \`%d\`" $value1 $value2 $result_after_bitwise_left_shiftment
+    echo ""
+    echo ""
+
+    echo "=============================================="
+}
+
+function perform_unary_bitwise_operation(){
+    declare -i result_after_bitwise_not
+    
+    declare -i value1=$1
+
+    echo "=============================================="
+    printf "====== perform an unary operation for value:\`%d\` ======" $value1
+    echo ""
+
+    result_after_bitwise_not=$(( ~ value1 ))
+
+    printf "perform bitwise NOT of \`%d\` equals to \`%d\`" $value1 $result_after_bitwise_not
+    echo ""
+    echo ""
+
+    echo "=============================================="
+}
+
+main(){
+    perform_unary_bitwise_operation 31 
+    perform_binary_bitwise_operation 31 16
+    perform_binary_bitwise_operation 16 15
+    perform_binary_bitwise_operation 16 2
+    perform_binary_bitwise_operation 2 5
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\operations\bitwise operators\bitwise-operators-example-1.bash"
+==============================================
+====== perform an unary operation for value:`31` ======
+perform bitwise NOT of `31` equals to `-32`
+
+==============================================
+==============================================
+====== perform an binary operation for value:`31` and `16` ======
+perform bitwise AND of `31`,`16` equals to `16`
+
+perform bitwise OR of `31`,`16` equals to `31`
+
+perform bitwise exclusive OR of `31`,`16` equals to `15`
+
+bitwise right shiftment `31` bits of `16` equals to `0`
+
+bitwise left shiftment `31` bits of `16` equals to `2031616`
+
+==============================================
+==============================================
+====== perform an binary operation for value:`16` and `15` ======
+perform bitwise AND of `16`,`15` equals to `0`
+
+perform bitwise OR of `16`,`15` equals to `31`
+
+perform bitwise exclusive OR of `16`,`15` equals to `31`
+
+bitwise right shiftment `16` bits of `15` equals to `0`
+
+bitwise left shiftment `16` bits of `15` equals to `524288`
+
+==============================================
+==============================================
+====== perform an binary operation for value:`16` and `2` ======
+perform bitwise AND of `16`,`2` equals to `0`
+
+perform bitwise OR of `16`,`2` equals to `18`
+
+perform bitwise exclusive OR of `16`,`2` equals to `18`
+
+bitwise right shiftment `16` bits of `2` equals to `4`
+
+bitwise left shiftment `16` bits of `2` equals to `64`
+
+==============================================
+==============================================
+====== perform an binary operation for value:`2` and `5` ======
+perform bitwise AND of `2`,`5` equals to `0`
+
+perform bitwise OR of `2`,`5` equals to `7`
+
+perform bitwise exclusive OR of `2`,`5` equals to `7`
+
+bitwise right shiftment `2` bits of `5` equals to `0`
+
+bitwise left shiftment `2` bits of `5` equals to `64`
+
+==============================================
+
+```
+
+## CH5-4 -- get length of string
 To get length of string, just simply use `#` followed by a varible then wrapped with `${}`
 
 
 ### Examples
-
 #### Example 1
 To get length of `STR` global variable,
 
@@ -504,6 +659,4 @@ $(( ${#VARIABLE} ))
 > `${#"STR"}` returns the length of string `STR` and string type.
 
 > [!IMPORTANT]
-> `$(( ${#VARIABLE} ))` returns the length of string `STR` and number type.
-
-
+> `$(( ${#VARIABLE} ))` returns the length of string `STR` as number type.
