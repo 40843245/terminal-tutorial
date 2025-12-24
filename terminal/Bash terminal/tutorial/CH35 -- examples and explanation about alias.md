@@ -651,5 +651,144 @@ throwing an error like `command not found`
 
 ### Example 5
 #### code
+`alias-example-5.bash`
+
+```
+shopt -s expand_aliases
+
+alias alias_func1='func1'
+alias alias_func2='func2'
+
+function func1(){
+    echo "In function named \`func1\`"
+}
+
+function func2(){
+    echo "In function named \`${FUNCNAME[0]}\`"
+}
+
+function func3(){
+    echo "In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+}
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    alias alias_func3='func3'
+    
+    function func3(){
+        echo "Defined in function named \`main\` scope. In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+    }
+
+    # use alias
+
+    echo "call function named \`func1\` by using function name"
+    func1
+    echo "call function named \`func1\` by using alias name"
+    alias_func1
+
+    echo "call function named \`func2\` by using function name"
+    func2
+    echo "call function named \`func2\` by using alias name"
+    alias_func2
+
+    echo "call function named \`func3\` by using function name"
+    func3 "Hello World"
+    echo "call function named \`func1\` by using alias name"
+    alias_func3 "Hello World"
+}
+
+main
+
+shopt -u expand_aliases
+```
+
 #### output
+executing this script will throw errors and echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-5.bash"
+--- current list of alias ---
+alias alias_func1='func1'
+alias alias_func2='func2'
+call function named `func1` by using function name
+In function named `func1`
+call function named `func1` by using alias name
+In function named `func1`
+call function named `func2` by using function name
+In function named `func2`
+call function named `func2` by using alias name
+In function named `func2`
+call function named `func3` by using function name
+Defined in function named `main` scope. In function named `func3`, it receives these arguments `1`
+call function named `func1` by using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-5.bash: line 43: alias_func3: command not found
+
+```
+
 #### explanation
+The reason why throws an error `alias_func3` command not found is same as the reason in example 4. Skip it.
+
+### Example 6
+#### code
+`alias-example-6.bash"`
+
+```
+shopt -s expand_aliases
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+    
+    alias say_hello='echo Hello from Alias!'
+    alias say_dirty_word='echo dirty word from Alias!' 
+
+    # use alias
+    eval "say_hello"
+    echo ""
+    eval "say_dirty_word"
+}
+
+main
+
+shopt -u expand_aliases
+```
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-6.bash"
+--- current list of alias ---
+Hello from Alias!
+
+dirty word from Alias!
+
+```
+
+#### explanation
+In this example, there are no error due to re-parsing using `eval` bulit-in command.
+
+Take this statement as example.
+
+```
+eval "say_hello"
+```
+
+In this statement,
+
+`eval` will force Bash engine to re-parse with argument `say_hello`.
+
+When re-parsing with argument `say_hello`, it can be found from the mapping table 
+
+since it is inserted into when executing this statement
+
+```
+alias say_hello='echo Hello from Alias!'
+```
+
+defined in `main` function, but before executing
+
+```
+eval "say_hello"
+```
