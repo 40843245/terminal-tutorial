@@ -1,6 +1,8 @@
-# CH34 -- parsing alias names
+# CH34 -- parsing rule of aliasing names
 ## preface
-This is a technical note: Mastery of Bash Alias and `eval`
+This is a technical note: 
+
+`Mastery of Bash Alias`
 
 This note summarizes the behavioral mechanics of `alias` and the `eval` command, derived from a series of 28 comprehensive experiments. 
 
