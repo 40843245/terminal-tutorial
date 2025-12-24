@@ -507,3 +507,94 @@ Similar to explanation in example 2.
 
 Here, the aliased name is parsed after parsing `func1`,`func2`,`func3` does NOT affect the behavior because there are no aliases need to be expanded.
 
+### Example 4
+#### code
+`alias-example-4.bash`
+
+```
+shopt -s expand_aliases
+
+function func1(){
+    echo "In function named \`func1\`"
+}
+
+function func2(){
+    echo "In function named \`${FUNCNAME[0]}\`"
+}
+
+function func3(){
+    echo "In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+}
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    alias alias_func1='func1'
+    alias alias_func2='func2'
+    alias alias_func3='func3'
+
+    # use alias
+
+    echo "call function named \`func1\` by using function name"
+    func1
+    echo "call function named \`func1\` by using alias name"
+    alias_func1
+
+    echo "call function named \`func2\` by using function name"
+    func2
+    echo "call function named \`func2\` by using alias name"
+    alias_func2
+
+    echo "call function named \`func3\` by using function name"
+    func3 "Hello World"
+    echo "call function named \`func1\` by using alias name"
+    alias_func3 "Hello World"
+}
+
+main
+
+shopt -u expand_aliases
+```
+
+#### output
+executing this script will throw errors and echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-4.bash"
+--- current list of alias ---
+call function named `func1` by using function name
+In function named `func1`
+call function named `func1` by using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-4.bash: line 28: alias_func1: command not found
+call function named `func2` by using function name
+In function named `func2`
+call function named `func2` by using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-4.bash: line 33: alias_func2: command not found
+call function named `func3` by using function name
+In function named `func3`, it receives these arguments `1`
+call function named `func1` by using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-4.bash: line 38: alias_func3: command not found
+
+```
+
+#### explanation
+The reason why throwing this error with error message
+
+```
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-4.bash: line 28: alias_func1: command not found
+```
+
+saying `command not found` is
+
+1. During Bash engine parses the code block -- `main` body,
+
+When parsing
+
+```
+alias_func1
+```
+
+it will NOT find an alias named `alias_func1` from the mapping table, even though it is inserted before the statement `alias_func1`, 
+
+since Bash engine parses the whole block (explained in `2. The "Parsing Time" Trap`](https://github.com/40843245/terminal-tutorial/blob/main/terminal/Bash%20terminal/tutorial/CH34%20--%20parsing%20rule%20of%20aliasing%20names.md#2-the-parsing-time-trap
