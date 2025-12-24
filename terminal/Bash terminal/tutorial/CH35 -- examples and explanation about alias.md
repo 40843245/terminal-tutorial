@@ -267,3 +267,160 @@ In function named `func3`, it receives these arguments `1`
 ```
 
 ### explanation
+1. Bash engine parses this code block at first
+
+```
+shopt -s expand_aliases
+
+alias alias_func1='func1'
+alias alias_func2='func2'
+alias alias_func3='func3'
+
+function func1(){
+    # ...
+}
+
+function func2(){
+    # ...
+}
+
+function func3(){
+    # ...
+}
+
+main(){
+    # ...
+}
+
+main
+
+shopt -u expand_aliases
+```
+
+When parsing
+
+```
+alias alias_func1='func1'
+```
+
+during this parsing phrase,
+
+it gives an alias named `alias_func1` for which will be expanded to `func1` at parsing phrase (if it can) then insert it into a mapping table.
+
+Similarly, when parsing
+
+```
+alias alias_func2='func2'
+```
+
+during this parsing phrase,
+
+it gives an alias named `alias_func2` for which will be expanded to `func2` at parsing phrase (if it can) then insert it into a mapping table.
+
+Similarly, when parsing
+
+```
+alias alias_func3='func3'
+```
+
+during this parsing phrase,
+
+it gives an alias named `alias_func3` for which will be expanded to `func3` at parsing phrase (if it can) then insert it into a mapping table.
+
+2. Next, it parses 2th code block
+
+```
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    # use alias
+
+    echo "call function named \`func1\` by using function name"
+    func1
+    echo "call function named \`func1\` by using alias name"
+    alias_func1
+
+    echo "call function named \`func2\` by using function name"
+    func2
+    echo "call function named \`func2\` by using alias name"
+    alias_func2
+
+    echo "call function named \`func3\` by using function name"
+    func3 "Hello World"
+    echo "call function named \`func1\` by using alias name"
+    alias_func3 "Hello World"
+}
+```
+
+When parsing
+
+```
+alias_func1
+```
+
+during this parsing phrase,
+
+Bash engine will expand an alias named `alias_func1` to `func1` 
+
+It can expand the alias because `expand_aliases` functionality is enabled and it can found an alias named `alias_func1` from mapping table (it is inserted at 1th parsing phrase)
+
+Again, when parsing
+
+```
+alias_func2
+```
+
+during this parsing phrase,
+
+Bash engine will expand an alias named `alias_func2` to `func2` 
+
+It can expand the alias because `expand_aliases` functionality is enabled and it can found an alias named `alias_func2` from mapping table (it is inserted at 1th parsing phrase)
+
+Again, when parsing
+
+```
+alias_func3
+```
+
+during this parsing phrase,
+
+Bash engine will expand an alias named `alias_func3` to `func3` 
+
+It can expand the alias because `expand_aliases` functionality is enabled and it can found an alias named `alias_func3` from mapping table (it is inserted at 1th parsing phrase)
+
+Therefore, the 2th code block will be expanded into
+
+```
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    # use alias
+
+    echo "call function named \`func1\` by using function name"
+    func1
+    echo "call function named \`func1\` by using alias name"
+    func1
+
+    echo "call function named \`func2\` by using function name"
+    func2
+    echo "call function named \`func2\` by using alias name"
+    func2
+
+    echo "call function named \`func3\` by using function name"
+    func3 "Hello World"
+    echo "call function named \`func1\` by using alias name"
+    func3 "Hello World"
+}
+```
+
+3. At the end of 1th parsing phrase,
+
+It parses 
+
+```
+shopt -u expand_aliases
+```
+
+which will disable `expand_aliases` functionality, disallowing Bash engine to expand the alias at parsing phrase.
