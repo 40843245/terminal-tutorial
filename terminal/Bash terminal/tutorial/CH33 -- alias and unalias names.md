@@ -18,7 +18,7 @@ You will know use of `alias` and `unalias` including
 > [!WARNING]
 > To make other scripts be unaffected by **literal text substitutions** with incident,
 >
-> always disable `alias_expanded` functionality after main script executes.
+> always disable `expand_aliases` functionality after main script executes.
 
 ## CH33-1 -- give it an alias
 ### `alias`
