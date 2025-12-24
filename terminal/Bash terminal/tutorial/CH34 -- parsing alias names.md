@@ -27,13 +27,68 @@ Lastly, I will discuss these issues.
 > 
 > They are **literal text substitutions** with a mapping table about parse whose entry is inserted into during the parsing phase, before the command is executed.
 
-
-> [!IMPORTANT]
-> Pay attention to parsing phrase (such as when this statement is parsed)
-> 
-> The Bash engine reads and parse block-by block (NOT like in Python which reads and parse by per statement,
+> [!WARNING]
+> To make Bash engine consider it is a aliased name that needs to be expanded, you have to enable the functionality `expand_aliases`
 >
-> though they are BOTH considered to be a interpretive programming language)
+> About how to enable a functionality, see CH3.
+
+For example,
+
+To use aliased names `say_hello` and `say_dirty_word`, you have to tell Bash engine that they are aliased names, you have to expand it. 
+```
+alias say_hello='echo Hello from Alias!'
+alias say_dirty_word='echo dirty word from Alias!' 
+
+main(){
+    shopt -s expand_aliases
+
+    # use alias
+    say_hello
+    echo ""
+    say_dirty_word
+
+    shopt -u expand_aliases
+}
+
+main
+```
+
+> [!WARNING]
+> To make other scripts be unaffected by **literal text substitutions** with incident,
+>
+> always disable `alias_expanded` functionality after main script executes. 
+
+## CH34-2 -- principles about parsing an aliased name
+### 1\. Literal Substitution
+#### A. The Trailing Space Rule (Chaining)
+
+If an alias definition ends with a **space**, Bash will check the _next_ word for alias expansion.
+
+```
+    alias sudo='sudo '
+    alias ll='ls -l'
+    # Result: 'sudo ll' becomes 'sudo ls -l'
+```
+
+#### B. The Recursive Principle
+
+Bash keeps expanding aliases until the resulting first word is no longer an alias.
+
+```
+alias a='b '
+alias b='c '
+
+function main(){
+  eval "echo 'a'" # will result in echo `c`
+}
+
+main
+``` 
+
+### 2\. The "Parsing Time" Trap
+Pay attention to parsing phrase (such as when this statement is parsed)
+
+The Bash engine reads and parse block-by block (NOT parse them by per statement) at compile time.
 
 For example,
 
@@ -65,74 +120,35 @@ Thus, it is needed to tell Bash engine inserts two aliases name `say_hello` and 
 
 before the `main` function is defined  (and of course, NOT in the `main` function)
 
-if you want to 
+if you want to use these aliased name in `main` function 
 
+since Bash engine searches the mapping table and expands aliases names just immediately when whole `main` function is parsed (at compile time) 
 
-> [!WARNING]
-> To make Bash engine consider it is a aliased name that needs to be expanded, you have to enable the functionality `expand_aliases`
->
-> About how to enable a functionality, see CH3.
+Otherwise, it is needed to use `eval` built-in command to tell the Bash engine dynamically re-parse at the executionn of the statement (and thus dynamically re-evaluates it), 
 
-For example,
+resulting in, forcing do follows at execution of `eval` statement, 
 
-To use aliased names `say_hello` and `say_dirty_word`, you have to tell Bash engine that they are aliased names, you have to expand it. 
-```
-alias say_hello='echo Hello from Alias!'
-alias say_dirty_word='echo dirty word from Alias!' 
+Bash engine will insert the alias name into mapping table 
 
-main(){
-    shopt -s expand_aliases
-
-    # use alias
-    say_hello
-    echo ""
-    say_dirty_word
-
-    shopt -u expand_aliases
-}
-
-main
-```
+then searching the mapping table and expands aliases names.
 
 > [!WARNING]
-> To make other scripts be unaffected by **literal text substitutions** with incident,
+> `eval` is dangerous.
 >
-> Always close 
+> At the execution of `eval`, Bash engine is forced to be re-parsed, and thus will affect expanded results globally.
+>
+> see section 4 `Precedence and Overriding` for more details.
 
-## CH34-2 -- principles about parsing an aliased name
-### A. The Trailing Space Rule (Chaining)
+### 3\. The Role of `eval`
 
-If an alias definition ends with a **space**, Bash will check the _next_ word for alias expansion.
+`eval` forces the shell to re-parse a string as raw code, triggering the entire expansion pipeline 
 
-```
-    alias sudo='sudo '
-    alias ll='ls -l'
-    # Result: 'sudo ll' becomes 'sudo ls -l'
-```
-
-### B. The Recursive Principle
-
-Bash keeps expanding aliases until the resulting first word is no longer an alias.
-
-```
-alias a='b '`, `alias b='c'`, calling `a` results in `c`.
-``` 
-
-
-## 2\. The "Parsing Time" Trap
-
-In non-interactive scripts, code blocks (like functions) are parsed as a whole before execution.
-
--   **Problem:** Aliases defined or modified _inside_ a script are often unrecognized inside functions because the parser has already "compiled" the function body.
-    
--   **Solution:** Use **`eval`**.
-    
-
-* * *
-
-## 3\. The Role of `eval`
-
-`eval` forces the shell to re-parse a string as raw code, triggering the entire expansion pipeline (Alias -> Variable -> Arithmetic -> Command).
+> [!NOTE]
+> The expansion precedence is
+>
+> alias expansion-> variable expansion -> arithmetic expansion -> command expansion,
+>
+> see CH11 for more details.
 
 | Feature | Direct Alias Call | `eval "alias_name"` |
 | --- | --- | --- |
@@ -140,11 +156,8 @@ In non-interactive scripts, code blocks (like functions) are parsed as a whole b
 | **Inside Functions** | Usually fails | **Works consistently** |
 | **Late Binding** | No  | **Yes (Reflects current alias table)** |
 
-Export to Sheets
 
-* * *
-
-## 4\. Precedence & Overriding
+### 4\. Precedence and Overriding
 
 When a command is issued, Bash resolves the name in this order:
 
@@ -159,26 +172,27 @@ When a command is issued, Bash resolves the name in this order:
 5.  **Executable** (Found in `$PATH`)
     
 
-### Using `command` to Bypass
-
+#### Using `command` to bypass
 The `command` keyword tells Bash to **ignore aliases and functions**, going directly to builtins or files.
 
--   **Note:** `command` cannot see aliases. `command my_alias` will return `command not found`.
+See CH7 for more details.
+
+> [!NOTE]
+> `command` built-in cannot see aliases.
+
+`command my_alias` will return `command not found`.
     
-
-* * *
-
-## 5\. Advanced Magic: Function Injection
-
+### 5\. Advanced Magic: Function Injection
 Aliases can be used as "templates" to define or override functions at runtime.
 
-Bash
+For example,
+
+In a Bash script
 
     alias inject_logic='function func1(){ echo "New Logic"; }'
     eval "inject_logic"
     # Now func1() is updated in the global scope.
 
-* * *
 
 ## 6\. Developer Cheat Sheet (Bash vs. C#)
 
