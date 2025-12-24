@@ -241,13 +241,9 @@ using alias can easier to resolve it.
 
 You don't need to 
 
-define a function (that needs to handle the other options of `ls` built-in command for different environment)
+define a function (that needs to handle the other options of `ls` built-in command for different environment which is much more complex)
 
-and
-
-concatenate the string about `ls` command then re-parse it through `eval` built-in command.
-
-For example, you don't need to do following for example which is much more complex.
+see following example.
 
 ```
 function list_items(){
@@ -294,19 +290,72 @@ I will discuss these issues, respectively.
 #### Q1: what's the pros and cons of using aliased name compared to using functions
 1. For aliased name in Bash,
 
-Pro:
+* Pros:
 
-+ Simplicity for simple command:
+  + Simplicity for simple command:
 
-  Extremely easy to define for simple command shortcuts
+    Extremely easy to define for simple command shortcuts
   
-+ Easier to implement cross-platform:
+  + Easier to implement cross-platform:
 
-In different environemts, the command arguments may be different.
+    In different environemts, the command arguments may be different.
 
-It is easier to handle the command arguments in diffent environment by aliasing the command arguments as a new name.
+    It is easier to handle the command arguments in diffent environment by aliasing the command arguments as a new name.
 
-### CH3-5 -- conclusion
+    see the example in `Pro-Tip: Conditional Alias` of CH34-4 as its usage.
+
+* Cons (Fatal cons): 
+
+  + No arguments support:
+
+    Can't pass an argument in aliased name
+
+  + Limited logic:
+
+    Since you can't easily use `if`, repetitive loops, or local variable within standard alias.
+
+  + Parsing issues:
+ 
+    Aliases inside functions often fail unless wrapped in eval because they are resolved during parsing phrase at compiled time, rather than execution time.
+
+    see `Parsing Traps` of CH34-2 for more details.
+
+2. For functions in Bash
+
+* Pros (which are more concerned relatively to its cons):
+
+  + Argument support:
+    
+    Functions fully support positional parameters (`$1`, `$2`, `$@`).
+    
+  + Local scope:
+
+    You can use the `local` keyword inside a function to prevent variable leakage, variable pollution.
+    
+  + Complex logic:
+
+    Supports including loops, conditionals, and redirections.
+    
+  + Reliable resolution:
+
+    Functions are resolved at execution time, making them much more stable inside scripts and other functions without needing `eval`
+
+    since `eval` is NOT safe (might be injected for malicious use) and might cause unexpected behavior.
+    
+  + Overriding Capability:
+
+    You can use functions to wrap and extend existing commands (using the `command` keyword to call the original).
+    
+
+* Cons
+    
+  + Lookup priority:
+
+    While high, they sit below aliases in the command lookup order (see CH11).
+
+    Thus if an alias and a function share the same name, the alias wins.
+
+### CH34-5 -- conclusion
 For robust script development:
 
 1.  Use **Functions** for logic and parameters.
