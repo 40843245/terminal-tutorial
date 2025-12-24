@@ -58,7 +58,7 @@ main
 > [!WARNING]
 > To make other scripts be unaffected by **literal text substitutions** with incident,
 >
-> always disable `alias_expanded` functionality after main script executes. 
+> always disable `expand_aliases` functionality after main script executes. 
 
 ## CH34-2 -- principles about parsing an aliased name
 ### 1\. Literal Substitution
