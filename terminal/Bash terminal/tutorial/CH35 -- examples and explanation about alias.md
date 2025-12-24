@@ -155,7 +155,7 @@ similarly, Bash engine will expand an alias named `say_dirty_word` to `echo dirt
 
 It can expand the alias because `expand_aliases` functionality is enabled and it can found an alias named `say_dirty_word` from mapping table (it is inserted at 1th parsing phrase)
 
-Therefore, after 2th parsing phrase, it will be expanded into
+Therefore, the code block will be expanded into
 
 ```
 main(){
@@ -327,7 +327,9 @@ during this parsing phrase,
 
 it gives an alias named `alias_func3` for which will be expanded to `func3` at parsing phrase (if it can) then insert it into a mapping table.
 
-2. Next, it parses 2th code block
+2. Next, it parses `func1`, `func2`,`func3`,`main` function respectively.
+
+Look at `main` function body
 
 ```
 main(){
@@ -389,7 +391,7 @@ Bash engine will expand an alias named `alias_func3` to `func3`
 
 It can expand the alias because `expand_aliases` functionality is enabled and it can found an alias named `alias_func3` from mapping table (it is inserted at 1th parsing phrase)
 
-Therefore, the 2th code block will be expanded into
+Therefore, the code block will be expanded into
 
 ```
 main(){
@@ -424,3 +426,84 @@ shopt -u expand_aliases
 ```
 
 which will disable `expand_aliases` functionality, disallowing Bash engine to expand the alias at parsing phrase.
+
+### Example 3
+#### code
+`alias-example-3.bash`
+
+```
+shopt -s expand_aliases
+
+function func1(){
+    echo "In function named \`func1\`"
+}
+
+function func2(){
+    echo "In function named \`${FUNCNAME[0]}\`"
+}
+
+
+function func3(){
+    echo "In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+}
+
+alias alias_func1='func1'
+alias alias_func2='func2'
+alias alias_func3='func3'
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    # use alias
+
+    echo "call function named \`func1\` by using function name"
+    func1
+    echo "call function named \`func1\` by using alias name"
+    alias_func1
+
+    echo "call function named \`func2\` by using function name"
+    func2
+    echo "call function named \`func2\` by using alias name"
+    alias_func2
+
+    echo "call function named \`func3\` by using function name"
+    func3 "Hello World"
+    echo "call function named \`func1\` by using alias name"
+    alias_func3 "Hello World"
+}
+
+main
+
+shopt -u expand_aliases
+```
+
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-3.bash"
+--- current list of alias ---
+alias alias_func1='func1'
+alias alias_func2='func2'
+alias alias_func3='func3'
+call function named `func1` by using function name
+In function named `func1`
+call function named `func1` by using alias name
+In function named `func1`
+call function named `func2` by using function name
+In function named `func2`
+call function named `func2` by using alias name
+In function named `func2`
+call function named `func3` by using function name
+In function named `func3`, it receives these arguments `1`
+call function named `func1` by using alias name
+In function named `func3`, it receives these arguments `1`
+
+```
+
+#### explanation
+Similar to explanation in example 2.
+
+Here, the aliased name is parsed after parsing `func1`,`func2`,`func3` does NOT affect the behavior because there are no aliases need to be expanded.
+
