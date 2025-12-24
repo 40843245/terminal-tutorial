@@ -597,4 +597,4 @@ alias_func1
 
 it will NOT find an alias named `alias_func1` from the mapping table, even though it is inserted before the statement `alias_func1`, 
 
-since Bash engine parses the whole block (explained in `2. The "Parsing Time" Trap`](https://github.com/40843245/terminal-tutorial/blob/main/terminal/Bash%20terminal/tutorial/CH34%20--%20parsing%20rule%20of%20aliasing%20names.md#2-the-parsing-time-trap
+since Bash engine parses the whole block (explained in [2. The "Parsing Time" Traps](https://github.com/40843245/terminal-tutorial/blob/main/terminal/Bash%20terminal/tutorial/CH34%20--%20parsing%20rule%20of%20aliasing%20names.md#2-the-parsing-time-trap)
