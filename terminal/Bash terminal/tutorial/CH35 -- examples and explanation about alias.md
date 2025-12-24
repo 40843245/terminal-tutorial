@@ -792,3 +792,261 @@ defined in `main` function, but before executing
 ```
 eval "say_hello"
 ```
+
+### Example 7
+#### code
+`alias-example-7.bash`
+
+```
+shopt -s expand_aliases
+
+function func1(){
+    echo "In function named \`func1\`"
+}
+
+function func2(){
+    echo "In function named \`${FUNCNAME[0]}\`"
+}
+
+function func3(){
+    echo "In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+}
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    alias alias_func1='func1'
+    alias alias_func2='func2'
+    alias alias_func3='func3'
+
+    # use alias
+    echo "call function named \`func1\` by using function name"
+    func1
+    echo "call function named \`func1\` by using alias name"
+    eval "alias_func1"
+
+    echo "call function named \`func2\` by using function name"
+    func2
+    echo "call function named \`func2\` by using alias name"
+    eval "alias_func2"
+
+    echo "call function named \`func3\` by using function name"
+    func3 "Hello World"
+    echo "call function named \`func1\` by using alias name"
+    eval "alias_func3 \"Hello World\""
+}
+
+main
+
+shopt -u expand_aliases
+```
+
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-7.bash"
+--- current list of alias ---
+call function named `func1` by using function name
+In function named `func1`
+call function named `func1` by using alias name
+In function named `func1`
+call function named `func2` by using function name
+In function named `func2`
+call function named `func2` by using alias name
+In function named `func2`
+call function named `func3` by using function name
+In function named `func3`, it receives these arguments `1`
+call function named `func1` by using alias name
+In function named `func3`, it receives these arguments `1`
+
+```
+
+#### explanation
+Similar to explanation in example 6, it uses `eval` to force Bash engine to re-parse it with arguments.
+
+### Example 8
+#### code
+`alias-example-8.bash`
+
+```
+shopt -s expand_aliases
+
+alias alias_alias_func1='alias_func1'
+alias alias_alias_func2='alias_func2'
+alias alias_alias_func3='alias_func3'
+
+alias alias_func1='func1'
+alias alias_func2='func2'
+alias alias_func3='func3'
+
+function func1(){
+    echo "In function named \`func1\`"
+}
+
+function func2(){
+    echo "In function named \`${FUNCNAME[0]}\`"
+}
+
+function func3(){
+    echo "In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+}
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    # use alias
+    echo "call function named \`func1\` by using function name"
+    func1
+    echo "call function named \`func1\` by using alias name"
+    eval "alias_func1"
+    echo "call function named \`func1\` by using alias name of alias name"
+    eval "alias_alias_func1"
+
+    echo "call function named \`func2\` by using function name"
+    func2
+    echo "call function named \`func2\` by using alias name"
+    eval "alias_func2"
+    echo "call function named \`func2\` by using alias name of alias name"
+    eval "alias_alias_func2"
+
+    echo "call function named \`func3\` by using function name"
+    func3 "Hello World"
+    echo "call function named \`func1\` by using alias name"
+    eval "alias_func3 \"Hello World\""
+    echo "call function named \`func2\` by using alias name of alias name"
+    eval "alias_alias_func3 \"Hello World\""
+}
+
+main
+
+shopt -u expand_aliases
+```
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-8.bash"
+--- current list of alias ---
+alias alias_alias_func1='alias_func1'
+alias alias_alias_func2='alias_func2'
+alias alias_alias_func3='alias_func3'
+alias alias_func1='func1'
+alias alias_func2='func2'
+alias alias_func3='func3'
+call function named `func1` by using function name
+In function named `func1`
+call function named `func1` by using alias name
+In function named `func1`
+call function named `func1` by using alias name of alias name
+In function named `func1`
+call function named `func2` by using function name
+In function named `func2`
+call function named `func2` by using alias name
+In function named `func2`
+call function named `func2` by using alias name of alias name
+In function named `func2`
+call function named `func3` by using function name
+In function named `func3`, it receives these arguments `1`
+call function named `func1` by using alias name
+In function named `func3`, it receives these arguments `1`
+call function named `func2` by using alias name of alias name
+In function named `func3`, it receives these arguments `1`
+
+```
+#### explanation
+Similar to explanation of exmaple 6. Skip it.
+
+### Example 9
+#### code
+`alias-example-9.bash`
+
+```
+shopt -s expand_aliases
+
+alias alias_alias_func1='alias_func1'
+alias alias_alias_func2='alias_func2'
+alias alias_alias_func3='alias_func3'
+
+alias alias_func1='func1'
+alias alias_func2='func2'
+alias alias_func3='func3'
+
+function func1(){
+    echo "In function named \`func1\`"
+}
+
+function func2(){
+    echo "In function named \`${FUNCNAME[0]}\`"
+}
+
+function func3(){
+    echo "In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+}
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    # use alias
+    echo "call function named \`func1\` by using function name"
+    func1
+    echo "call function named \`func1\` by using alias name"
+    eval "alias_func1"
+    echo "call function named \`func1\` by using alias name of alias name"
+    eval "alias_alias_func1"
+
+    echo "call function named \`func2\` by using function name"
+    func2
+    echo "call function named \`func2\` by using alias name"
+    alias_func2
+    echo "call function named \`func2\` by using alias name of alias name"
+    alias_alias_func2
+
+    echo "call function named \`func3\` by using function name"
+    func3 "Hello World"
+    echo "call function named \`func1\` by using alias name"
+    alias_func3 "Hello World"
+    echo "call function named \`func2\` by using alias name of alias name"
+    alias_alias_func3 "Hello World"
+}
+
+main
+
+shopt -u expand_aliases
+```
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-9.bash"
+--- current list of alias ---
+alias alias_alias_func1='alias_func1'
+alias alias_alias_func2='alias_func2'
+alias alias_alias_func3='alias_func3'
+alias alias_func1='func1'
+alias alias_func2='func2'
+alias alias_func3='func3'
+call function named `func1` by using function name
+In function named `func1`
+call function named `func1` by using alias name
+In function named `func1`
+call function named `func1` by using alias name of alias name
+In function named `func1`
+call function named `func2` by using function name
+In function named `func2`
+call function named `func2` by using alias name
+In function named `func2`
+call function named `func2` by using alias name of alias name
+In function named `func2`
+call function named `func3` by using function name
+In function named `func3`, it receives these arguments `1`
+call function named `func1` by using alias name
+In function named `func3`, it receives these arguments `1`
+call function named `func2` by using alias name of alias name
+In function named `func3`, it receives these arguments `1`
+
+```
+#### explanation
