@@ -19,7 +19,7 @@ Lastly, I will discuss these issues.
 
   + what's the pros and cons of using aliased name compared to using functions
   + why use functions for logic and parameters rather than aliased names
-  + which is better to use aliased name than using functions.
+  + which is better to use aliased name rather than functions.
     
 ## CH34-1 -- notice
 > [!IMPORTANT]
@@ -282,11 +282,6 @@ main
 ```
 
 ### CH34-4 -- issues about aliased name
-I will discuss these issues, respectively.
-  + what's the pros and cons of using aliased name compared to using functions
-  + why use functions for logic and parameters rather than aliased names
-  + which is better to use aliased name than using functions.
-
 #### Q1: what's the pros and cons of using aliased name compared to using functions
 1. For aliased name in Bash,
 
