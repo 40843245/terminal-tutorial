@@ -161,15 +161,15 @@ then searching the mapping table and expands aliases names.
 
 When a command is issued, Bash resolves the name in this order:
 
-1.  **Alias** (Highest priority)
+1.  **Aliased name** (uses `alias`)
     
 2.  **Keyword** (e.g., `if`, `function`)
     
 3.  **Function**
     
-4.  **Builtin** (e.g., `cd`, `unset`)
+4.  **Built-in function** (e.g., `cd`, `unset`)
     
-5.  **Executable** (Found in `$PATH`)
+5.  **Executable** (found in `$PATH`)
     
 
 #### Using `command` to bypass
@@ -191,10 +191,13 @@ In a Bash script
 
     alias inject_logic='function func1(){ echo "New Logic"; }'
     eval "inject_logic"
-    # Now func1() is updated in the global scope.
+    # Now func1() is updated in the global scope. For the explanation of the reason, see section 2
 
 
-## 6\. Developer Cheat Sheet (Bash vs. C#)
+### 6\. Developer Cheat Sheet (Bash vs. C#)
+These have been discussed in previous chapters. 
+
+I will take notes that is used in this chapter.
 
 | Bash Concept | C# Analogy | Key Takeaway |
 | --- | --- | --- |
@@ -204,12 +207,106 @@ In a Bash script
 | **Trailing Space** | Fluent Interface / Chaining | Allows aliases to "stack" on each other. |
 | **`shopt -s expand_aliases`** | Compiler Flag | Must be enabled for aliases to work in scripts. |
 
-Export to Sheets
+### CH34-3 -- Pro-Tip or better usage
+#### 1\. Pro-Tip: Conditional Alias (The "C# #if" Equivalent)
+Use conditional logic to define aliases based on diffent environment:
 
-* * *
+```
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    alias ls='ls -G' # macOS
+else
+    alias ls='ls --color=auto' # Linux
+fi
 
-## 7\. Conclusion
+main(){
+  ls 
 
+  ls -l
+
+  ls -l
+}
+
+main
+```
+
+In the above script,
+
+it gives an aliased name `ls` and overwrites the orginal behavior of `ls` built-in command
+
+When using an aliased name `ls`, it will list items with background color green.
+
+In different environments, listing item with background color green takes different options and arguments,
+
+using alias can easier to resolve it.
+
+You don't need to 
+
+define a function (that needs to handle the other options of `ls` built-in command for different environment)
+
+and
+
+concatenate the string about `ls` command then re-parse it through `eval` built-in command.
+
+For example, you don't need to do following for example which is much more complex.
+
+```
+function list_items(){
+  local command_str=""
+  declare -i i=0
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+      command_str='ls -G' # macOS
+  else
+      command_str='ls --color=auto' # Linux
+  fi
+  for (( i=0; i<$# ; i+=2 )); do
+    ## TODO: check the corresponding argument of option name is available for the option and other check (which are the most complex parts)
+    ## ... lots of code
+
+    # concatenate the `command_str` variable
+    # with 1th passed argument (as option name), 2th passed argument (as corresponding argument of option name) (using zero-based index) on 0th iteration
+    # with 3th passed argument (as option name), 4th passed argument (as corresponding argument of option name) (using zero-based index) on 1th iteration
+    # and so on
+    # However, for best practice, you need to first check the corresponding argument of option name is available for the option and other check (which are the most complex parts)
+    # Otherwise, you will build an invalid command related to `ls`, causing error or unexpected behavior (which is extremely hard to debug it) when re-parse it with `eval`.
+    command_str="$command_str '${$i+1}' '${$i+2}'"
+  done
+
+  eval "$command_str"
+}
+
+main(){
+  list_item 
+
+  list_item "-l"
+
+  list_item "-l"
+}
+
+main
+```
+
+### CH34-4 -- issues about aliased name
+I will discuss these issues, respectively.
+  + what's the pros and cons of using aliased name compared to using functions
+  + why use functions for logic and parameters rather than aliased names
+  + which is better to use aliased name than using functions.
+
+#### Q1: what's the pros and cons of using aliased name compared to using functions
+1. For aliased name in Bash,
+
+Pro:
+
++ Simplicity for simple command:
+
+  Extremely easy to define for simple command shortcuts
+  
++ Easier to implement cross-platform:
+
+In different environemts, the command arguments may be different.
+
+It is easier to handle the command arguments in diffent environment by aliasing the command arguments as a new name.
+
+### CH3-5 -- conclusion
 For robust script development:
 
 1.  Use **Functions** for logic and parameters.
@@ -217,6 +314,3 @@ For robust script development:
 2.  Use **Aliases** for interactive shortcuts or simple command wrapping.
     
 3.  Use **`eval`** whenever an alias must be resolved dynamically inside a function scope.
-
-
-
