@@ -1101,18 +1101,49 @@ alias are_all_functionalities_enabled='is_all_functionalities_enabled '
 
 source "$SCRIPT_DIR/../../utility modules/functionality enabled/shopt-many-functionalities-both-enabled-module.bash"
 
-
 main(){
+    declare -i enabled=0;
+    local status_text=""
+    local args
+
+    type is_all_functionalities_enabled
+
     echo "--- current list of alias ---"
     alias
 
     # use alias
+    args="expand_aliases"
     echo "call function named \`is_all_functionalities_enabled\` by using function name"
-    is_all_functionalities_enabled "expand_aliases"
+    is_all_functionalities_enabled "$args"
+    enabled=$?
+    if [[ $enabled -eq 0 ]]; then
+        status_text="These functionalities \`$args\` are both enabled"
+    else
+        status_text="These functionalities \`$args\` are NOT both enabled"
+    fi
+    echo "$status_text"
+
+    args="expand_aliases"
     echo "call function named \`is_all_functionalities_enabled\` by using alias name"
-    eval "are_all_functionalities_enabled \"expand_aliases\""
+    eval "are_all_functionalities_enabled \"$args\""
+    enabled=$?
+    if [[ $enabled -eq 0 ]]; then
+        status_text="These functionalities \`$args\` are both enabled"
+    else
+        status_text="These functionalities \`$args\` are NOT both enabled"
+    fi
+    echo "$status_text"
+
+    args="expand_aliases"
     echo "call function named \`is_all_functionalities_enabled\` by using alias name"
-    are_all_functionalities_enabled "expand_aliases"
+    are_all_functionalities_enabled "$args"
+    enabled=$?
+    if [[ $enabled -eq 0 ]]; then
+        status_text="These functionalities \`$args\` are both enabled"
+    else
+        status_text="These functionalities \`$args\` are NOT both enabled"
+    fi
+    echo "$status_text"
 }
 
 main
@@ -1124,11 +1155,46 @@ executing this main script will echo
 
 ```
 $ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-10.bash"
+is_all_functionalities_enabled is a function
+is_all_functionalities_enabled ()
+{
+    for item in "$@";
+    do
+        shopt -q "$item";
+        if [ $? -eq 0 ]; then
+            return 1;
+        fi;
+    done;
+    return 0
+}
 --- current list of alias ---
-alias are_all_functionalities_enabled='is_all_functionalities_enabled'
+alias are_all_functionalities_enabled='is_all_functionalities_enabled '
 call function named `is_all_functionalities_enabled` by using function name
+These functionalities `expand_aliases` are NOT both enabled
 call function named `is_all_functionalities_enabled` by using alias name
+These functionalities `expand_aliases` are NOT both enabled
 call function named `is_all_functionalities_enabled` by using alias name
+These functionalities `expand_aliases` are NOT both enabled
 
 ```
 #### explanation
+Although the alias statement
+
+```
+alias are_all_functionalities_enabled='is_all_functionalities_enabled '
+```
+
+`is_all_functionalities_enabled` function has NOT been imported yet,
+
+it is unrelated to behavior 
+
+since Bash engine will expand the alias name (here, is `are_all_functionalities_enabled`) to its content (here, is `is_all_functionalities_enabled `) using `alias` built-in command
+
+if it can (i.e. the alias name can be found from mapping table and it is allowed to Bash engine expands the alias name 
+
+### Example 11
+#### code
+``
+#### output
+#### explanation
+
