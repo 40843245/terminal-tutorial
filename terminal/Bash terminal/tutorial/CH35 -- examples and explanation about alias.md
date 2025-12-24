@@ -597,4 +597,59 @@ alias_func1
 
 it will NOT find an alias named `alias_func1` from the mapping table, even though it is inserted before the statement `alias_func1`, 
 
-since Bash engine parses the whole block (explained in [2. The "Parsing Time" Traps](https://github.com/40843245/terminal-tutorial/blob/main/terminal/Bash%20terminal/tutorial/CH34%20--%20parsing%20rule%20of%20aliasing%20names.md#2-the-parsing-time-trap)
+since Bash engine parses the whole `main` block (explained in [2. The "Parsing Time" Traps](https://github.com/40843245/terminal-tutorial/blob/main/terminal/Bash%20terminal/tutorial/CH34%20--%20parsing%20rule%20of%20aliasing%20names.md#2-the-parsing-time-trap))
+
+More precisely said, 
+
+the alias name `alias_func1` will be inserted into mapping table when executing
+
+```
+alias alias_func1='func1'
+```
+
+inside the `main` function.
+
+However, it is NOT executed when parsing the whole `main` block (NOTE: not `main` command itself)
+
+And so on for `alias_func2`, `alias_func3`
+
+Thus, `main` body is expanded to
+
+```
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    alias alias_func1='func1'
+    alias alias_func2='func2'
+    alias alias_func3='func3'
+
+    # use alias
+
+    echo "call function named \`func1\` by using function name"
+    func1
+    echo "call function named \`func1\` by using alias name"
+    alias_func1
+
+    echo "call function named \`func2\` by using function name"
+    func2
+    echo "call function named \`func2\` by using alias name"
+    alias_func2
+
+    echo "call function named \`func3\` by using function name"
+    func3 "Hello World"
+    echo "call function named \`func1\` by using alias name"
+    alias_func3 "Hello World"
+}
+```
+
+Consequently, when executing `main` function, 
+
+the Bash engine can't find the command `alias_func1`, 
+
+throwing an error like `command not found`
+
+### Example 5
+#### code
+#### output
+#### explanation
