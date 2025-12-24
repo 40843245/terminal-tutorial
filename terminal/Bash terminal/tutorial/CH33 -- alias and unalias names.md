@@ -72,12 +72,12 @@ where
 It will unalias `{aliased-name}`
 
 ## CH33-3 -- unalias all aliased names
-### `unalias`
+### `unalias -a`
 
 syntax:
 
 ```
-unalias
+unalias -a
 ```
 
 It will unalias all aliased names.
