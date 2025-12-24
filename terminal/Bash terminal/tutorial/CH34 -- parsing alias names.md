@@ -302,7 +302,7 @@ I will discuss these issues, respectively.
 
     It is easier to handle the command arguments in diffent environment by aliasing the command arguments as a new name.
 
-    see the example in `Pro-Tip: Conditional Alias` of CH34-4 as its usage.
+    see the example in `Pro-Tip: Conditional Alias` of CH34-3 as its usage.
 
 * Cons (Fatal cons): 
 
@@ -346,7 +346,6 @@ I will discuss these issues, respectively.
 
     You can use functions to wrap and extend existing commands (using the `command` keyword to call the original).
     
-
 * Cons
     
   + Lookup priority:
@@ -354,6 +353,14 @@ I will discuss these issues, respectively.
     While high, they sit below aliases in the command lookup order (see CH11).
 
     Thus if an alias and a function share the same name, the alias wins.
+
+#### Q2: why use functions for logic and parameters rather than aliased names
+it is discussed in Q1, see Q1.
+
+#### Q3: which is better to use aliased name rather than functions
+For command shortcuts especially for commands whose available options are different in different platform.
+
+see the example in `Pro-Tip: Conditional Alias` of CH34-3 as its usage.
 
 ### CH34-5 -- conclusion
 For robust script development:
