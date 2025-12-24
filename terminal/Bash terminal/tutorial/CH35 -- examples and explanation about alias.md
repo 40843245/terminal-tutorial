@@ -957,7 +957,14 @@ In function named `func3`, it receives these arguments `1`
 
 ```
 #### explanation
-Similar to explanation of exmaple 6. Skip it.
+Similar to explanation of exmaple 6. 
+
+Additionally, the example illustrates that 
+
+    + an alias can be aliased by other aliases.
+    + re-parse chain using `eval`:
+
+        When re-parsing, the Bash engine will parse an alias again and again until it is NOT parsed to an alias  
 
 ### Example 9
 #### code
@@ -1047,6 +1054,81 @@ call function named `func1` by using alias name
 In function named `func3`, it receives these arguments `1`
 call function named `func2` by using alias name of alias name
 In function named `func3`, it receives these arguments `1`
+
+```
+#### explanation
+Similar to the explanation of example 6. Skip it.
+
+### Example 10
+#### code
+utility module:
+
+`shopt-many-functionalities-both-enabled-module.bash`
+
+```
+### 模組
+### 目的:
+### 給定一系列的選項名稱(shopt能接受的選項)，檢查所有功能是否處於啟用狀態
+
+## 主要函式
+## 目的:
+## 給定一系列的選項名稱(shopt能接受的選項)，檢查所有功能是否處於啟用狀態
+## 回傳值:
+## 0: 所有功能是否處於啟用狀態
+## 1:其他
+function is_all_functionalities_enabled(){
+    for item in "$@"; do
+        shopt -q "$item"
+        if [ $? -eq 0 ]; then
+            return 1
+        fi
+    done
+    return 0
+}
+```
+
+main script:
+
+`alias-example-10.bash`
+
+```
+shopt -s expand_aliases
+
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+alias are_all_functionalities_enabled='is_all_functionalities_enabled '
+
+source "$SCRIPT_DIR/../../utility modules/functionality enabled/shopt-many-functionalities-both-enabled-module.bash"
+
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    # use alias
+    echo "call function named \`is_all_functionalities_enabled\` by using function name"
+    is_all_functionalities_enabled "expand_aliases"
+    echo "call function named \`is_all_functionalities_enabled\` by using alias name"
+    eval "are_all_functionalities_enabled \"expand_aliases\""
+    echo "call function named \`is_all_functionalities_enabled\` by using alias name"
+    are_all_functionalities_enabled "expand_aliases"
+}
+
+main
+
+shopt -u expand_aliases
+```
+#### output
+executing this main script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-10.bash"
+--- current list of alias ---
+alias are_all_functionalities_enabled='is_all_functionalities_enabled'
+call function named `is_all_functionalities_enabled` by using function name
+call function named `is_all_functionalities_enabled` by using alias name
+call function named `is_all_functionalities_enabled` by using alias name
 
 ```
 #### explanation
