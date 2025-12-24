@@ -76,7 +76,13 @@ main
 shopt -u expand_aliases
 ```
 
-When parsing `shopt -s expand_aliases` statement during this parsing phrase enable the functionality `expand_aliases` which allow to expand the alias during parsing phrase at compile time.
+When parsing 
+
+```
+shopt -s expand_aliases
+```
+
+statement during this parsing phrase enable the functionality `expand_aliases` which allow to expand the alias during parsing phrase at compile time.
 
 When parsing
 
@@ -175,3 +181,89 @@ main(){
     alias
 }
 ```
+
+3. At the end of 1th parsing phrase,
+
+It parses 
+
+```
+shopt -u expand_aliases
+```
+
+which will disable `expand_aliases` functionality, disallowing Bash engine to expand the alias at parsing phrase.
+
+### Example 2
+#### code
+`alias-example-2.bash`
+
+```
+shopt -s expand_aliases
+
+alias alias_func1='func1'
+alias alias_func2='func2'
+alias alias_func3='func3'
+
+function func1(){
+    echo "In function named \`func1\`"
+}
+
+function func2(){
+    echo "In function named \`${FUNCNAME[0]}\`"
+}
+
+function func3(){
+    echo "In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+}
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    # use alias
+
+    echo "call function named \`func1\` by using function name"
+    func1
+    echo "call function named \`func1\` by using alias name"
+    alias_func1
+
+    echo "call function named \`func2\` by using function name"
+    func2
+    echo "call function named \`func2\` by using alias name"
+    alias_func2
+
+    echo "call function named \`func3\` by using function name"
+    func3 "Hello World"
+    echo "call function named \`func1\` by using alias name"
+    alias_func3 "Hello World"
+}
+
+main
+
+shopt -u expand_aliases
+```
+
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-2.bash"
+--- current list of alias ---
+alias alias_func1='func1'
+alias alias_func2='func2'
+alias alias_func3='func3'
+call function named `func1` by using function name
+In function named `func1`
+call function named `func1` by using alias name
+In function named `func1`
+call function named `func2` by using function name
+In function named `func2`
+call function named `func2` by using alias name
+In function named `func2`
+call function named `func3` by using function name
+In function named `func3`, it receives these arguments `1`
+call function named `func1` by using alias name
+In function named `func3`, it receives these arguments `1`
+
+```
+
+### explanation
