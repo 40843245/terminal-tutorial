@@ -1450,6 +1450,72 @@ In function named `func3`, it receives these arguments `1`
 
 ```
 #### explanation
-
-#### explanation
 Similar to explanation in Example 13
+
+### Example 15
+#### code
+`alias-example-15.bash`
+
+```
+shopt -s expand_aliases
+
+alias set_var='set var=3;'
+alias set_var_twice='set_var set_var'
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+    declare -i var=2
+
+    echo "before setting variable using alias name"
+    printf "var:\`%d\`" $var
+    
+    # use alias
+    eval "set_var"
+
+    echo "after setting variable using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    set_var
+
+    echo "after setting variable using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    eval "set_var_twice"
+
+    echo "after setting variable twice using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    set_var_twice
+
+    echo "after setting variable twice using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+}
+
+main
+
+shopt -u expand_aliases
+```
+
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-15.bash"
+--- current list of alias ---
+alias set_var='set var=3;'
+alias set_var_twice='set_var set_var'
+before setting variable using alias name
+var:`2`after setting variable using alias name
+var:`2`
+after setting variable using alias name
+var:`2`
+after setting variable twice using alias name
+var:`2`
+after setting variable twice using alias name
+var:`2`
+```
