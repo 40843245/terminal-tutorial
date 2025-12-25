@@ -1386,4 +1386,70 @@ In function named `func3`, it receives these arguments `1`
 
 ```
 #### explanation
-Similar to explanation in Exampl 12
+Similar to explanation in Example 12
+
+### Example 14
+#### code
+utility modules:
+
+`alias-name-defined-in-external-source-example-4.bash`
+
+```
+shopt -s expand_aliases
+
+function func3(){
+    echo "In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+}
+```
+
+main script:
+
+`alias-example-14.bash`
+
+```
+shopt -s expand_aliases
+
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../utility modules/alias/alias-name-defined-in-external-source-example-4.bash"
+
+alias alias_func3='func3'
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    # use alias
+    echo "call function named \`func3\` defined on external source by using function name"
+    func3 "expand_aliases"
+    echo "call function named \`func3\` defined on external source by using alias name"
+    eval "alias_func3 \"expand_aliases\""
+    echo "call function named \`func3\` defined on external source by using alias name"
+    alias_func3 "expand_aliases"
+}
+
+main
+
+shopt -u expand_aliases
+```
+
+#### output
+executing this main script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-14.bash"
+--- current list of alias ---
+alias alias_func3='func3'
+call function named `func3` defined on external source by using function name
+In function named `func3`, it receives these arguments `1`
+call function named `func3` defined on external source by using alias name
+In function named `func3`, it receives these arguments `1`
+call function named `func3` defined on external source by using alias name
+In function named `func3`, it receives these arguments `1`
+
+```
+#### explanation
+
+#### explanation
+Similar to explanation in Example 13
