@@ -1255,4 +1255,8 @@ D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-11.bash: line 18: a
 
 ```
 #### explanation
+Although it is inserted to mapping table at parsing phrase at source file,
 
+the `expand_aliases` functionality is disabled at the end of source file.
+
+Thus, it is NOT allowed to expand the alias name with Bash engine when parsing at compiled phrase and re-parsing at execution phrase
