@@ -1526,6 +1526,6 @@ var:`2`
 ```
 
 #### explanation
-Since `echo_var` ends with `;` rather than whitspace ` `,
+Since the alias named `echo_var` is expanded to a string that does NOT end with whitspace ` `,
 when parsing and re-parsing, the alias named `echo_var_twice` will be expaned to `echo "var:\`$var\`" echo_var`
-(`echo_var_twice`->`echo_var echo_var`->`echo "var:\`$var\`" echo_var` as the first occurence of alias name will be expanded)
+(`echo_var_twice`->`echo_var echo_var`->`echo "var:\`$var\`" echo_var` as the first occurence of alias name will be expanded as the expanded string does NOT end with whitespace)
