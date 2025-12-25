@@ -1260,3 +1260,68 @@ Although it is inserted to mapping table at parsing phrase at source file,
 the `expand_aliases` functionality is disabled at the end of source file.
 
 Thus, it is NOT allowed to expand the alias name with Bash engine when parsing at compiled phrase and re-parsing at execution phrase
+
+### Example 12
+#### code
+utility modules
+
+`alias-name-defined-in-external-source-example-2.bash`
+
+```
+shopt -s expand_aliases
+
+alias alias_func3='func3'
+
+function func3(){
+    echo "In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+}
+```
+
+main script:
+
+`alias-example-12.bash`
+
+```
+shopt -s expand_aliases
+
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../utility modules/alias/alias-name-defined-in-external-source-example-1.bash"
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    # use alias
+    echo "call function named \`func3\` defined on external source by using function name"
+    func3 "expand_aliases"
+    echo "call function named \`func3\` defined on external source by using alias name"
+    eval "alias_func3 \"expand_aliases\""
+    echo "call function named \`func3\` defined on external source by using alias name"
+    alias_func3 "expand_aliases"
+}
+
+main
+
+shopt -u expand_aliases
+```
+
+#### output
+executing this main script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-12.bash"
+--- current list of alias ---
+alias alias_func3='func3'
+call function named `func3` defined on external source by using function name
+In function named `func3`, it receives these arguments `1`
+call function named `func3` defined on external source by using alias name
+In function named `func3`, it receives these arguments `1`
+call function named `func3` defined on external source by using alias name
+In function named `func3`, it receives these arguments `1`
+
+```
+
+#### explanation
+The alias can be expaneded when parsing at parsing phrase.
