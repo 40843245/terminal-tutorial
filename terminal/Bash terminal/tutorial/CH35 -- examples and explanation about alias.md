@@ -1605,3 +1605,81 @@ var:`2`
 Since the alias named `echo_var` is expanded to a string that ends with whitspace ` `,
 when parsing and re-parsing, the alias named `echo_var_twice` will be expaned to `echo "var:\`$var\`"  echo "var:\`$var\`" `
 (`echo_var_twice`->`echo_var echo_var`->`echo "var:\`$var\`"  echo "var:\`$var\`" ` as the first occurence of alias name will be expanded as the expanded string ends with whitespace)
+
+### Example 17
+#### code
+`alias-example-17.bash`
+
+```
+shopt -s expand_aliases
+
+alias echo_var='echo "var:\`$var\`" '
+alias echo_var_twice='echo_var; echo_var;'
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+    declare -i var=2
+
+    echo "before echoing variable using alias name"
+    printf "var:\`%d\`" $var
+    
+    # use alias
+    eval "echo_var"
+
+    echo "after echoing variable using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    echo_var
+
+    echo "after echoing variable using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    eval "echo_var_twice"
+
+    echo "after echoing variable twice using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    echo_var_twice
+
+    echo "after echoing variable twice using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+}
+
+main
+
+shopt -u expand_aliases
+```
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-17.bash"
+--- current list of alias ---
+alias echo_var='echo "var:\`$var\`" '
+alias echo_var_twice='echo_var; echo_var;'
+before echoing variable using alias name
+var:`2`var:`2`
+after echoing variable using alias name
+var:`2`
+var:`2`
+after echoing variable using alias name
+var:`2`
+var:`2`
+var:`2`
+after echoing variable twice using alias name
+var:`2`
+var:`2`
+var:`2`
+after echoing variable twice using alias name
+var:`2`
+
+```
+#### explanation
+Since the alias named `echo_var` is expanded to a string that ends with whitspace ` `,
+when parsing and re-parsing, the alias named `echo_var_twice` will be expaned to `echo "var:\`$var\`" ; echo "var:\`$var\`" ;`
+(`echo_var_twice`->`echo_var echo_var`->`echo "var:\`$var\`" ; echo "var:\`$var\`" ;` as the first occurence of alias name will be expanded as the expanded string ends with whitespace)
