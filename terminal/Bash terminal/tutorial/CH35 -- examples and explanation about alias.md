@@ -1841,3 +1841,84 @@ var:`11`
 Since the alias named `set_var` is expanded to a string that ends with whitspace ` `,
 when parsing and re-parsing, the alias named `echo_var_twice` will be expaned to `var=$(( GLOBAL_VAR++ )); var=$(( GLOBAL_VAR++ )); `
 (`set_var_twice`->`set_var set_var`->`var=$(( GLOBAL_VAR++ )); var=$(( GLOBAL_VAR++ )); ` as the first occurence of alias name will be expanded as the expanded string ends with whitespace)
+
+### Example 20
+#### code
+`alias-example-20.bash`
+
+```
+shopt -s expand_aliases
+
+GLOBAL_VAR=4
+
+alias set_var='var=$(( GLOBAL_VAR++ )); '
+alias set_var_twice='set_var set_var'
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+    local var=2
+
+    echo "before setting variable using alias name"
+    printf "var:\`%d\`" $var
+    
+    # use alias
+    GLOBAL_VAR=40
+    eval "set_var"
+
+    echo "after setting variable using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    set_var
+
+    echo "after setting variable using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    GLOBAL_VAR=80
+    eval "set_var_twice"
+
+    echo "after setting variable twice using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    set_var_twice
+
+    echo "after setting variable twice using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    set_var_twice
+
+    echo "after setting variable twice using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+}
+
+main
+
+shopt -u expand_aliases
+```
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-20.bash"
+--- current list of alias ---
+alias set_var='var=$(( GLOBAL_VAR++ )); '
+alias set_var_twice='set_var set_var'
+before setting variable using alias name
+var:`2`after setting variable using alias name
+var:`40`
+after setting variable using alias name
+var:`41`
+after setting variable twice using alias name
+var:`81`
+after setting variable twice using alias name
+var:`83`
+after setting variable twice using alias name
+var:`85`
+```
+#### explanation
+similar to explanation in example 19
