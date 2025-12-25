@@ -1194,7 +1194,65 @@ if it can (i.e. the alias name can be found from mapping table and it is allowed
 
 ### Example 11
 #### code
-``
+utility module:
+
+`alias-name-defined-in-external-source-example-1.bash`
+
+```
+shopt -s expand_aliases
+
+alias alias_func3='func3'
+
+function func3(){
+    echo "In function named \`${FUNCNAME[0]}\`, it receives these arguments \`$#\`"
+}
+
+shopt -u expand_aliases
+```
+
+main script:
+
+`alias-example-11.bash`
+
+```
+shopt -s expand_aliases
+
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../utility modules/alias/alias-name-defined-in-external-source-example-1.bash"
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+
+    # use alias
+    echo "call function named \`func3\` defined on external source by using function name"
+    func3 "expand_aliases"
+    echo "call function named \`func3\` defined on external source by using alias name"
+    eval "alias_func3 \"expand_aliases\""
+    echo "call function named \`func3\` defined on external source by using alias name"
+    alias_func3 "expand_aliases"
+}
+
+main
+
+shopt -u expand_aliases
+```
 #### output
+executing this main script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-11.bash"
+--- current list of alias ---
+alias alias_func3='func3'
+call function named `func3` defined on external source by using function name
+In function named `func3`, it receives these arguments `1`
+call function named `func3` defined on external source by using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-11.bash: line 16: alias_func3: command not found
+call function named `func3` defined on external source by using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-11.bash: line 18: alias_func3: command not found
+
+```
 #### explanation
 
