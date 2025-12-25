@@ -1759,3 +1759,85 @@ var:`5`
 Since the alias named `echo_var` is expanded to a string that ends with whitspace ` `,
 when parsing and re-parsing, the alias named `echo_var_twice` will be expaned to `var=5; echo "var:\`$var\`" ;`
 (`echo_var_twice`->`var=5; echo_var`->`var=5; echo "var:\`$var\`" ;` as the first occurence of alias name will be expanded as the expanded string ends with whitespace)
+
+### Example 19
+#### code
+`alias-example-19.bash`
+
+```
+shopt -s expand_aliases
+
+GLOBAL_VAR=4
+
+alias set_var='var=$(( GLOBAL_VAR++ )); '
+alias set_var_twice='set_var set_var'
+
+main(){
+    echo "--- current list of alias ---"
+    alias
+    local var=2
+
+    echo "before setting variable using alias name"
+    printf "var:\`%d\`" $var
+    
+    # use alias
+    eval "set_var"
+
+    echo "after setting variable using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    set_var
+
+    echo "after setting variable using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    eval "set_var_twice"
+
+    echo "after setting variable twice using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    set_var_twice
+
+    echo "after setting variable twice using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+
+    set_var_twice
+
+    echo "after setting variable twice using alias name"
+    printf "var:\`%d\`" $var
+    echo ""
+}
+
+main
+
+shopt -u expand_aliases
+```
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-19.bash"
+--- current list of alias ---
+alias set_var='var=$(( GLOBAL_VAR++ )); '
+alias set_var_twice='set_var set_var'
+before setting variable using alias name
+var:`2`after setting variable using alias name
+var:`4`
+after setting variable using alias name
+var:`5`
+after setting variable twice using alias name
+var:`7`
+after setting variable twice using alias name
+var:`9`
+after setting variable twice using alias name
+var:`11`
+
+```
+#### explanation
+Since the alias named `set_var` is expanded to a string that ends with whitspace ` `,
+when parsing and re-parsing, the alias named `echo_var_twice` will be expaned to `var=$(( GLOBAL_VAR++ )); var=$(( GLOBAL_VAR++ )); `
+(`set_var_twice`->`set_var set_var`->`var=$(( GLOBAL_VAR++ )); var=$(( GLOBAL_VAR++ )); ` as the first occurence of alias name will be expanded as the expanded string ends with whitespace)
