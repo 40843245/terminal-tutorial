@@ -1351,7 +1351,7 @@ alias alias_func3='func3'
 # Get the directory where the current script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-source "$SCRIPT_DIR/../../utility modules/alias/alias-name-defined-in-external-source-example-2.bash"
+source "$SCRIPT_DIR/../../utility modules/alias/alias-name-defined-in-external-source-example-3.bash"
 
 main(){
     echo "--- current list of alias ---"
@@ -1459,39 +1459,39 @@ Similar to explanation in Example 13
 ```
 shopt -s expand_aliases
 
-alias set_var='set var=3;'
-alias set_var_twice='set_var set_var'
+alias echo_var='echo "var:\`$var\`"'
+alias echo_var_twice='echo_var echo_var'
 
 main(){
     echo "--- current list of alias ---"
     alias
     declare -i var=2
 
-    echo "before setting variable using alias name"
+    echo "before echoing variable using alias name"
     printf "var:\`%d\`" $var
     
     # use alias
-    eval "set_var"
+    eval "echo_var"
 
-    echo "after setting variable using alias name"
+    echo "after echoing variable using alias name"
     printf "var:\`%d\`" $var
     echo ""
 
-    set_var
+    echo_var
 
-    echo "after setting variable using alias name"
+    echo "after echoing variable using alias name"
     printf "var:\`%d\`" $var
     echo ""
 
-    eval "set_var_twice"
+    eval "echo_var_twice"
 
-    echo "after setting variable twice using alias name"
+    echo "after echoing variable twice using alias name"
     printf "var:\`%d\`" $var
     echo ""
 
-    set_var_twice
+    echo_var_twice
 
-    echo "after setting variable twice using alias name"
+    echo "after echoing variable twice using alias name"
     printf "var:\`%d\`" $var
     echo ""
 }
@@ -1507,15 +1507,25 @@ executing this script will echo
 ```
 $ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-15.bash"
 --- current list of alias ---
-alias set_var='set var=3;'
-alias set_var_twice='set_var set_var'
-before setting variable using alias name
-var:`2`after setting variable using alias name
+alias echo_var='echo "var:\`$var\`"'
+alias echo_var_twice='echo_var echo_var'
+before echoing variable using alias name
+var:`2`var:`2`
+after echoing variable using alias name
 var:`2`
-after setting variable using alias name
 var:`2`
-after setting variable twice using alias name
+after echoing variable using alias name
 var:`2`
-after setting variable twice using alias name
+var:`2` echo_var
+after echoing variable twice using alias name
 var:`2`
+var:`2` echo_var
+after echoing variable twice using alias name
+var:`2`
+
 ```
+
+#### explanation
+Since `echo_var` ends with `;` rather than whitspace ` `,
+when parsing and re-parsing, the alias named `echo_var_twice` will be expaned to `echo "var:\`$var\`" echo_var`
+(`echo_var_twice`->`echo_var echo_var`->`echo "var:\`$var\`" echo_var` as the first occurence of alias name will be expanded)
