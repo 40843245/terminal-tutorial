@@ -2049,7 +2049,7 @@ UNSET_HISTORY_ARRAY_STR="" # define a new empty array represented as string
 ## the first positional argument ALWAYS be a valid identifieer, it NEVER contain whitespace and commas 
 function unset(){
     local arg1="$1"
-    UNSET_HISTORY_ARRAY_STR="$UNSET_HISTORY_ARRAY,$arg1"
+    UNSET_HISTORY_ARRAY_STR="$UNSET_HISTORY_ARRAY_STR,$arg1"
     # call non-overridden existing command `unset`
     command unset $arg1
 } 
@@ -2296,7 +2296,7 @@ str2:`string2`
 str3:`string3`
 str4:`string4`
 str5:`string5`
-unset_history_array_str:`,integer5`
+unset_history_array_str:`,integer1,integer5`
 
 6)---------------------
 after unsetting variable using alias name
@@ -2310,7 +2310,7 @@ str2:`string3`
 str3:`string4`
 str4:`string5`
 str5:``
-unset_history_array_str:`,str1`
+unset_history_array_str:`,integer1,integer5,str1`
 
 7)---------------------
 after unsetting variable without using alias name
@@ -2324,7 +2324,7 @@ str2:`string4`
 str3:`string5`
 str4:``
 str5:``
-unset_history_array_str:`,str1`
+unset_history_array_str:`,integer1,integer5,str1`
 
 8)---------------------
 D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 140: alias_unset: command not found
@@ -2339,7 +2339,7 @@ str2:`string4`
 str3:`string5`
 str4:``
 str5:``
-unset_history_array_str:`,str1`
+unset_history_array_str:`,integer1,integer5,str1`
 
 9)---------------------
 after unsetting variable using alias name
@@ -2353,7 +2353,7 @@ str2:`string5`
 str3:``
 str4:``
 str5:``
-unset_history_array_str:`,str1`
+unset_history_array_str:`,integer1,integer5,str1`
 
 10)---------------------
 after unsetting variable without using alias name
@@ -2367,7 +2367,11 @@ str2:``
 str3:``
 str4:``
 str5:``
-unset_history_array_str:`,str5`
+unset_history_array_str:`,integer1,integer5,str1,str5`
 
 ```
 #### explanation
+1. About `alias_unset: command not found` error,
+
+the error occurs due to `command alias_unset` will NOT be expanded by Bash engine parser as command substitution has higher precedence than alias substitution (see [precedence in CH34](https://github.com/40843245/terminal-tutorial/blob/main/terminal/Bash%20terminal/tutorial/CH34%20--%20parsing%20rule%20of%20aliasing%20names.md#4-precedence-and-overriding) for more details)
+
