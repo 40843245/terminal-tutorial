@@ -2821,3 +2821,124 @@ Then it will force Bash engine to re-parse with argument `alias_unset integer6`.
 
 executing `eval "command_eval_alias_unset integer6\""` -> re-parse with argument `command_eval_alias_unset integer6\"` -> executing `command eval "alias_unset integer6"` -> re-parse with argument `alias_unset integer6` -> executing user-defined function `unset` with argument integer6` ->
 adding `integer6` into `UNSET_HISTORY_ARRAY_STR` global variable.
+
+### Example 24
+#### code
+`alias-example-24.bash`
+
+```
+shopt -s expand_aliases
+set +e
+
+alias alias_of_define_user_defined_function='
+function func1(){
+    local -n counter=$1
+
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    ((counter++))
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+'
+alias define_user_defined_function_using_alias_name='alias_of_define_user_defined_function '
+alias call_alias_of_define_user_defined_function_without_arguments='func1 '
+alias call_alias_of_define_user_defined_function_with_arguments='func1 $counter'
+
+function subfunction(){
+    declare -i counter=$1
+    
+    echo "0)-------------------------"
+    echo "before calling function using alias name"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "1)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_without_arguments $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "2)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_without_arguments $counter\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "3)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_with_arguments "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "4)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_with_arguments\" "
+    printf "counter:\`%d\`\n" $counter
+}
+
+main(){
+    subfunction 3
+}
+
+main
+
+set -e
+shopt -u expand_aliases
+```
+
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-24.bash"
+0)-------------------------
+before calling function using alias name
+counter:`3`
+1)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-24.bash: line 29: func1: command not found
+counter:`3`
+2)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-24.bash: line 34: func1: command not found
+counter:`3`
+3)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-24.bash: line 39: func1: command not found
+counter:`3`
+4)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-24.bash: line 44: func1: command not found
+counter:`3`
+
+```
+#### explanation
+1. About `func1: command not found` error,
+
+Although `func1` and its function block is the content of an alias named `alias_of_define_user_defined_function`,
+
+`alias_of_define_user_defined_function` and its related alias have NOT been forced to be re-parsed yet. Thus, the `func1` function has NOT defined yet (and NOT stored in the memory),
+
+causing `func1: command not found` error at
+
+```
+    eval "call_alias_of_define_user_defined_function_without_arguments $counter"
+```
+
+and
+
+```
+    eval "eval \"call_alias_of_define_user_defined_function_without_arguments $counter\" "
+```
+
+and
+
+```
+    eval "call_alias_of_define_user_defined_function_with_arguments "
+```
+
+and
+
+```
+    eval "eval \"call_alias_of_define_user_defined_function_with_arguments\" "
+```
+
+which BOTH will be expanded and invoke `func1`
