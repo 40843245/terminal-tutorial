@@ -1240,7 +1240,7 @@ main
 shopt -u expand_aliases
 ```
 #### output
-executing this main script will echo
+executing this main script will throw errors and echo
 
 ```
 $ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-11.bash"
@@ -2207,7 +2207,7 @@ main
 shopt -u expand_aliases
 ```
 #### output
-executing this script will echo
+executing this script will throw errors and echo
 
 ```
 $ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash"
@@ -2590,7 +2590,7 @@ shopt -u expand_aliases
 ```
 
 #### output
-executing this script will echo
+executing this script will throw errors and echo
 
 ```
 $ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-23.bash"
@@ -2885,7 +2885,7 @@ shopt -u expand_aliases
 ```
 
 #### output
-executing this script will echo
+executing this script will throw errors and echo
 
 ```
 $ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-24.bash"
@@ -3124,3 +3124,4 @@ The reason why invoking function `func1` that is defined directly is that
     + `func1` block as content of an alias named `alias_of_define_user_defined_function`has NOT been defined yet since the alias named `alias_of_define_user_defined_function` and its related alias has been NOT re-parsed yet (it is mentioned in explanation of example 24)
     + Thus, when invoking `func1`, it will find that there is ONLY one function named `func1` (the one without postfix increment of counter variable) that has been defined.
     
+### Example 26
