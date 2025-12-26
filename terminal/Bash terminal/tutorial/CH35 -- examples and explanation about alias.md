@@ -3537,6 +3537,47 @@ function func1(){
 thus, the function named `func1` is defined.
 
 
-2. About such as `local: `3': invalid variable name for name reference` error in use cases numbered from `5)` to `6)` and counter variable is increased by 
+2. About such as `local: `3': invalid variable name for name reference` error in use cases numbered from `5)` to `6)` and `counter` variable is increased by 1.
 
+The reason why these occur is
 
+`counter` variable is a `nameref` in `func1` in context of
+
+```
+function func1(){
+    local -n counter=$1
+
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    ((counter++))
+    echo "> [!NOTE]"
+    echo "> This is a user defined-function but in an aliased name"
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+'
+```
+
+However, passing a number as 1th argument to `func1` function rather than passing a variable name will cause an error like
+
+```
+ local: `3': invalid variable name for name reference
+```
+
+Due to the above error, the counter is NOT defined in `func1` function,
+
+Consequently, the `counter` variable defined inside `main` function is increased by 1.
+
+> [!NOTE]
+> When accessing or modifying a variable,
+>
+> it will find it from function call stack.
+>
+> It will find defined variable start from the function named `${FUNCNAME[0]}`, `${FUNCNAME[1]}`, and so on until at the top level.
+>
+> Then accessing or modifying it.
+
+Why does not increase it by 1 in use cases numbered from 7) to 8)?
+
+Because, in use cases numbered from 7) to 8), it invokes `func1` defined inside `subfunction` block.
