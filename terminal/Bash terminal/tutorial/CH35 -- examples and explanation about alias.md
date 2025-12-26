@@ -4581,7 +4581,12 @@ In alias name `also_print_integer1`,integer1:`5`
 #### explanation
 This example illustrates that 
 
-    + Bash engine will expand the alias immediately.
+    + Bash engine will expand the alias rather than points to its content.
+    + The behavior of parsing:
+
+        Bash engine will insert it into mapping table during the parsing phrase at compiled time, and will expand it when the alias is parsed at compiled time.
+
+        But, for `eval` statements, it will re-parse with its arguments (may affect the mapping table)
 
 1. In this statement
 
@@ -4600,3 +4605,42 @@ alias other_alias_print_integer1='print_integer1 '
 it gives an alias named `other_alias_print_integer1` that will be expanded to `print_integer1 `
 
 It likes in `C++`, one defines two pointers that points to same variable.
+
+3. During parsing phrase,
+
++ Adding a key-value pair which `print_integer1` as key and `printf "In alias name \`print_integer1\`,integer1:\`%d\`\n" $integer1 ` as value into mapping table 
++ `print_integer1` will be expanded to `printf "In alias name \`print_integer1\`,integer1:\`%d\`\n" $integer1 `
++ Adding a key-value pair which `also_print_integer1` as key and `printf "In alias name \`also_print_integer1\`,integer1:\`%d\`\n" $integer1 ` as value into mapping table 
++ `also_print_integer1` will be expanded to `printf "In alias name \`also_print_integer1\`,integer1:\`%d\`\n" $integer1  `
++ Adding a key-value pair which `alias_print_integer1` as key and `printf "In alias name \`print_integer1\`,integer1:\`%d\`\n" $integer1 ` as value into mapping table 
++ `alias_print_integer1` will be expanded to `printf "In alias name \`print_integer1\`,integer1:\`%d\`\n" $integer1 `
+
+      `alias_print_integer1` -> `print_integer1 ` -> `printf "In alias name \`print_integer1\`,integer1:\`%d\`\n" $integer1 `
+
++ Adding a key-value pair which `other_alias_print_integer1` as key and `printf "In alias name \`print_integer1\`,integer1:\`%d\`\n" $integer1 ` as value into mapping table 
++ `other_alias_print_integer1`  will be expanded to `printf "In alias name \`print_integer1\`,integer1:\`%d\`\n" $integer1 `
+
+      `other_alias_print_integer1` -> `print_integer1 ` -> `printf "In alias name \`print_integer1\`,integer1:\`%d\`\n" $integer1 `   
+
+> [!NOTE]
+> The rename inside `main` function will NOT affect the expanded result for an alias name placed in `main` block
+>
+> since Bash engine parses block-by block (and thus these aliases are expanded in during `main` block parsing phrase at compiled time with its content aliased at top level)
+>
+> see parsing-time trap section in CH34 for more details.
+
+4. At execution time,
+
+When executing this statement
+
+```
+    eval "alias_print_integer1"
+```
+
+it forces Bash engine to re-parse with argument `alias_print_integer1`, 
+
+making the renaming alias (in context of `alias alias_print_integer1='also_print_integer1 '` in part 2) take effect,
+
+also updating the key-value pair, in the mapping table, whose key is `alias_print_integer1` with new expanded result `printf "In alias name \`also_print_integer1\`,integer1:\`%d\`\n" $integer1 ` as value.
+
+Lastly execute it.
