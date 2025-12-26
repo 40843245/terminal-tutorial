@@ -3125,3 +3125,184 @@ The reason why invoking function `func1` that is defined directly is that
     + Thus, when invoking `func1`, it will find that there is ONLY one function named `func1` (the one without postfix increment of counter variable) that has been defined.
     
 ### Example 26
+#### code
+`alias-example-26.bash`
+
+```
+shopt -s expand_aliases
+set +e
+
+alias alias_of_define_user_defined_function='
+function func1(){
+    local -n counter=$1
+
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    ((counter++))
+    echo "> [!NOTE]"
+    echo "> This is a user defined-function but in an aliased name"
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+'
+alias define_user_defined_function_using_alias_name='alias_of_define_user_defined_function '
+alias call_alias_of_define_user_defined_function_without_arguments='func1 '
+alias call_alias_of_define_user_defined_function_with_arguments='func1 $counter'
+
+function subfunction(){
+    declare -i counter=$1
+    
+    echo "0)-------------------------"
+    echo "before calling function using alias name"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "1)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_without_arguments $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "2)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_without_arguments $counter\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "3)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_with_arguments "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "4)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_with_arguments\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "5)-------------------------"
+    echo "after calling function without using alias name"
+    func1 $counter
+    printf "counter:\`%d\`\n" $counter
+
+    echo "6)-------------------------"
+    echo "after calling function without using alias name"
+    eval "func1 $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    # inner user-defined function (inside `subfunction`)
+    function func1(){
+        declare -i counter=$1
+        echo "++++++++++++++++++++++++++"
+        echo "In ${FUNCNAME[0]} function,"
+        echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+        echo "> [!NOTE]"
+        echo "> This is a user defined-function"
+        echo "End of ${FUNCNAME[0]} function"
+        echo "++++++++++++++++++++++++++"
+    }
+
+    echo "7)-------------------------"
+    echo "after calling function without using alias name"
+    func1 $counter
+    printf "counter:\`%d\`\n" $counter
+
+    echo "8)-------------------------"
+    echo "after calling function without using alias name"
+    eval "func1 $counter"
+    printf "counter:\`%d\`\n" $counter
+}
+
+main(){
+    subfunction 3
+}
+
+main
+
+set -e
+shopt -u expand_aliases
+```
+
+#### output
+executing this script will throw erros and echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-26.bash"
+0)-------------------------
+before calling function using alias name
+counter:`3`
+1)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-26.bash: line 31: func1: command not found
+counter:`3`
+2)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-26.bash: line 36: func1: command not found
+counter:`3`
+3)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-26.bash: line 41: func1: command not found
+counter:`3`
+4)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-26.bash: line 46: func1: command not found
+counter:`3`
+5)-------------------------
+after calling function without using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-26.bash: line 51: func1: command not found
+counter:`3`
+6)-------------------------
+after calling function without using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-26.bash: line 56: func1: command not found
+counter:`3`
+7)-------------------------
+after calling function without using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`3`
+8)-------------------------
+after calling function without using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`3`
+
+```
+#### explanation
+1. About `func1: command not found` error before uses case numbered `7)`,
+
+The reason why the error occurs is
+
+    + The `func1` block as content of an alias named `alias_of_define_user_defined_function` has been NOT defined yet since the alias and its related aliases have NOT been re-parsed yet (mentioned before)
+    + The `func1` function (inside `subfunction`) is defined after the use case numbered `6)`
+
+    ```
+    echo "6)-------------------------"
+    echo "after calling function without using alias name"
+    eval "func1 $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    # inner user-defined function (inside `subfunction`)
+    function func1(){
+        declare -i counter=$1
+        echo "++++++++++++++++++++++++++"
+        echo "In ${FUNCNAME[0]} function,"
+        echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+        echo "> [!NOTE]"
+        echo "> This is a user defined-function"
+        echo "End of ${FUNCNAME[0]} function"
+        echo "++++++++++++++++++++++++++"
+    }
+
+    echo "7)-------------------------"
+    ```
+    
+    + Therefore, when Bash engine is forced to re-parse at execution time for use ases `1)` to `6)`, Bash engine can't find the `func1` function (inside `subfunction`) and find that there are NO function `func1` is defined, throwing `func1: command not found` error. 
+
+In use cases `7)` and `8)`, it can invoke `func1` function (inside `subfunction`) since it has been defined.
