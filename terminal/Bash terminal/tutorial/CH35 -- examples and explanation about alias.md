@@ -2942,3 +2942,185 @@ and
 ```
 
 which BOTH will be expanded and invoke `func1`
+
+### Example 25
+#### code
+`alias-example-25.bash`
+
+```
+shopt -s expand_aliases
+set +e
+
+alias alias_of_define_user_defined_function='
+function func1(){
+    local -n counter=$1
+
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    ((counter++))
+    echo "> [!NOTE]"
+    echo "> This is a user defined-function but in an aliased name"
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+'
+alias define_user_defined_function_using_alias_name='alias_of_define_user_defined_function '
+alias call_alias_of_define_user_defined_function_without_arguments='func1 '
+alias call_alias_of_define_user_defined_function_with_arguments='func1 $counter'
+
+function func1(){
+    declare -i counter=$1
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    echo "> [!NOTE]"
+    echo "> This is a user defined-function"
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+
+function subfunction(){
+    declare -i counter=$1
+    
+    echo "0)-------------------------"
+    echo "before calling function using alias name"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "1)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_without_arguments $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "2)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_without_arguments $counter\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "3)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_with_arguments "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "4)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_with_arguments\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "5)-------------------------"
+    echo "after calling function without using alias name"
+    func1 $counter
+    printf "counter:\`%d\`\n" $counter
+
+    echo "6)-------------------------"
+    echo "after calling function without using alias name"
+    eval "func1 $counter"
+    printf "counter:\`%d\`\n" $counter
+}
+
+main(){
+    subfunction 3
+}
+
+main
+
+set -e
+shopt -u expand_aliases
+```
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-25.bash"
+0)-------------------------
+before calling function using alias name
+counter:`3`
+1)-------------------------
+after calling function using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`3`
+2)-------------------------
+after calling function using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`3`
+3)-------------------------
+after calling function using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`3`
+4)-------------------------
+after calling function using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`3`
+5)-------------------------
+after calling function without using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`3`
+6)-------------------------
+after calling function without using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`3`
+
+```
+#### explanation
+1. After `func1` function call, counter local variable is still be 3.
+
+The reason why it is due to invoking function `func1` that is defined directly rather than defined as content of an alias
+
+Its definition
+
+```
+function func1(){
+    declare -i counter=$1
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    echo "> [!NOTE]"
+    echo "> This is a user defined-function"
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+```
+
+The reason why invoking function `func1` that is defined directly is that
+ 
+    + During top-level parsing phrase (at compiled time), these aliases (including but not be restricted to) `call_alias_of_define_user_defined_function_without_arguments`, `call_alias_of_define_user_defined_function_with_arguments` are inserted into mapping table.
+    + When Bash engine is forced to re-parse with argument `call_alias_of_define_user_defined_function_without_arguments $counter` due to execution of `    eval "call_alias_of_define_user_defined_function_without_arguments $counter", these aliases (including but not be restricted to)`call_alias_of_define_user_defined_function_without_arguments`, `call_alias_of_define_user_defined_function_with_arguments` are inserted into mapping table again, overriding the existing one (that is inserted during top-level parsing phrase (at compiled time))
+    + `func1` block as content of an alias named `alias_of_define_user_defined_function`has NOT been defined yet since the alias named `alias_of_define_user_defined_function` and its related alias has been NOT re-parsed yet (it is mentioned in explanation of example 24)
+    + Thus, when invoking `func1`, it will find that there is ONLY one function named `func1` (the one without postfix increment of counter variable) that has been defined.
+    
