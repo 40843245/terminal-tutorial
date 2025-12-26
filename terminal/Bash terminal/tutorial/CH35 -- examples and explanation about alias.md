@@ -3559,7 +3559,7 @@ function func1(){
 '
 ```
 
-However, passing a number as 1th argument to `func1` function rather than passing a variable name will cause an error like
+However, passing a number as 1th argument to `func1` function rather than passing a variable name will cause an error (`Failed Variable Shadowing`) where error message like
 
 ```
  local: `3': invalid variable name for name reference
@@ -3570,14 +3570,170 @@ Due to the above error, the counter is NOT defined in `func1` function,
 Consequently, the `counter` variable defined inside `main` function is increased by 1.
 
 > [!NOTE]
-> When accessing or modifying a variable,
+> In Bash, accessing or modifying a variable using `Dynamic Scoping`.
+> 
+> That is, when accessing or modifying a variable,
 >
 > it will find it from function call stack.
 >
 > It will find defined variable start from the function named `${FUNCNAME[0]}`, `${FUNCNAME[1]}`, and so on until at the top level.
 >
 > Then accessing or modifying it.
+>
+> see CH2 for more details about variables and CH9 for more about function call stack.
 
 Why does not increase it by 1 in use cases numbered from 7) to 8)?
 
 Because, in use cases numbered from 7) to 8), it invokes `func1` defined inside `subfunction` block.
+
+### Example 28
+#### code
+`alias-example-28.bash`
+
+```
+shopt -s expand_aliases
+set +e
+
+alias alias_of_define_user_defined_function='
+function func1(){
+    local -n counter=$1
+
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    ((counter++))
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+'
+alias define_user_defined_function_using_alias_name='alias_of_define_user_defined_function '
+alias call_alias_of_define_user_defined_function_without_arguments='func1 '
+alias call_alias_of_define_user_defined_function_with_arguments='func1 $counter'
+
+function subfunction(){
+    declare -i counter=$1
+    
+    echo "0)-------------------------"
+    echo "before calling function using alias name"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "0.1)-------------------------"
+    echo "eval \`define_user_defined_function_using_alias_name\` first"
+    eval "define_user_defined_function_using_alias_name"
+
+    echo "1)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_without_arguments $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "2)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_without_arguments $counter\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "3)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_with_arguments "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "4)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_with_arguments\" "
+    printf "counter:\`%d\`\n" $counter
+}
+
+main(){
+    subfunction 3
+}
+
+main
+
+set -e
+shopt -u expand_aliases
+```
+
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-28.bash"
+0)-------------------------
+before calling function using alias name
+counter:`3`
+0.1)-------------------------
+eval `define_user_defined_function_using_alias_name` first
+1)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-28.bash: line 29: local: `3': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+End of func1 function
+++++++++++++++++++++++++++
+counter:`4`
+2)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-28.bash: line 29: local: `4': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `4`,the passed argument is `"4"`
+End of func1 function
+++++++++++++++++++++++++++
+counter:`5`
+3)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-28.bash: line 29: local: `5': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `5`,the passed argument is `"5"`
+End of func1 function
+++++++++++++++++++++++++++
+counter:`6`
+4)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-28.bash: line 29: local: `6': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `6`,the passed argument is `"6"`
+End of func1 function
+++++++++++++++++++++++++++
+counter:`7`
+
+```
+#### explanation
+Because 
+
+```
+eval "define_user_defined_function_using_alias_name"
+```
+
+is executed,
+
+it forces Bash engine to re-parse with argument `define_user_defined_function_using_alias_name`.
+
+When re-parsing, 
+
+it expands `define_user_defined_function_using_alias_name` to `alias_of_define_user_defined_function` 
+
+then expands `alias_of_define_user_defined_function` to 
+
+```
+function func1(){
+    local -n counter=$1
+
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    ((counter++))
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+```
+
+and executing it.
+
+Thus, `func1` (its body is the content of an alias named `alias_of_define_user_defined_function`) is defined.
+
+Why does it increase by 1 in use cases numbered start from `1)` to `8)`?
+
+Due to the error (caused by `Failed Variable Shadowing`) and `Dynamic Scoping of variable` (see explanation in above example for more details)
