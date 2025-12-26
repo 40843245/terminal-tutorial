@@ -6,7 +6,11 @@ You will know how to
   + inoke a function
   + special variables about functions
   + return an exit code in a function
-  + shift positional arguments 
+  + shift positional arguments
+
+Additionally, you will know function call is stored -- function stack trace.
+
+Thus, you can get current name (though there is an another simpler way), the name of top level, and the name of callee that is invoked at at top level.   
     
 ## CH9-1 -- define a function
 It doesn't like that in high-level programming language.
@@ -313,3 +317,8 @@ shifted_arg5:`papaya`
 shifted_arg6:`peach`
 
 ```
+
+## CH9-6 -- function stack trace
+### introduction
+Function call stack stores the order of function calls.
+
