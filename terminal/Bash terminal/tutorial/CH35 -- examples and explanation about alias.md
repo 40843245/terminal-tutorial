@@ -2049,9 +2049,9 @@ UNSET_HISTORY_ARRAY_STR="" # define a new empty array represented as string
 ## the first positional argument ALWAYS be a valid identifieer, it NEVER contain whitespace and commas 
 function unset(){
     local arg1="$1"
-    UNSET_HISTORY_ARRAY="$UNSET_HISTORY_ARRAY,$arg1"
+    UNSET_HISTORY_ARRAY_STR="$UNSET_HISTORY_ARRAY,$arg1"
     # call non-overridden existing command `unset`
-    command unset arg1
+    command unset $arg1
 } 
 
 function print_integer_variable_value(){
@@ -2076,10 +2076,10 @@ function print_string_variable_value(){
     local str5="$5"
 
     printf "str1:\`%s\`\n" $str1
-    printf "str2:\`%d\`\n" $str2
-    printf "str3:\`%d\`\n" $str3
-    printf "str4:\`%d\`\n" $str4
-    printf "str5:\`%d\`\n" $str5
+    printf "str2:\`%s\`\n" $str2
+    printf "str3:\`%s\`\n" $str3
+    printf "str4:\`%s\`\n" $str4
+    printf "str5:\`%s\`\n" $str5
 }
 
 function print_unset_history_array_str(){
@@ -2222,190 +2222,152 @@ integer3:`3`
 integer4:`4`
 integer5:`5`
 str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string2: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string3: invalid number
-str3:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 43: printf: string4: invalid number
-str4:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 44: printf: string5: invalid number
-str5:`0`
+str2:`string2`
+str3:`string3`
+str4:`string4`
+str5:`string5`
 
 1)---------------------
 after unsetting variable using alias name
-integer1:`1`
-integer2:`2`
-integer3:`3`
-integer4:`4`
-integer5:`5`
-str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string2: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string3: invalid number
-str3:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 43: printf: string4: invalid number
-str4:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 44: printf: string5: invalid number
-str5:`0`
-unset_history_array_str:``
-
-2)---------------------
-after unsetting variable without using alias name
-integer1:`1`
+integer1:`2`
 integer2:`3`
 integer3:`4`
 integer4:`5`
 integer5:`0`
 str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string2: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string3: invalid number
-str3:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 43: printf: string4: invalid number
-str4:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 44: printf: string5: invalid number
-str5:`0`
-unset_history_array_str:``
+str2:`string2`
+str3:`string3`
+str4:`string4`
+str5:`string5`
+unset_history_array_str:`,integer1`
+
+2)---------------------
+after unsetting variable without using alias name
+integer1:`3`
+integer2:`4`
+integer3:`5`
+integer4:`0`
+integer5:`0`
+str1:`string1`
+str2:`string2`
+str3:`string3`
+str4:`string4`
+str5:`string5`
+unset_history_array_str:`,integer1`
 
 3)---------------------
 D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 95: alias_unset: command not found
 after unsetting variable using alias name
-integer1:`1`
-integer2:`3`
-integer3:`4`
-integer4:`5`
+integer1:`3`
+integer2:`4`
+integer3:`5`
+integer4:`0`
 integer5:`0`
 str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string2: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string3: invalid number
-str3:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 43: printf: string4: invalid number
-str4:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 44: printf: string5: invalid number
-str5:`0`
-unset_history_array_str:``
+str2:`string2`
+str3:`string3`
+str4:`string4`
+str5:`string5`
+unset_history_array_str:`,integer1`
 
 4)---------------------
 after unsetting variable using alias name
-integer1:`1`
-integer2:`3`
-integer3:`5`
+integer1:`3`
+integer2:`5`
+integer3:`0`
 integer4:`0`
 integer5:`0`
 str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string2: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string3: invalid number
-str3:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 43: printf: string4: invalid number
-str4:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 44: printf: string5: invalid number
-str5:`0`
-unset_history_array_str:``
+str2:`string2`
+str3:`string3`
+str4:`string4`
+str5:`string5`
+unset_history_array_str:`,integer1`
 
 5)---------------------
 after unsetting variable without using alias name
-integer1:`1`
-integer2:`3`
-integer3:`5`
+integer1:`3`
+integer2:`0`
+integer3:`0`
 integer4:`0`
 integer5:`0`
 str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string2: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string3: invalid number
-str3:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 43: printf: string4: invalid number
-str4:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 44: printf: string5: invalid number
-str5:`0`
-unset_history_array_str:``
+str2:`string2`
+str3:`string3`
+str4:`string4`
+str5:`string5`
+unset_history_array_str:`,integer5`
 
 6)---------------------
 after unsetting variable using alias name
-integer1:`1`
-integer2:`3`
-integer3:`5`
+integer1:`3`
+integer2:`0`
+integer3:`0`
 integer4:`0`
 integer5:`0`
-str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string2: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string3: invalid number
-str3:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 43: printf: string4: invalid number
-str4:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 44: printf: string5: invalid number
-str5:`0`
-unset_history_array_str:``
+str1:`string2`
+str2:`string3`
+str3:`string4`
+str4:`string5`
+str5:``
+unset_history_array_str:`,str1`
 
 7)---------------------
 after unsetting variable without using alias name
-integer1:`1`
-integer2:`3`
-integer3:`5`
+integer1:`3`
+integer2:`0`
+integer3:`0`
 integer4:`0`
 integer5:`0`
-str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string3: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string4: invalid number
-str3:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 43: printf: string5: invalid number
-str4:`0`
-str5:`0`
-unset_history_array_str:``
+str1:`string3`
+str2:`string4`
+str3:`string5`
+str4:``
+str5:``
+unset_history_array_str:`,str1`
 
 8)---------------------
 D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 140: alias_unset: command not found
 after unsetting variable using alias name
-integer1:`1`
-integer2:`3`
-integer3:`5`
+integer1:`3`
+integer2:`0`
+integer3:`0`
 integer4:`0`
 integer5:`0`
-str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string3: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string4: invalid number
-str3:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 43: printf: string5: invalid number
-str4:`0`
-str5:`0`
-unset_history_array_str:``
+str1:`string3`
+str2:`string4`
+str3:`string5`
+str4:``
+str5:``
+unset_history_array_str:`,str1`
 
 9)---------------------
 after unsetting variable using alias name
-integer1:`1`
-integer2:`3`
-integer3:`5`
+integer1:`3`
+integer2:`0`
+integer3:`0`
 integer4:`0`
 integer5:`0`
-str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string3: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string5: invalid number
-str3:`0`
-str4:`0`
-str5:`0`
-unset_history_array_str:``
+str1:`string3`
+str2:`string5`
+str3:``
+str4:``
+str5:``
+unset_history_array_str:`,str1`
 
 10)---------------------
 after unsetting variable without using alias name
-integer1:`1`
-integer2:`3`
-integer3:`5`
+integer1:`3`
+integer2:`0`
+integer3:`0`
 integer4:`0`
 integer5:`0`
-str1:`string1`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 41: printf: string3: invalid number
-str2:`0`
-D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-22.bash: line 42: printf: string5: invalid number
-str3:`0`
-str4:`0`
-str5:`0`
-unset_history_array_str:``
+str1:`string3`
+str2:``
+str3:``
+str4:``
+str5:``
+unset_history_array_str:`,str5`
 
 ```
 #### explanation
