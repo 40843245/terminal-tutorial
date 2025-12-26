@@ -3221,7 +3221,7 @@ shopt -u expand_aliases
 ```
 
 #### output
-executing this script will throw erros and echo
+executing this script will throw errors and echo
 
 ```
 $ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-26.bash"
@@ -3653,7 +3653,7 @@ shopt -u expand_aliases
 ```
 
 #### output
-executing this script will echo
+executing this script will throw errors and echo
 
 ```
 $ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-28.bash"
@@ -3737,3 +3737,866 @@ Thus, `func1` (its body is the content of an alias named `alias_of_define_user_d
 Why does it increase by 1 in use cases numbered start from `1)` to `8)`?
 
 Due to the error (caused by `Failed Variable Shadowing`) and `Dynamic Scoping of variable` (see explanation in above example for more details)
+
+### Example 29
+#### code
+`alias-example-29.bash`
+
+```
+shopt -s expand_aliases
+set +e
+
+alias alias_of_define_user_defined_function='
+function func1(){
+    local -n counter=$1
+
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    ((counter++))
+    echo "> [!NOTE]"
+    echo "> This is a user defined-function but in an aliased name"
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+'
+alias define_user_defined_function_using_alias_name='alias_of_define_user_defined_function '
+alias call_alias_of_define_user_defined_function_without_arguments='func1 '
+alias call_alias_of_define_user_defined_function_with_arguments='func1 $counter'
+
+function func1(){
+    declare -i counter=$1
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    echo "> [!NOTE]"
+    echo "> This is a user defined-function"
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+
+function subfunction(){
+    declare -i counter=$1
+    
+    echo "0)-------------------------"
+    echo "before calling function using alias name"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "0.1)-------------------------"
+    echo "eval \`define_user_defined_function_using_alias_name\` first"
+    eval "define_user_defined_function_using_alias_name"
+    
+    echo "1)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_without_arguments $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "2)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_without_arguments $counter\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "3)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_with_arguments "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "4)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_with_arguments\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "5)-------------------------"
+    echo "after calling function without using alias name"
+    func1 $counter
+    printf "counter:\`%d\`\n" $counter
+
+    echo "6)-------------------------"
+    echo "after calling function without using alias name"
+    eval "func1 $counter"
+    printf "counter:\`%d\`\n" $counter
+}
+
+main(){
+    subfunction 3
+}
+
+main
+
+set -e
+shopt -u expand_aliases
+```
+
+#### output
+executing this script will throw errors and echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-29.bash"
+0)-------------------------
+before calling function using alias name
+counter:`3`
+0.1)-------------------------
+eval `define_user_defined_function_using_alias_name` first
+1)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-29.bash: line 42: local: `3': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`4`
+2)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-29.bash: line 42: local: `4': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `4`,the passed argument is `"4"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`5`
+3)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-29.bash: line 42: local: `5': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `5`,the passed argument is `"5"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`6`
+4)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-29.bash: line 42: local: `6': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `6`,the passed argument is `"6"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`7`
+5)-------------------------
+after calling function without using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-29.bash: line 42: local: `7': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `7`,the passed argument is `"7"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`8`
+6)-------------------------
+after calling function without using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-29.bash: line 42: local: `8': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `8`,the passed argument is `"8"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`9`
+
+```
+#### explanation
+see explanation in above example.
+
+### Example 30
+#### code
+`alias-example-30.bash`
+
+```
+shopt -s expand_aliases
+set +e
+
+alias alias_of_define_user_defined_function='
+function func1(){
+    local -n counter=$1
+
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    ((counter++))
+    echo "> [!NOTE]"
+    echo "> This is a user defined-function but in an aliased name"
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+'
+alias define_user_defined_function_using_alias_name='alias_of_define_user_defined_function '
+alias call_alias_of_define_user_defined_function_without_arguments='func1 '
+alias call_alias_of_define_user_defined_function_with_arguments='func1 $counter'
+
+function subfunction(){
+    declare -i counter=$1
+    
+    echo "0)-------------------------"
+    echo "before calling function using alias name"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "0.1)-------------------------"
+    echo "eval \`define_user_defined_function_using_alias_name\` first"
+    eval "define_user_defined_function_using_alias_name"
+    
+    echo "1)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_without_arguments $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "2)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_without_arguments $counter\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "3)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_with_arguments "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "4)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_with_arguments\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "5)-------------------------"
+    echo "after calling function without using alias name"
+    func1 $counter
+    printf "counter:\`%d\`\n" $counter
+
+    echo "6)-------------------------"
+    echo "after calling function without using alias name"
+    eval "func1 $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    # inner user-defined function (inside `subfunction`)
+    function func1(){
+        declare -i counter=$1
+        echo "++++++++++++++++++++++++++"
+        echo "In ${FUNCNAME[0]} function,"
+        echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+        echo "> [!NOTE]"
+        echo "> This is a user defined-function"
+        echo "End of ${FUNCNAME[0]} function"
+        echo "++++++++++++++++++++++++++"
+    }
+
+    echo "7)-------------------------"
+    echo "after calling function without using alias name"
+    func1 $counter
+    printf "counter:\`%d\`\n" $counter
+
+    echo "8)-------------------------"
+    echo "after calling function without using alias name"
+    eval "func1 $counter"
+    printf "counter:\`%d\`\n" $counter
+}
+
+main(){
+    subfunction 3
+}
+
+main
+
+set -e
+shopt -u expand_aliases
+```
+
+#### output
+executing this script will throw errors and echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-30.bash"
+0)-------------------------
+before calling function using alias name
+counter:`3`
+0.1)-------------------------
+eval `define_user_defined_function_using_alias_name` first
+1)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-30.bash: line 31: local: `3': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`4`
+2)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-30.bash: line 31: local: `4': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `4`,the passed argument is `"4"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`5`
+3)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-30.bash: line 31: local: `5': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `5`,the passed argument is `"5"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`6`
+4)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-30.bash: line 31: local: `6': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `6`,the passed argument is `"6"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`7`
+5)-------------------------
+after calling function without using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-30.bash: line 31: local: `7': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `7`,the passed argument is `"7"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`8`
+6)-------------------------
+after calling function without using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-30.bash: line 31: local: `8': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `8`,the passed argument is `"8"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`9`
+7)-------------------------
+after calling function without using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `9`,the passed argument is `"9"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`9`
+8)-------------------------
+after calling function without using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `9`,the passed argument is `"9"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`9`
+
+```
+
+#### explanation
+see explanation in above example.
+
+### Example 31
+#### code
+`D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-31.bash`
+
+```
+shopt -s expand_aliases
+set +e
+
+alias alias_of_define_user_defined_function='
+function func1(){
+    local -n counter=$1
+
+    echo "++++++++++++++++++++++++++"
+    echo "In ${FUNCNAME[0]} function,"
+    echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+    ((counter++))
+    echo "> [!NOTE]"
+    echo "> This is a user defined-function but in an aliased name"
+    echo "End of ${FUNCNAME[0]} function"
+    echo "++++++++++++++++++++++++++"
+}
+'
+
+alias call_alias_of_define_user_defined_function_without_arguments='alias_of_define_user_defined_function '
+alias call_alias_of_define_user_defined_function_with_arguments='alias_of_define_user_defined_function $counter'
+
+function subfunction(){
+    declare -i counter=$1
+    
+    echo "0)-------------------------"
+    echo "before calling function using alias name"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "0.1)-------------------------"
+    echo "eval \`define_user_defined_function_using_alias_name\` first"
+    eval "define_user_defined_function_using_alias_name"
+    
+    echo "1)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_without_arguments $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    echo "2)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_without_arguments $counter\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "3)-------------------------"
+    echo "after calling function using alias name"
+    eval "call_alias_of_define_user_defined_function_with_arguments "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "4)-------------------------"
+    echo "after calling function using alias name"
+    eval "eval \"call_alias_of_define_user_defined_function_with_arguments\" "
+    printf "counter:\`%d\`\n" $counter
+
+    echo "5)-------------------------"
+    echo "after calling function without using alias name"
+    func1 $counter
+    printf "counter:\`%d\`\n" $counter
+
+    echo "6)-------------------------"
+    echo "after calling function without using alias name"
+    eval "func1 $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    # inner user-defined function (inside `subfunction`)
+    function func1(){
+        declare -i counter=$1
+        echo "++++++++++++++++++++++++++"
+        echo "In ${FUNCNAME[0]} function,"
+        echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+        echo "> [!NOTE]"
+        echo "> This is a user defined-function"
+        echo "End of ${FUNCNAME[0]} function"
+        echo "++++++++++++++++++++++++++"
+    }
+
+    echo "7)-------------------------"
+    echo "after calling function without using alias name"
+    func1 $counter
+    printf "counter:\`%d\`\n" $counter
+
+    echo "8)-------------------------"
+    echo "after calling function without using alias name"
+    eval "func1 $counter"
+    printf "counter:\`%d\`\n" $counter
+}
+
+main(){
+    subfunction 3
+}
+
+main
+
+set -e
+shopt -u expand_aliases
+```
+#### output
+executing this script will throw errors and echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-31.bash"
+0)-------------------------
+before calling function using alias name
+counter:`3`
+0.1)-------------------------
+eval `define_user_defined_function_using_alias_name` first
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-31.bash: line 31: define_user_defined_function_using_alias_name: command not found
+1)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-31.bash: line 35: 3: command not found
+counter:`3`
+2)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-31.bash: line 40: 3: command not found
+counter:`3`
+3)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-31.bash: line 45: 3: command not found
+counter:`3`
+4)-------------------------
+after calling function using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-31.bash: line 50: 3: command not found
+counter:`3`
+5)-------------------------
+after calling function without using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-31.bash: line 50: local: `3': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `3`,the passed argument is `"3"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`4`
+6)-------------------------
+after calling function without using alias name
+D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-31.bash: line 50: local: `4': invalid variable name for name reference
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `4`,the passed argument is `"4"`
+> [!NOTE]
+> This is a user defined-function but in an aliased name
+End of func1 function
+++++++++++++++++++++++++++
+counter:`5`
+7)-------------------------
+after calling function without using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `5`,the passed argument is `"5"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`5`
+8)-------------------------
+after calling function without using alias name
+++++++++++++++++++++++++++
+In func1 function,
+The counter is `5`,the passed argument is `"5"`
+> [!NOTE]
+> This is a user defined-function
+End of func1 function
+++++++++++++++++++++++++++
+counter:`5`
+
+```
+#### explanation
+1. In this statement
+
+```
+eval "define_user_defined_function_using_alias_name"
+```
+
+in use case numbered as `0.1)`,
+
+it forces Bash engine to re-parse with argument `define_user_defined_function_using_alias_name` and executing it
+
+Thus, throwing an error
+
+```
+ define_user_defined_function_using_alias_name: command not found
+```
+
+2. In each statement about `eval` in use cases numbered from `1)` to `4)`,
+
+It forces Bash engine to re-parse with argument and executing it
+
+Thus, defining a function named `func1` (its body is the content of an alias named `alias_of_define_user_defined_function`)
+
+and then execute 3, throwing an error
+
+```
+3: command not found
+```
+
+3. In this statement
+
+```
+func1 $counter
+```
+
+due to Failed Variable Shadowing and Dynamic Scoping, the `counter` variable defined inside `subfunction` function is increased by 1, 
+
+and so for this statement
+
+```
+eval "func1 $counter"
+```
+
+4. In this statement
+
+```
+func1 $counter
+```
+
+it invokes `func1` defined inside `subfunction` function
+
+since it is defined before, in context of
+
+```
+echo "6)-------------------------"
+    echo "after calling function without using alias name"
+    eval "func1 $counter"
+    printf "counter:\`%d\`\n" $counter
+
+    # inner user-defined function (inside `subfunction`)
+    function func1(){
+        declare -i counter=$1
+        echo "++++++++++++++++++++++++++"
+        echo "In ${FUNCNAME[0]} function,"
+        echo "The counter is \`$counter\`,the passed argument is \`\"$counter\"\`" 
+        echo "> [!NOTE]"
+        echo "> This is a user defined-function"
+        echo "End of ${FUNCNAME[0]} function"
+        echo "++++++++++++++++++++++++++"
+    }
+
+    echo "7)-------------------------"
+    echo "after calling function without using alias name"
+    func1 $counter
+    printf "counter:\`%d\`\n" $counter
+```
+
+and so for this statement
+
+```
+eval "func1 $counter"
+```
+
+### Example 32
+#### code
+`alias-example-32.bash`
+
+```
+shopt -s expand_aliases
+set +e
+
+alias print_integer1='printf "In alias name \`print_integer1\`,integer1:\`%d\`\n" $integer1 '
+alias also_print_integer1='printf "In alias name \`also_print_integer1\`,integer1:\`%d\`\n" $integer1 '
+alias alias_print_integer1='print_integer1 '
+alias other_alias_print_integer1='print_integer1 '
+
+main(){
+    declare -i integer1=5
+
+    echo "-------------------- part 1 --------------------"
+    echo "just print variable using alias name"
+    
+    echo "part1.1)---------------------"
+    print_integer1
+    echo ""
+
+    echo "part1.2)---------------------"
+    also_print_integer1
+    echo ""
+
+    echo "part1.3)---------------------"
+    alias_print_integer1
+    echo ""
+
+    echo "part1.4)---------------------"
+    other_alias_print_integer1
+    echo ""
+
+    echo "part1.5)---------------------"
+    eval "print_integer1"
+    echo ""
+
+    echo "part1.6)---------------------"
+    eval "also_print_integer1"
+    echo ""
+
+    echo "part1.7)---------------------"
+    eval "alias_print_integer1"
+    echo ""
+
+    echo "part1.8)---------------------"
+    eval "other_alias_print_integer1"
+    echo ""
+
+    echo "-------------------- part 2 --------------------"
+    echo "try to rename alias name"
+    alias alias_print_integer1='also_print_integer1 '
+    
+    echo "part2.1)---------------------"
+    print_integer1
+    echo ""
+
+    echo "part2.2)---------------------"
+    also_print_integer1
+    echo ""
+
+    echo "part2.3)---------------------"
+    alias_print_integer1
+    echo ""
+
+    echo "part2.4)---------------------"
+    other_alias_print_integer1
+    echo ""
+
+    echo "part2.5)---------------------"
+    eval "print_integer1"
+    echo ""
+
+    echo "part2.6)---------------------"
+    eval "also_print_integer1"
+    echo ""
+
+    echo "part2.7)---------------------"
+    eval "alias_print_integer1"
+    echo ""
+
+    echo "part2.8)---------------------"
+    eval "other_alias_print_integer1"
+    echo ""
+
+    echo "-------------------- part 3 --------------------"
+    echo "try to rename alias name"
+    alias alias_print_integer1='also_print_integer1 '
+    alias other_alias_print_integer1='alias_print_integer1 '
+
+    echo "part3.1)---------------------"
+    print_integer1
+    echo ""
+
+    echo "part3.2)---------------------"
+    also_print_integer1
+    echo ""
+
+    echo "part3.3)---------------------"
+    alias_print_integer1
+    echo ""
+
+    echo "part3.4)---------------------"
+    other_alias_print_integer1
+    echo ""
+
+    echo "part3.5)---------------------"
+    eval "print_integer1"
+    echo ""
+
+    echo "part3.6)---------------------"
+    eval "also_print_integer1"
+    echo ""
+
+    echo "part3.7)---------------------"
+    eval "alias_print_integer1"
+    echo ""
+
+    echo "part3.8)---------------------"
+    eval "other_alias_print_integer1"
+    echo ""
+}
+
+main
+
+set -e
+shopt -u expand_aliases
+```
+#### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\alias\alias-example-32.bash"
+-------------------- part 1 --------------------
+just print variable using alias name
+part1.1)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part1.2)---------------------
+In alias name `also_print_integer1`,integer1:`5`
+
+part1.3)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part1.4)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part1.5)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part1.6)---------------------
+In alias name `also_print_integer1`,integer1:`5`
+
+part1.7)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part1.8)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+-------------------- part 2 --------------------
+try to rename alias name
+part2.1)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part2.2)---------------------
+In alias name `also_print_integer1`,integer1:`5`
+
+part2.3)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part2.4)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part2.5)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part2.6)---------------------
+In alias name `also_print_integer1`,integer1:`5`
+
+part2.7)---------------------
+In alias name `also_print_integer1`,integer1:`5`
+
+part2.8)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+-------------------- part 3 --------------------
+try to rename alias name
+part3.1)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part3.2)---------------------
+In alias name `also_print_integer1`,integer1:`5`
+
+part3.3)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part3.4)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part3.5)---------------------
+In alias name `print_integer1`,integer1:`5`
+
+part3.6)---------------------
+In alias name `also_print_integer1`,integer1:`5`
+
+part3.7)---------------------
+In alias name `also_print_integer1`,integer1:`5`
+
+part3.8)---------------------
+In alias name `also_print_integer1`,integer1:`5`
+
+
+```
+#### explanation
+This example illustrates that 
+
+    + Bash engine will expand the alias immediately.
+
+1. In this statement
+
+```
+alias alias_print_integer1='print_integer1 '
+```
+
+it gives an alias named `alias_print_integer1` that will be expanded to `print_integer1 `
+
+2. In this statement
+
+```
+alias other_alias_print_integer1='print_integer1 '
+```
+
+it gives an alias named `other_alias_print_integer1` that will be expanded to `print_integer1 `
+
+It likes in `C++`, one defines two pointers that points to same variable.
