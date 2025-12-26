@@ -10,7 +10,7 @@ You will know how to
 
 Additionally, you will know function call is stored -- function stack trace.
 
-Thus, you can get current name (though there is an another simpler way), the name of top level, and the name of callee that is invoked at at top level.   
+Thus, you can get callee name of current function call, and the caller came.
     
 ## CH9-1 -- define a function
 It doesn't like that in high-level programming language.
