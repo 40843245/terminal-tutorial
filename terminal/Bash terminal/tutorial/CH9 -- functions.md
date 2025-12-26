@@ -10,7 +10,7 @@ You will know how to
 
 Additionally, you will know function call is stored -- function stack trace.
 
-Thus, you can get callee name of current function call, and the caller came.
+Thus, you can get callee name of current function call, and the caller name.
     
 ## CH9-1 -- define a function
 It doesn't like that in high-level programming language.
@@ -318,7 +318,244 @@ shifted_arg6:`peach`
 
 ```
 
-## CH9-6 -- function stack trace
+## CH9-6 -- function call stack
 ### introduction
-Function call stack stores the order of function calls.
+Function call stack stores the order of function calls. Like function call stack in `C#` 
 
+### access from a function call stack
+`FUNCNAME` stores an array of function names from a function call stack.
+
+`${FUNCNAME[0]}`: name of callee function
+
+`${FUNCNAME[1]}`: name of caller function
+
+`"${FUNCNAME[@]}"`: expands the whole array to a string seperated by first character of `$IFS`
+
+### Examples
+#### Example 1
+utility modules:
+
+`get-length-of-function-call-stack-module.bash`
+
+```
+## utility function 
+## 主要目的:
+## 得到function call stack的元素數量，也就是FUNCNAME這個索引陣列的長度
+function get_length_of_function_call_stack(){
+    # 取得最後一個參數作為回傳變數名
+    local -n _result_var="${!#}" 
+    
+    # 計算除了最後一個參數以外的所有參數數量 (即傳進來的 FUNCNAME 數量)
+    _result_var=$(( $# - 1 ))
+}
+```
+
+`function-call-stack-module.bash`
+
+```
+#!/bin/bash
+
+## utility function
+## 主要目的:
+## 列印出漂亮的stack trace of function call
+function print_stack_trace() {
+    declare -i depth=${#FUNCNAME[@]}
+    printf "Stack Trace (Total Depth exclusive to this callee function itself:\`%d\`)" "$((depth - 1))"
+    echo ""
+
+    # 從1開始，因為0是callee function自身
+    for (( i=1; i<depth; i++ )); do
+        local func_name="${FUNCNAME[$i]}"
+        local file_name="${BASH_SOURCE[$i]}"
+        local line_num="${BASH_LINENO[$((i-1))]}" # 注意：呼叫點的行號在 i-1
+        
+        # 縮排效果
+        local indent=""
+        for (( j=1; j<i; j++ )); do indent+="  "; done
+        
+        # 格式化輸出
+        if [ "$i" -eq 1 ]; then
+            echo "${indent}└─> $func_name() at $file_name:$line_num"
+        else
+            echo "${indent}└─ $func_name()"
+        fi
+    done
+    echo "----------------------------------------"
+}
+```
+
+main script:
+
+`function-call-stack-example-1.bash`
+
+```
+# Get the directory where the current script is located
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../utility modules/function call stack/get-length-of-function-call-stack-module.bash"
+source "$SCRIPT_DIR/../../utility modules/function call stack/function-call-stack-module.bash"
+
+function func1(){
+    declare -i arg2=$2
+    echo "Inside \`${FUNCNAME[0]}\` function, it is called by \`${FUNCNAME[1]}\`"
+    get_length_of_function_call_stack "${FUNCNAME[@]}" length_of_function_call_stack    
+    printf "there are \`%d\` items in stack trace of function call at present." "$length_of_function_call_stack"
+    echo ""
+    printf "%d)----------------" $numbered_index
+    echo ""
+    ((numbered_index++))
+    
+    func2 $numbered_index $arg2
+}
+
+function func2(){
+    declare -i arg2=$2
+    echo "Inside \`${FUNCNAME[0]}\` function, it is called by \`${FUNCNAME[1]}\`"
+    get_length_of_function_call_stack "${FUNCNAME[@]}" length_of_function_call_stack
+    printf "there are \`%d\` items in stack trace of function call at present." "$length_of_function_call_stack"
+    echo ""
+    print_stack_trace
+    printf "%d)----------------" $numbered_index
+    echo ""
+    ((numbered_index++))
+    func3 $numbered_index $arg2
+}
+
+function func3(){
+    echo "Inside \`${FUNCNAME[0]}\` function, it is called by \`${FUNCNAME[1]}\`"
+    get_length_of_function_call_stack "${FUNCNAME[@]}" length_of_function_call_stack
+    printf "there are \`%d\` items in stack trace of function call at present." "$length_of_function_call_stack"
+    echo ""
+    print_stack_trace
+    printf "%d)----------------" $numbered_index
+    echo ""
+    ((numbered_index++))
+    declare -i n=$2
+    printf "n:\`%d\`\n" $n
+    if [[ $n -ge 10 ]] ; then
+        return 0
+    fi
+    func3 $numbered_index $((n + 1)) 
+    return 0
+}
+
+function demo_function(){
+    declare -i numbered_index
+    numbered_index=0
+    declare -i integer1=5
+    func1 $numbered_index $integer1
+}
+
+main(){
+    demo_function
+}
+
+main
+```
+
+executing this main script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\function call stack\function-call-stack-example-1.bash"
+Inside `func1` function, it is called by `demo_function`
+there are `4` items in stack trace of function call at present.
+0)----------------
+Inside `func2` function, it is called by `func1`
+there are `5` items in stack trace of function call at present.
+Stack Trace (Total Depth exclusive to this callee function itself:`5`)
+└─> func2() at D:\workspace\Bash\Bash tutorial\examples\function call stack\function-call-stack-example-1.bash:26
+  └─ func1()
+    └─ demo_function()
+      └─ main()
+        └─ main()
+----------------------------------------
+1)----------------
+Inside `func3` function, it is called by `func2`
+there are `6` items in stack trace of function call at present.
+Stack Trace (Total Depth exclusive to this callee function itself:`6`)
+└─> func3() at D:\workspace\Bash\Bash tutorial\examples\function call stack\function-call-stack-example-1.bash:38
+  └─ func2()
+    └─ func1()
+      └─ demo_function()
+        └─ main()
+          └─ main()
+----------------------------------------
+2)----------------
+n:`5`
+Inside `func3` function, it is called by `func3`
+there are `7` items in stack trace of function call at present.
+Stack Trace (Total Depth exclusive to this callee function itself:`7`)
+└─> func3() at D:\workspace\Bash\Bash tutorial\examples\function call stack\function-call-stack-example-1.bash:38
+  └─ func3()
+    └─ func2()
+      └─ func1()
+        └─ demo_function()
+          └─ main()
+            └─ main()
+----------------------------------------
+3)----------------
+n:`6`
+Inside `func3` function, it is called by `func3`
+there are `8` items in stack trace of function call at present.
+Stack Trace (Total Depth exclusive to this callee function itself:`8`)
+└─> func3() at D:\workspace\Bash\Bash tutorial\examples\function call stack\function-call-stack-example-1.bash:38
+  └─ func3()
+    └─ func3()
+      └─ func2()
+        └─ func1()
+          └─ demo_function()
+            └─ main()
+              └─ main()
+----------------------------------------
+4)----------------
+n:`7`
+Inside `func3` function, it is called by `func3`
+there are `9` items in stack trace of function call at present.
+Stack Trace (Total Depth exclusive to this callee function itself:`9`)
+└─> func3() at D:\workspace\Bash\Bash tutorial\examples\function call stack\function-call-stack-example-1.bash:38
+  └─ func3()
+    └─ func3()
+      └─ func3()
+        └─ func2()
+          └─ func1()
+            └─ demo_function()
+              └─ main()
+                └─ main()
+----------------------------------------
+5)----------------
+n:`8`
+Inside `func3` function, it is called by `func3`
+there are `10` items in stack trace of function call at present.
+Stack Trace (Total Depth exclusive to this callee function itself:`10`)
+└─> func3() at D:\workspace\Bash\Bash tutorial\examples\function call stack\function-call-stack-example-1.bash:38
+  └─ func3()
+    └─ func3()
+      └─ func3()
+        └─ func3()
+          └─ func2()
+            └─ func1()
+              └─ demo_function()
+                └─ main()
+                  └─ main()
+----------------------------------------
+6)----------------
+n:`9`
+Inside `func3` function, it is called by `func3`
+there are `11` items in stack trace of function call at present.
+Stack Trace (Total Depth exclusive to this callee function itself:`11`)
+└─> func3() at D:\workspace\Bash\Bash tutorial\examples\function call stack\function-call-stack-example-1.bash:38
+  └─ func3()
+    └─ func3()
+      └─ func3()
+        └─ func3()
+          └─ func3()
+            └─ func2()
+              └─ func1()
+                └─ demo_function()
+                  └─ main()
+                    └─ main()
+----------------------------------------
+7)----------------
+n:`10`
+
+```
