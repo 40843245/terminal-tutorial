@@ -4,7 +4,7 @@ This is a technical note:
 
 `Mastery of Bash Alias`
 
-This note summarizes the behavioral mechanics of `alias` and the `eval` command, derived from a series of 28 comprehensive experiments (see next chapter for examples and its explanation). 
+This note summarizes the behavioral mechanics of `alias` and the `eval` command, derived from a series of comprehensive experiments (see next chapter for examples and its explanation). 
 
 It is designed for developers coming from a structured background (like C#) to understand the `dynamic parsing` nature of Shell.
 
