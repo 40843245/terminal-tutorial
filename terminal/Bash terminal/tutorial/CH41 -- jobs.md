@@ -519,6 +519,68 @@ $
 
 <img width="957" height="476" alt="image" src="https://github.com/user-attachments/assets/0c801565-bfa6-4694-b798-85b0218a5603" />
 
+Interactions:
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ . "D:\workspace\Bash\Bash tutorial\example scripts\jobs\long-sleep-job2.bash"
+腳本已啟動。我們將在背景啟動一個等待 60 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1618)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 50 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1619)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 55 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1621)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]   Running                 delayed_function $n &
+[2]-  Running                 delayed_function $n &
+[3]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ disown %1
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ disown
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[2]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+[通知] 50 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sun Dec 28 07:10:02 TST 2025
+^C
+
+[通知] 55 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sun Dec 28 07:10:07 TST 2025
+[2]+  Done                    delayed_function $n
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+[通知] 60 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sun Dec 28 07:10:12 TST 2025
+^C
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+
+```
+
+<img width="959" height="500" alt="image" src="https://github.com/user-attachments/assets/d799e336-404d-4051-b06d-425c90a9c373" />
+
+<img width="947" height="72" alt="image" src="https://github.com/user-attachments/assets/966a9ca2-598e-48d4-ac2d-e0d3e6e2b815" />
+
 ## CH41-2 -- switch a job to foreground or background
 + Type this command
   
@@ -603,3 +665,7 @@ will list the current working job
 will list the previous working job.
 
 See example 2 in CH41-1 for example
+
++ `disown` will only remove ids (many of process id pid or jobspecs), but NOT kill the ids.
+
+  If ids is NOT supplied, it applies for cureent job.
