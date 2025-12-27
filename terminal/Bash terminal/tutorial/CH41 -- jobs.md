@@ -1,4 +1,4 @@
-# CH41-1 -- jobs
+<img width="939" height="272" alt="image" src="https://github.com/user-attachments/assets/29a4e549-fa1f-4e48-a1b4-536060619d98" /># CH41-1 -- jobs
 ## objectives
 You will learn how to
 
@@ -161,3 +161,139 @@ $
 ```
 
 <img width="958" height="422" alt="image" src="https://github.com/user-attachments/assets/e0def5d2-7542-46a4-9c0d-022d7eea654c" />
+
+Interactions:
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ . "D:\workspace\Bash\Bash tutorial\example scripts\jobs\long-sleep-job2.bash"
+腳本已啟動。我們將在背景啟動一個等待 60 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1287)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 50 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1288)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 55 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1290)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]   Running                 delayed_function $n &
+[2]-  Running                 delayed_function $n &
+[3]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ fg %1
+delayed_function $n
+
+[通知] 50 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:44:16 TST 2025
+
+[通知] 55 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:44:21 TST 2025
+
+[通知] 60 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:44:26 TST 2025
+[2]   Done                    delayed_function $n
+[3]   Done                    delayed_function $n
+
+```
+
+<img width="950" height="385" alt="image" src="https://github.com/user-attachments/assets/11d91111-6698-4305-91e4-8d4c260eaea7" />
+
+Interactions
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ . "D:\workspace\Bash\Bash tutorial\example scripts\jobs\long-sleep-job2.bash"
+腳本已啟動。我們將在背景啟動一個等待 60 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1326)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 50 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1327)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 55 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1329)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]   Running                 delayed_function $n &
+[2]-  Running                 delayed_function $n &
+[3]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ bg %1
+bash: bg: job 1 already in background
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ bg %2
+bash: bg: job 2 already in background
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ bg %3
+bash: bg: job 3 already in background
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ fg %1
+delayed_function $n
+bg %1
+bg %1
+
+[通知] 50 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:48:45 TST 2025
+
+[通知] 55 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:48:50 TST 2025
+
+[通知] 60 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:48:55 TST 2025
+[2]   Done                    delayed_function $n
+[3]   Done                    delayed_function $n
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ bg %1
+bash: bg: %1: no such job
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ bg %1
+bash: bg: %1: no such job
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+
+```
+
+<img width="949" height="353" alt="image" src="https://github.com/user-attachments/assets/5b2ca741-fcdd-4e1c-b929-e0356e550094" />
+
+<img width="939" height="272" alt="image" src="https://github.com/user-attachments/assets/016ff262-4f23-4d82-b741-98c611a12b6a" />
+
+## CH41-2 -- switch a job to foreground or background
+```
+fg %{job-number}
+```
+
+where 
+
+`{job-number}` is the job number id, wrapped with `[]` when displaying jobs mapping table
+
+It will switch a job to foreground
+
+```
+bg %{job-number}
+```
+
+where 
+
+`{job-number}` is the job number id, wrapped with `[]` when displaying jobs mapping table
+
+It will switch a job to background
+
+See example 2 in CH41-1 for example
