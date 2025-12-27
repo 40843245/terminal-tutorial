@@ -1,4 +1,4 @@
-<img width="939" height="272" alt="image" src="https://github.com/user-attachments/assets/29a4e549-fa1f-4e48-a1b4-536060619d98" /># CH41-1 -- jobs
+# CH41-1 -- jobs
 ## objectives
 You will learn how to
 
