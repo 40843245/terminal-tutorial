@@ -40,20 +40,33 @@ userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
 $ cd ~
 ```
 
-create or overwriting file `.bashrc` under `HOME` system environment variable
+Then create or overwriting file `.bashrc` under `HOME` system environment variable
+
 ```
 userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
 $ touch .bashrc
 ```
 
-userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
-$ notepad .bashrc
+Then open NotePad it 
 
-
-userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
-$ notepad ~/.bash_profile
+or you can use `vim .bashrc` in Unix/Linux environment to type plain text in edit mode)
 
 ```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ notepad .bashrc
+```
+
+After finishing writing the Bash script, close it.
+
+Then create or overwriting `.bash_profile` under `HOME` system environment variable.
+
+Then open NotePad it.
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ notepad ~/.bash_profile
+```
+
 ###### explanation
 ```
 ```
