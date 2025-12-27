@@ -49,7 +49,8 @@ $ touch .bashrc
 
 Then open NotePad it 
 
-or you can use `vim .bashrc` in Unix/Linux environment to type plain text in edit mode)
+> [!IMPORTANT]
+> You can use `vim .bashrc` in Unix/Linux environment to type plain text in edit mode)
 
 ```
 userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
@@ -67,6 +68,10 @@ userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
 $ notepad ~/.bash_profile
 ```
 
-###### explanation
+Then type these at top.
+
 ```
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
 ```
