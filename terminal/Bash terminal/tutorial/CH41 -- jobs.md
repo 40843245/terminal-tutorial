@@ -5,6 +5,12 @@ You will learn how to
   + look at jobs of current shell
 
 ## CH41-1 -- look at jobs of current shell
+### `jobs`
+use `jobs` lists current working, or scheduled jobs of current shell (in fact, it lists current state of jobs mapping table).
+
+### Examples
+#### Example 1
+
 `D:\workspace\Bash\Bash tutorial\example scripts\jobs\long-sleep-job.bash`
 
 ```
@@ -68,3 +74,90 @@ $
 ```
 
 <img width="959" height="241" alt="image" src="https://github.com/user-attachments/assets/4028fe4d-b9c9-4cea-bbe8-e8d9d77d2d91" />
+
+#### Example 2
+`D:\workspace\Bash\Bash tutorial\example scripts\jobs\long-sleep-job2.bash`
+
+```
+delayed_function() {
+    declare -i n=$(("$1"))
+    
+    # 模擬 n 秒的等待（這是在背景跑的，不影響你操作）
+    sleep $n
+    
+    echo -e "\n[通知] $n 秒已到！delayed_function 開始執行..."
+    echo "目前的日期時間是: $(date)"
+    
+    # 這裡可以放你實際想執行的指令，例如 dotnet build 或通知
+    # dotnet build
+}
+
+function subfunction(){
+    declare -i n=$(("$1"))
+
+    echo "腳本已啟動。我們將在背景啟動一個等待 $n 秒的任務。"
+    echo "這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。"
+
+    # 關鍵點：在呼叫函數後加上 '&' 符號，讓它去背景跑
+    delayed_function $n &
+
+    # 取得剛才丟到背景的 Job ID (這行非必要，僅作示範)
+    PID=$!
+    echo "背景任務已啟動 (PID: $PID)，你可以試著輸入 'jobs' 查看。"
+    echo "--------------------------------------------------------"
+}
+
+main(){
+    subfunction 60
+    subfunction 50
+    subfunction 55
+}
+
+main
+```
+
+Interactions:
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ . "D:\workspace\Bash\Bash tutorial\example scripts\jobs\long-sleep-job2.bash"
+腳本已啟動。我們將在背景啟動一個等待 60 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1194)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 50 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1195)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 55 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1197)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]   Running                 delayed_function $n &
+[2]-  Running                 delayed_function $n &
+[3]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+[通知] 50 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:27:46 TST 2025
+
+[通知] 55 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:27:51 TST 2025
+
+[通知] 60 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:27:56 TST 2025
+^C
+[1]   Done                    delayed_function $n
+[2]-  Done                    delayed_function $n
+[3]+  Done                    delayed_function $n
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+
+```
+
+<img width="958" height="422" alt="image" src="https://github.com/user-attachments/assets/e0def5d2-7542-46a4-9c0d-022d7eea654c" />
