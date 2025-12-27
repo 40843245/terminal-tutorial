@@ -48,3 +48,17 @@ main(){
 
 main
 ```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\compatibility level\set-compatibility-level-example-1.bash"
+compatibility level at present:``
+Ready to change compatibility level version 4.2
+After changing compatibility level version 4.2
+Now, compatibility level is changed to:`42`
+Now, ready to restore compatibility level:``
+After restoring compatibility level:``
+Now, compatibility level is changed to:``
+
+```
