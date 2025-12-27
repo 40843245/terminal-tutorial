@@ -346,7 +346,72 @@ $
 
 <img width="951" height="359" alt="image" src="https://github.com/user-attachments/assets/c2a138b5-854a-4e2e-9585-ceb3b56660b5" />
 
+Interactions:
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ . "D:\workspace\Bash\Bash tutorial\example scripts\jobs\long-sleep-job2.bash"
+腳本已啟動。我們將在背景啟動一個等待 60 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1463)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 50 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1464)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 55 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1466)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]   Running                 delayed_function $n &
+[2]-  Running                 delayed_function $n &
+[3]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ bg %3
+bash: bg: job 3 already in background
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ %3
+delayed_function $n
+
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]-  Running                 delayed_function $n &
+[2]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ kill %1
+[1]-  Terminated              delayed_function $n
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[2]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+[通知] 50 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 21:09:27 TST 2025
+^C
+[2]+  Done                    delayed_function $n
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+
+```
+
+<img width="959" height="452" alt="image" src="https://github.com/user-attachments/assets/fd2a5b2a-0bbd-4575-80c5-bfb244d70e6c" />
+
+<img width="951" height="98" alt="image" src="https://github.com/user-attachments/assets/2758b040-3d5b-4921-bfa6-8247c9fc8d0d" />
+
+
 ## CH41-2 -- switch a job to foreground or background
++ Type this command
+  
 ```
 fg %{job-number}
 ```
@@ -356,6 +421,8 @@ where
 `{job-number}` is the job number id, wrapped with `[]` when displaying jobs mapping table
 
 will switch a background job with id `{job-number}` to a foreground job 
+
++ Type this command
 
 ```
 bg %{job-number}
@@ -367,7 +434,7 @@ where
 
 will continue to executed a stopped job with id `{job-number}` as a background job
 
-Type this command then entering `Ctrl` + `z`
++ Type this command then entering `Ctrl` + `z`
 
 ```
 %{job-number}
@@ -378,5 +445,13 @@ where
 `{job-number}` is the job number id, wrapped with `[]` when displaying jobs mapping table
 
 will stop this job with id `{job-number}`
+
++ Type this command
+
+```
+kill %{job-number}
+```
+
+will kill the job with id `{job-number}`
 
 See example 2 in CH41-1 for example
