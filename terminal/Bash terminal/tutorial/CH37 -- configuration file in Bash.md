@@ -26,10 +26,8 @@ above code snippet means that
 
 loads `~/.bashrc` if it exists.
 
-#### Examples
-##### Example 1
-###### code
-Here's an example via Bash command.
+#### Samples
+Here's an sample via Bash command.
 
 Open Git Bash terminal
 
@@ -75,3 +73,24 @@ if [ -f ~/.bashrc ]; then
   . ~/.bashrc
 fi
 ```
+
+#### Examples
+##### Example 1
+Type these commands
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ cd ~
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ touch .bashrc
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ notepad .bashrc
+```
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ notepad ~/.bash_profile
+
+
+<img width="959" height="376" alt="image" src="https://github.com/user-attachments/assets/112db5bb-fdd2-4c0b-94fd-7c4ab40f78c8" />
