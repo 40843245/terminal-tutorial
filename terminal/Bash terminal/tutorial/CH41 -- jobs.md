@@ -59,7 +59,12 @@ userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
 $
 [通知] 10秒已到！delayed_function 開始執行...
 目前的日期時間是: Sat Dec 27 20:08:21 TST 2025
+^C
+[1]+  Done                    delayed_function
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
 
 ```
 
-<img width="949" height="220" alt="image" src="https://github.com/user-attachments/assets/65bb375a-bba0-42d2-886b-a44a07e20f93" />
+<img width="959" height="241" alt="image" src="https://github.com/user-attachments/assets/4028fe4d-b9c9-4cea-bbe8-e8d9d77d2d91" />
