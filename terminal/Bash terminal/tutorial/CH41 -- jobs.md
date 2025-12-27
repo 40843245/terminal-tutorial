@@ -467,7 +467,57 @@ $
 
 <img width="951" height="92" alt="image" src="https://github.com/user-attachments/assets/16e69061-de07-4a64-a68e-0b9570b86b5c" />
 
+Interactions:
 
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ . "D:\workspace\Bash\Bash tutorial\example scripts\jobs\long-sleep-job2.bash"
+腳本已啟動。我們將在背景啟動一個等待 60 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1551)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 50 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1552)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 55 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1554)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]   Running                 delayed_function $n &
+[2]-  Running                 delayed_function $n &
+[3]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ %-
+delayed_function $n
+
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]-  Running                 delayed_function $n &
+[3]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+[通知] 55 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 21:17:58 TST 2025
+
+[通知] 60 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 21:18:03 TST 2025
+^C
+[1]-  Done                    delayed_function $n
+[3]+  Done                    delayed_function $n
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+
+```
+
+<img width="957" height="476" alt="image" src="https://github.com/user-attachments/assets/0c801565-bfa6-4694-b798-85b0218a5603" />
 
 ## CH41-2 -- switch a job to foreground or background
 + Type this command
