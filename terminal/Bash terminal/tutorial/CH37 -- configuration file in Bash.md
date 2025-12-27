@@ -81,14 +81,40 @@ Type these commands
 ```
 userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
 $ cd ~
+```
 
+Then create or overwriting `.bashrc`.
+
+```
 userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
 $ touch .bashrc
+```
 
+Then open NotePad it.
+
+```
 userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
 $ notepad .bashrc
 ```
 
+Type these in `.bashrc` under `HOME` system environment variable.
+
+```
+PS1="\u 在 \w 說：\n> "
+```
+
+Similarly type these in `.bash_profile` under `HOME` system environment variable.
+
+```
+if [ -f ~/.bashrc ]; then
+  . ~/.bashrc
+fi
+```
+
+Then open Git Bash Terminal,
+
+you will see the prompt will look like this
+```
 userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
 $ notepad ~/.bash_profile
 
