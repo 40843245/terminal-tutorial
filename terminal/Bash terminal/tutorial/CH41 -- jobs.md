@@ -526,6 +526,12 @@ $
 fg %{job-number}
 ```
 
+or
+
+```
+%{job-number}
+```
+
 where 
 
 `{job-number}` is the job number id, wrapped with `[]` when displaying jobs mapping table
@@ -536,6 +542,10 @@ will switch a background job with id `{job-number}` to a foreground job
 
 ```
 bg %{job-number}
+```
+
+```
+%{job-number} &
 ```
 
 where 
@@ -567,15 +577,19 @@ will kill the job with id `{job-number}`
 + Type this command
 
 ```
-%{job-number}
-```
-
-will list the job with id `{job-number}`
-
-+ Type this command
-
-```
 %%
+```
+
+or
+
+```
+%+
+```
+
+or
+
+```
+%
 ```
 
 will list the current working job
@@ -583,16 +597,9 @@ will list the current working job
 + Type this command
 
 ```
-%+
-```
-
-will also list the current working job
-
-+ Type this command
-
-```
 %-
 ```
 
-will list the previous working job
+will list the previous working job.
+
 See example 2 in CH41-1 for example
