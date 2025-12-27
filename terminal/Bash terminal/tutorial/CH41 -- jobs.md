@@ -275,6 +275,77 @@ $
 
 <img width="939" height="272" alt="image" src="https://github.com/user-attachments/assets/016ff262-4f23-4d82-b741-98c611a12b6a" />
 
+Interactions:
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ . "D:\workspace\Bash\Bash tutorial\example scripts\jobs\long-sleep-job2.bash"
+腳本已啟動。我們將在背景啟動一個等待 60 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1372)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 50 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1373)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 55 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1375)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]   Running                 delayed_function $n &
+[2]-  Running                 delayed_function $n &
+[3]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ fg %1
+delayed_function $n
+
+[1]+  Stopped                 delayed_function $n
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ bg %1
+[1]+ delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]   Running                 delayed_function $n &
+[2]-  Running                 delayed_function $n &
+[3]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ bg %1
+bash: bg: job 1 already in background
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[通知] 50 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:57:56 TST 2025
+
+[通知] 55 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:58:01 TST 2025
+
+[通知] 60 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 20:58:17 TST 2025
+^C
+[1]   Done                    delayed_function $n
+[2]-  Done                    delayed_function $n
+[3]+  Done                    delayed_function $n
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+
+```
+
+<img width="944" height="433" alt="image" src="https://github.com/user-attachments/assets/b95e3880-1a35-45c1-8665-387cc2d001e6" />
+
+<img width="951" height="359" alt="image" src="https://github.com/user-attachments/assets/c2a138b5-854a-4e2e-9585-ceb3b56660b5" />
+
 ## CH41-2 -- switch a job to foreground or background
 ```
 fg %{job-number}
@@ -284,7 +355,7 @@ where
 
 `{job-number}` is the job number id, wrapped with `[]` when displaying jobs mapping table
 
-It will switch a job to foreground
+will switch a background job with id `{job-number}` to a foreground job 
 
 ```
 bg %{job-number}
@@ -294,6 +365,18 @@ where
 
 `{job-number}` is the job number id, wrapped with `[]` when displaying jobs mapping table
 
-It will switch a job to background
+will continue to executed a stopped job with id `{job-number}` as a background job
+
+Type this command then entering `Ctrl` + `z`
+
+```
+%{job-number}
+```
+
+where 
+
+`{job-number}` is the job number id, wrapped with `[]` when displaying jobs mapping table
+
+will stop this job with id `{job-number}`
 
 See example 2 in CH41-1 for example
