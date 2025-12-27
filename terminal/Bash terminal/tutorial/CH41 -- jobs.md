@@ -408,6 +408,66 @@ $
 
 <img width="951" height="98" alt="image" src="https://github.com/user-attachments/assets/2758b040-3d5b-4921-bfa6-8247c9fc8d0d" />
 
+Interactions:
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ . "D:\workspace\Bash\Bash tutorial\example scripts\jobs\long-sleep-job2.bash"
+腳本已啟動。我們將在背景啟動一個等待 60 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1511)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 50 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1512)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+腳本已啟動。我們將在背景啟動一個等待 55 秒的任務。
+這期間你可以繼續在終端機輸入其他指令，或是查看 jobs。
+背景任務已啟動 (PID: 1514)，你可以試著輸入 'jobs' 查看。
+--------------------------------------------------------
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]   Running                 delayed_function $n &
+[2]-  Running                 delayed_function $n &
+[3]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ %%
+delayed_function $n
+
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]-  Running                 delayed_function $n &
+[2]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ %+
+delayed_function $n
+
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ jobs
+[1]+  Running                 delayed_function $n &
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+[通知] 60 秒已到！delayed_function 開始執行...
+目前的日期時間是: Sat Dec 27 21:14:40 TST 2025
+^C
+[1]+  Done                    delayed_function $n
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$
+
+```
+
+<img width="959" height="421" alt="image" src="https://github.com/user-attachments/assets/db8daa14-f3b3-4863-b730-d97fae8d8ff6" />
+
+<img width="951" height="92" alt="image" src="https://github.com/user-attachments/assets/16e69061-de07-4a64-a68e-0b9570b86b5c" />
+
+
 
 ## CH41-2 -- switch a job to foreground or background
 + Type this command
@@ -454,4 +514,35 @@ kill %{job-number}
 
 will kill the job with id `{job-number}`
 
++ Type this command
+
+```
+%{job-number}
+```
+
+will list the job with id `{job-number}`
+
++ Type this command
+
+```
+%%
+```
+
+will list the current working job
+
++ Type this command
+
+```
+%+
+```
+
+will also list the current working job
+
++ Type this command
+
+```
+%-
+```
+
+will list the previous working job
 See example 2 in CH41-1 for example
