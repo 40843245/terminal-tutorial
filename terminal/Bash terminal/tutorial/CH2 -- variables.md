@@ -829,3 +829,311 @@ The array `index_array_1` is not defined or completely empty.
 declare -n func_arr="index_array_1"
 
 ```
+
+## CH2-6 -- associative array
+### Examples
+#### Example 1
+##### code
+`associative-array-example-1.bash`
+
+```
+## utility function
+## 主要目的
+## echo 索引陣列的相關資訊
+function print_associative_array_info(){
+    # 使用 -n (Nameref)，func_arr 現在指向傳入的變數名稱
+    local -n func_arr=$1
+    
+    # 檢查該變數是否存在
+    if [[ -z ${func_arr+x} && ${#func_arr[@]} -eq 0 ]]; then
+        echo "The array \`$1\` is not defined or completely empty."
+    else
+        echo "there are \`${#func_arr[@]}\` elements in this array"
+        # 取得所有索引 (Indices)
+        for i in "${!func_arr[@]}"; do
+            echo "item at index [$i]: \`${func_arr[$i]}\`"
+        done
+    fi
+
+    # 列印func_arr這個nameref所參考到的陣列之結構
+    declare -p func_arr
+}
+
+## utility wrapper belongs to utility function
+## 主要目的
+## echo 執行傳入的宣告指令，並捕捉 stderr
+function try_to_reparse_command() {
+    # 使用 ( ) 開啟 Subshell
+    (
+        # 在子進程中執行 eval，出錯也只會結束這個子進程
+        eval "$@" 2>/tmp/bash_err
+    )
+    
+    # 檢查子進程的回傳狀態
+    if [ $? -ne 0 ]; then
+        echo "Caught Error: $(cat /tmp/bash_err)"
+        return 1
+    fi
+    return 0
+}
+
+function demo_function1(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    declare -A associative_array_1
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function2(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    declare -A associative_array_1[0]="test"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function3(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    declare -A associative_array_1[1]="test"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function4(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    declare -i index=0
+    declare -A associative_array_1[$index]="test"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function5(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    declare -A associative_array_1["1"]="test"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function6(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    local subscript="1"
+    declare -A associative_array_1["subscript"]="test"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function7(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    local subscript="1"
+    unset subscript
+    declare -A associative_array_1["subscript"]="test"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function8(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    local superscript="2"
+    local subscript="superscript"
+    declare -A associative_array_1["subscript"]="test"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function9(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    try_to_reparse_command "declare -A associative_array_1[-3]=\"test\"" || echo "can't initialize an indexed array given the negative integer"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function10(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    try_to_reparse_command "declare -A associative_array_1[\"-3\"]=\"test\"" || echo "can't initialize an indexed array given the negative integer"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function11(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    declare -i subscript=-3
+    try_to_reparse_command "declare -A associative_array_1[\$\"subscript\"]=\"test\"" || echo "can't initialize an indexed array given the negative integer"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function12(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    declare -i subscript=-3
+    try_to_reparse_command "declare -A associative_array_1[\"subscript\"]=\"test\"" || echo "can't initialize an indexed array given the negative integer"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function13(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    local subscript="-3"
+    try_to_reparse_command "declare -A associative_array_1[\"subscript\"]=\"test\"" || echo "can't initialize an indexed array given the negative integer"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function14(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    local subscript="-0"
+    declare -A associative_array_1[$subscript]="test"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function15(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    local subscript="-0"
+    declare -A associative_array_1["subscript"]="test"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function16(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    try_to_reparse_command "declare -A associative_array_1[\"0.3\"]=\"test\"" || echo "can't parse an float number into an integer"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function17(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    try_to_reparse_command "declare -A associative_array_1[\"0.3f\"]=\"test\"" || echo "can't parse an float number into an integer"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function18(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    try_to_reparse_command "declare -A associative_array_1[\"0.3d\"]=\"test\"" || echo "can't parse an float number into an integer"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function19(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    try_to_reparse_command "declare -A associative_array_1[\"(4)\"]=\"test\"" || echo "invalid initialization of an index array"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function20(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    try_to_reparse_command "declare -A associative_array_1[\"(-1)*(-5)\"]=\"test\"" || echo "invalid initialization of an index array"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function21(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    declare -i superscript=2
+    declare -i dummy=4
+    local subscript="superscript dummy"
+    try_to_reparse_command "declare -A associative_array_1[\"subscript\"]=\"test\"" || echo "invalid initialization of an index array"
+    print_associative_array_info "associative_array_1"
+}
+
+function demo_function22(){
+    echo "In \`${FUNCNAME[0]}\` function call,"
+    declare -i superscript=2
+    declare -i dummy=4
+    try_to_reparse_command "declare -A associative_array_1[\"\$((superscript + dummy))\"]=\"test\"" || echo "invalid initialization of an associative array"
+    print_associative_array_info "associative_array_1"
+}
+
+main(){
+    demo_function1
+    demo_function2
+    demo_function3
+    demo_function4
+    demo_function5
+    demo_function6
+    demo_function7
+    demo_function8
+    demo_function9
+    demo_function10
+    demo_function11
+    demo_function12
+    demo_function13
+    demo_function14
+    demo_function15
+    demo_function16
+    demo_function17
+    demo_function18
+    demo_function19
+    demo_function20
+    demo_function21
+    demo_function22
+}
+
+set +e
+main
+set -e
+
+```
+##### output
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\arrays\associative array\associative-array-example-1.bash"
+In `demo_function1` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function2` function call,
+there are `1` elements in this array
+item at index [0]: `test`
+declare -n func_arr="associative_array_1"
+In `demo_function3` function call,
+there are `1` elements in this array
+item at index [1]: `test`
+declare -n func_arr="associative_array_1"
+In `demo_function4` function call,
+there are `1` elements in this array
+item at index [0]: `test`
+declare -n func_arr="associative_array_1"
+In `demo_function5` function call,
+there are `1` elements in this array
+item at index [1]: `test`
+declare -n func_arr="associative_array_1"
+In `demo_function6` function call,
+there are `1` elements in this array
+item at index [subscript]: `test`
+declare -n func_arr="associative_array_1"
+In `demo_function7` function call,
+there are `1` elements in this array
+item at index [subscript]: `test`
+declare -n func_arr="associative_array_1"
+In `demo_function8` function call,
+there are `1` elements in this array
+item at index [subscript]: `test`
+declare -n func_arr="associative_array_1"
+In `demo_function9` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function10` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function11` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function12` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function13` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function14` function call,
+there are `1` elements in this array
+item at index [-0]: `test`
+declare -n func_arr="associative_array_1"
+In `demo_function15` function call,
+there are `1` elements in this array
+item at index [subscript]: `test`
+declare -n func_arr="associative_array_1"
+In `demo_function16` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function17` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function18` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function19` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function20` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function21` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+In `demo_function22` function call,
+The array `associative_array_1` is not defined or completely empty.
+declare -n func_arr="associative_array_1"
+
+```
