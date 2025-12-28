@@ -104,3 +104,21 @@ userJay30@ASUS-B1400CBNGW MINGW64 /c
 $ !!
 bash: !!: event not found
 ```
+
+## CH43-4 -- environment variable
+### `HISTFILE`
+The history records will be written to environment variable `HISTFILE` (defaults to `~/.bash_history` where `~` is the value of environment variable `HOME`)
+
+### `HISTSIZE`
+`HISTSIZE` determines the number of history records can be saved in memory.
+
+### `HISTFILESIZE`
+`HISTFILESIZE` determines the number of history records can be saved in file where environment variable `HISTFILE` .
+
+### `HISTCONTROL`
+`HISTCONTROL`: how it filters history records when they are read at startup of Bash Terminal.
+
+| option | description |
+| :-- | :-- |
+| `ignorespace` | filters history records that starts with whitespace |
+| `ignoredups` | filters history records that are duplicated |
