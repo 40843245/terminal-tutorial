@@ -11,7 +11,7 @@ Additionally, you will learn how to
 Lastly, you will know the rationale of history record.
 
 ## CH43-1 -- rationale of history record
-The history records will be written to environment variable `HISTFILE` (defaults to `~` which is environment variable `HOME`)
+The history records will be written to environment variable `HISTFILE` (defaults to `~/.bash_history` where `~` is the value of environment variable `HOME`)
 
 The history records will be written when Bash terminal is successfully closed, or when `history -w` is executed successfully.
 
@@ -88,5 +88,6 @@ $
 
 ## CH43-3 -- operation of history record
 + `history`: will list all history records
-+ `history -w`: will write all commands in this session to history file (the file where environment variable `HISTFILE` is)
-
++ `history -w`: will write all commands in this session to history file (the file where the value of environment variable `HISTFILE` is)
++ `history -c`: clear all history records in current session.
++ `history -d {record}`: delete one history record `{record}`.
