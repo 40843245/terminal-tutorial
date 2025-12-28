@@ -122,3 +122,54 @@ The history records will be written to environment variable `HISTFILE` (defaults
 | :-- | :-- |
 | `ignorespace` | filters history records that starts with whitespace |
 | `ignoredups` | filters history records that are duplicated |
+
+### Examples
+#### Example 1
+utility modules:
+
+`print-history-info-module.bash`
+
+```
+## utility function
+## 主要目的:
+## 列印history records的相關資訊
+function print_history_record_info(){
+    local hist_control_str="${HISTCONTROL}"
+    local hist_control_str_message=""
+    if [[ "${hist_control_str+defined}" -eq "" || "${hist_control_str}" -eq "" ]]; then
+        hist_control_str_message="None"
+    else
+        hist_control_str_message="${hist_control_str}"
+    fi
+    printf "In the memory, there can save \`%s\` records\n" "${HISTSIZE}"
+    printf "In the history file:\`%s\`, there can save \`%s\` records\n" "${HISTFILE}" "${HISTFILESIZE}"
+    printf "How does it filter history record when they are be read at startup? \`%s\`\n" "${hist_control_str_message}"
+}
+```
+
+main script:
+
+`history-record-example-1.bash`
+
+```
+# Get the directory where the current script is located 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../utility modules/history/print-history-info-module.bash"
+
+main(){
+    print_history_record_info
+}
+
+main
+```
+
+executing this main script will echo
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\history\history-record-example-1.bash"
+In the memory, there can save `10000` records
+In the history file:`/c/Users/userJay30/.bash_history`, there can save `1000000` records
+How does it filter history record when they are be read at startup? `None`
+
+```
