@@ -91,3 +91,16 @@ $
 + `history -w`: will write all commands in this session to history file (the file where the value of environment variable `HISTFILE` is)
 + `history -c`: clear all history records in current session.
 + `history -d {record}`: delete one history record `{record}`.
+
+### Examples
+#### Example 1
+Interactions:
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 /c
+$ history -c
+
+userJay30@ASUS-B1400CBNGW MINGW64 /c
+$ !!
+bash: !!: event not found
+```
