@@ -311,3 +311,58 @@ $ !!:2
 bash: /c/Users/userJay30: Is a directory
 
 ```
+
+#### Example 2
+Interactions:
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ cd "D:\workspace\Bash\Bash tutorial"
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ pwd
+/d/workspace/Bash/Bash tutorial
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ working_current_parent_directory="..$PWD"
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ cd_working_current_parent_directory_command="eval \"cd \"$working_current_parent_directory\" \" "
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ echo "$cd_working_current_parent_directory_command"
+eval "cd "../d/workspace/Bash/Bash tutorial" "
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ echo $cd_working_current_parent_directory_command
+eval "cd "../d/workspace/Bash/Bash tutorial" "
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ echo "$HOME" "$PWD" $working_current_parent_directory $cd_working_current_parent_directory_command
+/c/Users/userJay30 /d/workspace/Bash/Bash tutorial ../d/workspace/Bash/Bash tutorial eval "cd "../d/workspace/Bash/Bash tutorial" "
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ echo !!:^
+echo "$HOME"
+/c/Users/userJay30
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ echo !-2:2
+echo "$PWD"
+/d/workspace/Bash/Bash tutorial
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ echo !-3:4
+echo $cd_working_current_parent_directory_command
+eval "cd "../d/workspace/Bash/Bash tutorial" "
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ !-4:4
+$cd_working_current_parent_directory_command
+bash: cd ../d/workspace/Bash/Bash: No such file or directory
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ eval !-5:4
+eval $cd_working_current_parent_directory_command
+bash: cd: too many arguments
+```
