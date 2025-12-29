@@ -105,7 +105,7 @@ How does it filter history record when they are be read at startup? `None`
 
 ```
 
-## CH43-4 -- History expansion
+## CH43-4 -- event designator
 + `!!`: exapnd the previous one command then executes it
 + `!{n}`:  exapnd the first `{n}`th command then executes it where `{n}` is an positive integer.
 + `!-{n}`:  exapnd the previous `{n}` command then executes it where `{n}` is an positive integer.
@@ -177,14 +177,34 @@ $
 ```
 
 ## CH43-5 -- word designator
-Word designator is the last part that will be inserted into command shorthands for history expansion. 
+Word designator is the last part that will be inserted into event designator.
 
-A word designator starts with `:`, followed by a nonnegative integer.
+A word designator MUST start with `:`, then 
 
-`:{n}` expands it into 
+followed by a nonnegative integer 
+
+where
+
+`{n}` indicates
 
   + the `{n}`th option or argument of the command about history expansion if `{n}` is a postive integer, or
   + the command itself if `{n}` equals to the integer 0.
+
+or followed by one of the following
+
++ `^`: indicates the first option or argument (equivalent to `1`)
++ `$`: inidcates the last option or argument
++ `%`: the most recently searched matching pattern
++ `*` : all options or arguments (equivalent to `1-$`)
++ `{x}-{y}` for an nonnegative integer `{x}`, `{y}`, and `{y}` is greater than `{x}`
+
+where
+
+`{x}-{y}` indicates starts from `{x}`th to {y}`th , both inclusive.
+
++ `{x}*` indicates starts from `{x}th` to last (equivalent to `{x}:$`)
++ `{x}*` indicates starts from `{x}th` to last two.
+  
 
 For example,
 
@@ -211,6 +231,46 @@ So, executing
 ```
 
 will expand the first option or argument of previous one command and then executing it.
+
+So, executing 
+
+```
+!!:^
+```
+
+will expand the first option or argument of previous one command and then executing it.
+
+So, executing 
+
+```
+!!:$
+```
+
+will expand the last option or argument of previous one command and then executing it.
+
+So, executing 
+
+```
+!!:2-5
+```
+
+will expand the from 2th option or arguments to 5th of previous one command and then executing it.
+
+So, executing 
+
+```
+!!:2*
+```
+
+will expand the 2th option or argument to last one of previous one command and then executing it.
+
+So, executing 
+
+```
+!!:2-
+```
+
+will expand the 2th option or argument to last two cof previous one command and then executing it.
 
 ### Examples
 #### Example 1
