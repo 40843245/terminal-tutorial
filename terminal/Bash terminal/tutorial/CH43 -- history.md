@@ -196,15 +196,15 @@ or followed by one of the following
 + `$`: inidcates the last option or argument
 + `%`: the most recently searched matching pattern
 + `*` : all options or arguments (equivalent to `1-$`)
-+ `{x}-{y}` for an nonnegative integer `{x}`, `{y}`, and `{y}` is greater than `{x}`
++ `{x}-{y}`, for an nonnegative integer `{x}`, `{y}`, and `{y}` is greater than `{x}`
 
-where
+indicates that it starts from `{x}`th to {y}`th , both inclusive.
 
-`{x}-{y}` indicates starts from `{x}`th to {y}`th , both inclusive.
++ `{x}*` indicates that it starts from `{x}th` to last (equivalent to `{x}:$`)
++ `{x}-` indicates that it starts from `{x}th` to last two, for an nonnegative integer `{x}`
 
-+ `{x}*` indicates starts from `{x}th` to last (equivalent to `{x}:$`)
-+ `{x}*` indicates starts from `{x}th` to last two.
-  
+> [!NOTE]
+> If the `{x}` before `-` is omitted, it defaults to 0
 
 For example,
 
@@ -254,7 +254,15 @@ So, executing
 !!:2-5
 ```
 
-will expand the from 2th option or arguments to 5th of previous one command and then executing it.
+will expand from 2th option or arguments to 5th of previous one command and then executing it.
+
+So, executing 
+
+```
+!!:2-5
+```
+
+will expand from 2th option or arguments to 5th of previous one command and then executing it.
 
 So, executing 
 
@@ -262,7 +270,7 @@ So, executing
 !!:2*
 ```
 
-will expand the 2th option or argument to last one of previous one command and then executing it.
+will expand the command itself and 1th option or argument to last one of previous one command and then executing it.
 
 So, executing 
 
@@ -271,6 +279,14 @@ So, executing
 ```
 
 will expand the 2th option or argument to last two cof previous one command and then executing it.
+
+So, executing 
+
+```
+!!:-
+```
+
+will expand the command itself and 1th option or argument to last two cof previous one command and then executing it.
 
 ### Examples
 #### Example 1
@@ -366,3 +382,54 @@ $ eval !-5:4
 eval $cd_working_current_parent_directory_command
 bash: cd: too many arguments
 ```
+
+## CH43-6 -- Modifier
+After the optional word designator, you can add a sequence of one or more of the following modifiers, each preceded by a ‘:’. 
+
+These modify, or edit, one or mores words selected from the history event.
+
++ `h`
+
+Remove a trailing filename component, leaving only the head.
+
++ `t`
+
+Remove all leading filename components, leaving the tail.
+
++ `r`
+
+Remove a trailing suffix of the form ‘.suffix’, leaving the basename.
+
++ `e`
+
+Remove all but the trailing suffix.
+
++ `p`
+
+Print the new command but do not execute it.
+
++ `q`
+
+Quote the substituted words, escaping further substitutions.
+
++ `x`
+
+Quote the substituted words as with ‘q’, but break into words at spaces, tabs, and newlines. The ‘q’ and ‘x’ modifiers are mutually exclusive; expansion uses the last one supplied.
+
++ `s/old/new/`
+
+Substitute new for the first occurrence of old in the event line. Any character may be used as the delimiter in place of ‘/’. The delimiter may be quoted in old and new with a single backslash. If ‘&’ appears in new, it is replaced with old. A single backslash quotes the ‘&’ in old and new. If old is null, it is set to the last old substituted, or, if no previous history substitutions took place, the last string in a !?string`[?]` search. If new is null, each matching old is deleted. The final delimiter is optional if it is the last character on the input line.
+
++ `&`
+
+Repeat the previous substitution.
+
++ `g`
+
++ `a`
+
+Cause changes to be applied over the entire event line. This is used in conjunction with ‘s’, as in `gs/old/new/`, or with ‘&’.
+
++ `G`
+
+Apply the following ‘s’ or ‘&’ modifier once to each word in the event.
