@@ -64,6 +64,29 @@ The following has the highest to lowest precedence, respectively
 1. connection using pipeline operators
 2. redirection
 
+## CH22-4 -- special variable
+### `PIPESTATUS`
+special variable `PIPESTATUS` is an indexed array that stores the exit code of the previous one commands (if it uses pipeline), or previous one command (if it does NOT use pipeline)
+
+> [!NOTE]
+> `PIPESTATUS` has a feature: `flicker`, so that onces after the other command executes, the value of it will be changed.
+>
+> Thus, please store the value of it immediately after executing a command.
+>
+>> [!DO]
+>> ```
+>> find "$directory_to_find" -name "$pattern_to_match" | wc -l
+>> rc=("${PIPESTATUS[@]}")
+>> ```
+>
+>> [!DON'T]
+>> ```
+>> find "$directory_to_find" -name "$pattern_to_match" | wc -l
+>> echo "DON'T DO LIKE THIS"
+>> rc=("${PIPESTATUS[@]}")
+>> ``` 
+
+
 ## Examples
 ### Example 1
 This example illustrates how to get the number of entries in specified directory with matching pattern (using regex) through `find` command
