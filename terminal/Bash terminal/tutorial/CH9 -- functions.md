@@ -6,6 +6,7 @@ You will know how to
   + inoke a function
   + special variables about functions
   + return an exit code in a function
+  + pass by reference to a function
   + shift positional arguments
 
 Additionally, you will know function call is stored -- function stack trace.
@@ -95,6 +96,8 @@ non-zero means failure (boolean false)
 > You can't return a string.
 >
 > However, you can assign the value into a global variable to simulate to return a string.
+>
+> Or pass by reference to a function, see CH9-4 for more details.
 
 ### Examples
 #### Example 1
@@ -168,7 +171,119 @@ End of the function named `func1` call.
 
 ```
 
-## CH9-4 -- special variables about functions
+## CH9-4 -- pass by reference to a function
+To pass by reference to a function, define a `NameRef` (stands for name reference) using `local -n` in the function
+
+Then you can pass a variable name to the function.
+
+> [!NOTE]
+> To tell a nameref is an integer,
+>
+> please simply define a `NameRef` rather than adding `declare -i` statement followed by `local -n` statement with same variable.
+>
+> Adding `declare -i` statement followed by `local -n` statement same variable will override the behavior of `local -n`, making the variable as a local variable (NOT be a `NameRef`)
+>
+> [!DO]
+>> ```
+>> function has_same_elements(){
+>> local -n _ref_target=$1
+>> # Logic here
+>> ```
+>
+>> [!DONT'T]
+>> ```
+>> function has_same_elements(){
+>> local -n _ref_target=$1
+>> declare -i _ref_target # This will override the behavior of `local -n`
+>> # Logic here
+>> ``` 
+
+
+### Examples
+#### Example 1
+utility modules:
+
+`has-same-elements-module.bash`
+
+```
+## utility function
+## 主要目的:
+## 判斷一個indexed array中所有的元素是否皆為第二個參數的值
+## > [!NOTE]
+## > 第一個參數的值一定要為indexed array且所有元素皆為integer。
+## > 
+## > 第二個參數的值一定要為integer
+function has_same_elements(){
+    local -n arr=$1
+    declare -i target_integer=$2
+    local -n _ref_target=$3
+    declare -i _ref_target
+
+    _ref_target=0
+    for item in "${arr[@]}"; do
+        if [[ $item -ne $target_integer ]]; then
+            # 不同
+            _ref_target=1
+            break;
+        fi
+    done
+}
+```
+
+main script:
+
+`pass-by-reference-example-1.bash`
+
+```
+# Get the directory where the current script is located 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../../utility modules/array/indexed array/has-same-elements-module.bash"
+
+main(){
+    declare -i returned_value=0
+    declare -i index=1
+    declare -a array
+    declare -i target_integer
+
+    printf "use case \`%d\`:\n" ${index}
+    array=(0 0 0)
+    target_integer=0
+    has_same_elements array $target_integer returned_value
+    if [[ $returned_value -eq 0 ]]; then
+        echo "The values of elements in the array \`${array[@]}\` are BOTH \`${target_integer}\`"
+    else
+        echo "At least one of values of elements in the array \`${array[@]}\` is NOT equal to \`${target_integer}\`"
+    fi
+    ((index++))
+
+    printf "use case \`%d\`:\n" ${index}
+    array=(0 2 0)
+    target_integer=0
+    has_same_elements array $target_integer returned_value
+    if [[ $returned_value -eq 0 ]]; then
+        echo "The values of elements in the array \`${array[@]}\` are BOTH \`${target_integer}\`"
+    else
+        echo "At least one of values of elements in the array \`${array[@]}\` is NOT equal to \`${target_integer}\`"
+    fi
+    ((index++))
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\functions\pass by reference\pass-by-reference-example-1.bash"
+use case `1`:
+The values of elements in the array `0 0 0` are BOTH `0`
+use case `2`:
+At least one of values of elements in the array `0 2 0` is NOT equal to `0`
+
+```
+
+## CH9-5 -- special variables about functions
 `\@`: all passed arguments separator by first character of `$IFS`.
 
 `$*`: all passed arguments that are expanded as a string. 
@@ -176,6 +291,8 @@ End of the function named `func1` call.
 When quotated by double quotations, it will expand a string and it will be splitted by first character of `IFS` (which is usually a whitespace) 
 
 `$#`: number of all passed arguments
+
+`$@`: number of all passed arguments
 
 `$FUNCNAME`: a special variable stores current function stack trace (Like stack trace in `C#`)
 
@@ -195,8 +312,10 @@ and so on
 
 `$10`: the second tenth argument (zero-based index)
 
+and so on
+
 > [!NOTE]
-> `$` followed a positive integer `n` means that expanding the `n`th argument value.
+> `$` followed a positive integer `n` means that expands the `n`th argument value.
 
 > [!NOTE]
 > Since the parser only parses one digit after symbol `$`,
@@ -205,7 +324,7 @@ and so on
 >
 > Otherwise, you will get an unexpected result.
 
-## CH9-5 -- shift positional arguments
+## CH9-6 -- shift positional arguments
 ### `shift`
 built-in command `shift` can shift `n` positional arguments from right to left
 
