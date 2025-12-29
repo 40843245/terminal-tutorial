@@ -88,7 +88,7 @@ $
 
 ## CH43-3 -- operation of history record
 + `history`: will list all history records
-+ `history -w`: will write all commands in this session to history file (the file where the value of environment variable `HISTFILE` is)
++ `history -w {filename}`: will write all commands in this session to history file -- `{filename}`, or the file where the value of environment variable `HISTFILE` if `{filename}` is NOT specified. 
 + `history -c`: clear all history records in current session.
 + `history -d {record}`: delete one history record `{record}`.
 
