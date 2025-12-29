@@ -151,3 +151,153 @@ $ find '/d/workspace/Bash/Bash tutorial/outputs/examples' -name '*.bash' | wc -l
 2
 
 ```
+
+### Example 2
+This example illustrates how to use `PIPESTATUS` special variable.
+
+utility modules:
+
+`has-same-elements-module.bash`
+
+```
+## utility function
+## 主要目的:
+## 判斷一個indexed array中所有的元素是否皆為第二個參數的值
+## > [!NOTE]
+## > 第一個參數的值一定要為indexed array且所有元素皆為integer。
+## > 
+## > 第二個參數的值一定要為integer
+function has_same_elements(){
+    local -n arr=$1
+    declare -i target_integer=$2
+    local -n _ref_target=$3
+    declare -i _ref_target
+
+    _ref_target=0
+    for item in "${arr[@]}"; do
+        if [[ $item -ne $target_integer ]]; then
+            # 不同
+            _ref_target=1
+            break;
+        fi
+    done
+}
+```
+
+main script:
+
+`pipeline-example-2.bash`
+
+```
+# Get the directory where the current script is located 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+source "$SCRIPT_DIR/../../utility modules/array/indexed array/has-same-elements-module.bash"
+
+function pipeline_commands(){
+    local directory_to_find="$1"
+    local pattern_to_match="$2"
+    # 定義一個NameRef，參考第三個參數的值
+    local -n _ref_target=$3
+
+    # 定義該NameRef為整數型別
+    declare -i _ref_target
+
+    # 定義一個NameRef，參考第四個參數的值
+    local -n _ref_rc=$4
+
+    find "$directory_to_find" -name "$pattern_to_match" | wc -l | xargs printf "there are \`%d\` entries that satifies the matching pattern \`${pattern_to_match}\` in this directory \`${directory_to_find}\`\n" || exit 1
+    _ref_rc=("${PIPESTATUS[@]}")
+    _ref_target=$?
+}
+
+function print_pipeline_commands(){
+    declare -i result=$1
+    local -n _error_arr_ref=$2
+    local message="" 
+    declare -i error_arr_exit_code=1
+
+    has_same_elements _error_arr_ref 0 error_arr_exit_code
+    
+    if [[ -z "${_error_arr_ref[*]}" ]]; then
+        message="Unknown error!!! The array is unset or empty.\n"
+    elif [[ $result -eq 0 && $error_arr_exit_code -eq 0 ]]; then
+            message="The commands using pipeline is executed with success with exit code \`${result}\`"
+    else
+        message="The commands using pipeline is executed with failure with exit code \`${result}\`\n"
+        message="${message}Detailed message as following:\n"
+        for i in "${!_error_arr_ref[@]}"; do
+            message="${message}At [${i}]th command, exit code:\`${_error_arr_ref[$i]}\`\n" 
+        done
+    fi
+    printf "$message"
+}
+
+main(){
+    local directory_to_find=""
+    local pattern_to_match=""
+    declare -i returned_value=0
+    declare -i index=1
+    declare -a error_message_array
+
+    printf "use case \`%d\`:\n" ${index}
+    directory_to_find="/d/workspace/Bash/Bash tutorial/outputs/examples"
+    pattern_to_match="*.txt"
+
+    pipeline_commands "$directory_to_find" "$pattern_to_match" returned_value error_message_array
+    print_pipeline_commands $returned_value error_message_array
+
+    ((index++))
+
+    printf "use case \`%d\`:\n" ${index}
+    directory_to_find="/d/workspace/Bash/Bash tutorial/outputs/examples"
+    pattern_to_match="*.bash"
+
+    pipeline_commands "$directory_to_find" "$pattern_to_match" returned_value error_message_array
+    print_pipeline_commands $returned_value error_message_array
+
+    ((index++))
+
+    printf "use case \`%d\`:\n" ${index}
+    directory_to_find="/d/workspace/Bash/Bash tutorial/non-exist-directory/"
+    pattern_to_match="*.bash"
+
+    pipeline_commands "$directory_to_find" "$pattern_to_match" returned_value error_message_array
+    print_pipeline_commands $returned_value error_message_array
+
+    ((index++))
+}
+
+set +o pipefail
+main
+```
+
+executing main script will throw errors and echo
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ source "D:\workspace\Bash\Bash tutorial\examples\pipeline\pipeline-example-2.bash"
+use case `1`:
+there are `5` entries that satifies the matching pattern `*.txt` in this directory `/d/workspace/Bash/Bash tutorial/outputs/examples`
+The commands using pipeline is executed with failure with exit code `0`
+Detailed message as following:
+At [0]th command, exit code:`0`
+At [1]th command, exit code:`0`
+At [2]th command, exit code:`0`
+use case `2`:
+there are `2` entries that satifies the matching pattern `*.bash` in this directory `/d/workspace/Bash/Bash tutorial/outputs/examples`
+The commands using pipeline is executed with failure with exit code `0`
+Detailed message as following:
+At [0]th command, exit code:`0`
+At [1]th command, exit code:`0`
+At [2]th command, exit code:`0`
+use case `3`:
+find: ‘/d/workspace/Bash/Bash tutorial/non-exist-directory/’: No such file or directory
+there are `0` entries that satifies the matching pattern `*.bash` in this directory `/d/workspace/Bash/Bash tutorial/non-exist-directory/`
+The commands using pipeline is executed with failure with exit code `0`
+Detailed message as following:
+At [0]th command, exit code:`1`
+At [1]th command, exit code:`0`
+At [2]th command, exit code:`0`
+
+```
