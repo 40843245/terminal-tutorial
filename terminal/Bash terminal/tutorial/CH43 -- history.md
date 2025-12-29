@@ -23,6 +23,8 @@ The history records will be read once Bash terminal opens successfully.
 + `!-{n}`:  exapnd the previous `{n}` command then executes it where `{n}` is an positive integer.
 + `!{string}`:  exapnd command that is the first occurrence that starts with the string `{string}`, where `{string}` is a string without quotation, then executes it.
 + `!?{string}?`:  exapnd command that is the first occurrence that contains the string `{string}`, where `{string}` is a string without quotation, then executes it.
++ `!#`: the number of commands typed so far in this session.
++ `^{string1}^{string2}^` : Repeat the previous one command, replacing `{string1}` to `{string2}` where `{string1}` is a string without quotation and `{string1}` is a string without quotation.
 
 ### Examples
 #### Example 1
