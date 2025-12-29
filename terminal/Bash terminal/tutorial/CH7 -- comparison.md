@@ -132,8 +132,91 @@ The variable named `str3` exists in memory. It is set.
 
 ```
 
+## CH7-4 -- get type of a variable
+### `declare -p`
+`declare -p` followed by a variable name will echo the structure (definition, variable name, variable value) of a variable.
 
-## CH7-4 -- check a file
+Thus, you can stream the data from stdout (stands for standard output stream) to `/dev/null` and assigns it to a variable.
+
+Then you can parse it with regex (see CH14 for more details) or using `grep` (a built-in command in Unix/Linux environment)
+
+### Examples
+#### Example 1
+`typeof-a-variable-example-1.bash`
+
+```
+function print_info(){
+    print_info1 "$1"
+    print_info2 "$1"
+}
+
+function print_info1(){
+    local info
+    info=$(declare -p "$1" 2>/dev/null)
+    
+    if [[ -z "$info" ]]; then
+        echo "Variable '$1' is undefined."
+    elif [[ "$info" =~ "declare -a" ]]; then
+        echo "$1 is an Indexed Array."
+    elif [[ "$info" =~ "declare -A" ]]; then
+        echo "$1 is an Associative Array."
+    elif [[ "$info" =~ "declare -i" ]]; then
+        echo "$1 is an Integer."
+    else
+        echo "$1 is a String (default)."
+    fi
+}
+
+function print_info2(){
+    local info
+    info=$(declare -p "$1" 2>/dev/null)
+    
+    if [[ -z "$info" ]]; then
+        echo "Variable '$1' is undefined."
+    elif grep -q "declare -a" <<< "$info"; then
+        echo "$1 is an Indexed Array."
+    elif grep -q "declare -A" <<< "$info"; then
+        echo "$1 is an Associative Array."
+    elif grep -q "declare -i" <<< "$info"; then
+        echo "$1 is an Integer."
+    else
+        echo "$1 is a String (default)."
+    fi
+}
+
+main(){
+    local str1="string1"
+    declare -i integer1=1
+    declare -a indexed_array1=(1 2 3)
+    declare -A associative_array1=(["0"]="value0")
+    print_info str1 
+    print_info integer1
+    print_info indexed_array1
+    print_info associative_array1
+    print_info unset_variable1
+}
+
+main 
+```
+
+executing this script will echo
+
+```
+$ "D:\workspace\Bash\Bash tutorial\examples\declare\typeof-a-variable-example-1.bash"
+str1 is a String (default).
+str1 is a String (default).
+integer1 is an Integer.
+integer1 is an Integer.
+indexed_array1 is an Indexed Array.
+indexed_array1 is an Indexed Array.
+associative_array1 is an Associative Array.
+associative_array1 is an Associative Array.
+Variable 'unset_variable1' is undefined.
+Variable 'unset_variable1' is undefined.
+
+```
+
+## CH7-5 -- check a file
 see [bash的File Testing](https://docs.google.com/spreadsheets/d/1sSjh6nQffVeyuqQo4JFjFje6DZ7LzkrtOl_s688bUEM/edit?gid=1954033718#gid=1954033718)
 
 and [CH28](https://github.com/40843245/terminal-tutorial/blob/main/terminal/Bash%20terminal/tutorial/CH28%20--%20existence%20of%20a%20file%20or%20directory_TOC.md) for more details
