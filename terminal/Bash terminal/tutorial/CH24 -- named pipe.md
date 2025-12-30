@@ -28,7 +28,7 @@ Thus, the receiever can immediately reads the data in the named pipe once after 
 >
 > for more details, see [rationale of reading data from HDD](https://gemini.google.com/share/2002ef5abe2d)
 
-However, it has `64MB`, so that when the sender writes large data over than 64MB, 
+However, it has `64KB`, so that when the sender writes large data over than 64MB, 
 
 then it will be unable to write the data until the receiever successfully read it (as it is stored in cached memory and there is a small amount of space in cached memory). 
 
