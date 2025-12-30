@@ -1,8 +1,8 @@
-# CH22 -- pipeline
+# CH22 -- anonymous pipe
 ## objectives
 You will learn how to
 
-  + use pipeline
+  + use anonymous
 
 ## CH22-1 -- syntax and description
 syntax:

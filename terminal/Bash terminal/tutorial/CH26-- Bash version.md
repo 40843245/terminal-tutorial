@@ -1,4 +1,4 @@
-# CH25 -- version
+# CH25 -- Bash version
 ## objectives
 You will know how to
 
