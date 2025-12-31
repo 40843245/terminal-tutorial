@@ -184,7 +184,6 @@ then **`~` will be expanded into `$HOME`** (a kind of a system environment path 
 | user inputs | `tilde-prefix` | `{login-name}` | perform tilde expansion or not | description | 
 | :-- | :-- | :-- | :-- | :-- |
 | `~` | `~` | `` | yes | your home directory |
-| `~` | `~` | `` | yes | your home directory |
 | `~john/` | `~john` | `` | yes | john's home directory |
 | `~"john"/` | `~"john"` | `"john"` | no | considered as an unexpaned string `~john/` |
 | `~ /` | `~` | `` | `` | your home directory followed by a whitespace ` ` then root directory |
@@ -216,6 +215,147 @@ where
 
 > [!TIP]
 > see CH16 for more details and usage
+
+### Examples
+#### Example 1
+`tilde-expansion-example-1.bash`
+
+```
+main(){
+    local home_directory=~
+    echo "The current user home directory:\`$HOME\`"
+    echo "The current user home directory:\`$home_directory\`"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\shell expansions\tilde expansion\tilde-expansion-example-1.bash"
+The current user home directory:`/c/Users/userJay30`
+The current user home directory:`/c/Users/userJay30`
+
+```
+
+#### Example 2
+`tilde-expansion-example-2.bash`
+
+```
+main(){
+    local john_home_directory=~john
+    local not_be_considered_as_john_home_directory=~"john"
+    local your_home_directory_followed_by_a_whitespace="~ /"
+    
+    echo "The user john home directory:\`$john_home_directory\`"
+    echo "\`$not_be_considered_as_john_home_directory\` will be NOT considered a home directory and Bash engine will NOT perform a tilde-expansion."
+    echo "\`~ /\` will be considered a home directory and Bash engine will perform a tilde-expansion and it will be expanded to \`$your_home_directory_followed_by_a_whitespace\`"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\shell expansions\tilde expansion\tilde-expansion-example-2.bash"
+The user john home directory:`~john`
+`~john` will be NOT considered a home directory and Bash engine will NOT perform a tilde-expansion.
+`~ /` will be considered a home directory and Bash engine will perform a tilde-expansion and it will be expanded to `~ /`
+
+```
+
+#### Example 3
+`tilde-expansion-example-3.bash`
+
+```
+main(){
+    local your_home_directory=~
+    local current_working_directory=~+
+    local previous_working_directory=~-
+    local yes_no_answer=""
+
+    if [[ "$your_home_directory" == "$HOME" ]]; then
+        yes_no_answer="yes"
+    else
+        yes_no_answer="no"
+    fi
+
+    echo "\`~\` will be expanded to \`\$HOME\`\`" 
+    echo "Are \`$your_home_directory\` and \`$HOME\` equal after expansion? \`$yes_no_answer\`"
+    echo ""
+
+    if [[ "$current_working_directory" == "$PWD" ]]; then
+        yes_no_answer="yes"
+    else
+        yes_no_answer="no"
+    fi
+
+    echo "\`~+\` will be expanded to \`\$PWD\`"
+    echo "Are \`$current_working_directory\` and \`$PWD\` equal after expansion? \`$yes_no_answer\`"
+    echo ""
+
+    if [[ "$previous_working_directory" == "$OLDPWD" ]]; then
+        yes_no_answer="yes"
+    else
+        yes_no_answer="no"
+    fi
+
+    echo "\`~-\` will be expanded to \`\$OLDPWD\`"
+    echo "Are \`$previous_working_directory\` and \`$OLDPWD\` equal after expansion? \`$yes_no_answer\`"
+    echo ""
+}
+
+main
+```
+
+Type these commands
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ pwd
+/c/Users/userJay30
+
+userJay30@ASUS-B1400CBNGW MINGW64 ~ (master)
+$ cd "D:\workspace\Bash\Bash tutorial"
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ pwd
+/d/workspace/Bash/Bash tutorial
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ echo "$OLDPWD"
+/c/Users/userJay30
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash/Bash tutorial
+$ cd ../
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash
+$ pwd
+/d/workspace/Bash
+
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash
+$ echo "$OLDPWD"
+/d/workspace/Bash/Bash tutorial
+
+```
+
+Then executes this script will echo
+
+```
+userJay30@ASUS-B1400CBNGW MINGW64 /d/workspace/Bash
+$ source "D:\workspace\Bash\Bash tutorial\examples\shell expansions\tilde expansion\tilde-expansion-example-3.bash"
+`~` will be expanded to `$HOME``
+Are `/c/Users/userJay30` and `/c/Users/userJay30` equal after expansion? `yes`
+
+`~+` will be expanded to `$PWD`
+Are `/d/workspace/Bash` and `/d/workspace/Bash` equal after expansion? `yes`
+
+`~-` will be expanded to `$OLDPWD`
+Are `/d/workspace/Bash/Bash tutorial` and `/d/workspace/Bash/Bash tutorial` equal after expansion? `yes`
+
+```
 
 ## CH11-4 -- parameter and variable expansion
 ### capitalize and decapitalize
@@ -550,6 +690,337 @@ $ "D:\workspace\Bash\Bash tutorial\examples\shell expansions\parameter expansion
 
 ```
 
+## CH11-4 -- command substitution
+### syntax and description
+syntax:
+
+Forms in newer version:
+
+```
+$({commands})
+```
+
+where
+
+```
+{commands}: one or more commands
+```
+
+2th form in latest version (ONLY supports on Bash 5.2+): 
+
+> [!WARNING]
+> this form is ONLY on Git Bash 5.2+ which is released in 2022-09-26.
+> 
+> Please check its version first.
+> 
+> Also, check your device is running on Ubuntu kernel (such as Unix/Linux) 
+> 
+> since the new cutting-edge feature is ONLY stable and fully supported on Ubuntu kernel.
+>
+> Take my experiment as example,
+>
+> My device is on Windows 11. And Git Bash terminal (with version Bash 5.2) runs on `MSYS2` ecosystem  (which uses `MingGW-64` -- `GCC` compiler),
+>
+> According my experiment,
+>
+> It is ONLY accepted that 
+> 
+> the statement ONLY has this form, that is
+>
+> It is NOT acceptable if one appends something on the command in this form
+>
+> For example, 
+> 
+> this is acceptable on Windows 11
+>
+>> [!DO]
+>> 
+>> ```
+>> { echo "${name^^}"; }
+>> ```
+>
+> while, running this example on Windows 11 will throw an error.
+>
+>> [!DON'T]
+>> 
+>> ```
+>> upper_cased_text=${ echo "${name^^}"; }
+>> ``` 
+>
+> see the following figure as example
+>
+> ![command substitution is not stable in msys example.png](command-substitution-is-not-stable-in-msys.png)
+
+Represented with Regex
+
+```
+{dollar-sign}{left-curly-bracket}{c}?{whitespaces}{commands}{semicolon}{whitespaces}{right-curly-bracket}
+```
+
+where
+
+```
+{c}:= {whitespace}|{tab}|{newline}|{pipeline}
+```
+
+```
+{left-curly-bracket}: left curly bracket `{`
+{right-curly-bracket}: right curly bracket `}`
+{dollar-sign}: dollar sign `$`
+{whitespace}: a whitespace ` `
+{tab}: a tab `\t`
+{newline}: break line `\n`
+{pipeline}: pipe line `|`
+{semicolon}: semi-colon `;`
+```
+
+Form in older version (deprecated):
+
+```
+`command`
+```
+
+description:
+
++ About 1th form,
+
+```
+$({commands})
+```
+
+`$({commands})` will execute the commands `{commands}` and then will expand it to the result after executing.
+
+For example
+
+```
+cat "file1.txt"
+```
+
+will display the file content of `file1.txt` on terminal
+
+So,
+
+```
+FILE_CONTENT=$(cat "file1.txt")
+```
+
+will assign the file content of `file1.txt` into `FILE_CONTENT` variable.
+
++ About 2th form
+
+```
+{left-curly-bracket}{c}?{whitespaces}{commands}{semicolon}{whitespaces}{right-curly-bracket}
+```
+
+will look like this
+
+```
+{commands; }
+```
+
+or 
+
+```
+${| commands; }
+```
+
+and more
+
+which will also expand it then execute it.
+
+The only differece between
+
+```
+{commands; }
+```
+
+and 
+
+```
+${| commands; }
+```
+
+is that 
+
+in latter, once after it is executed, the construct will expand it to the value of `RELPY` special variable,
+
+while in former, it will not do so.
+
+
+shorthand:
+
+```
+$(cat "file1.txt")
+```
+
+is equivalent to
+
+```
+$(< "file1.txt")
+```
+
+but the latter one runs faster since it is not needed to execute `cat.exe` file
+
+### comparison
+We will ONLY compare the 1th and 2th form.
+
+Though they have the same behavior in a 
+
+### Examples
+#### Example 1
+`command-substitution-example-1.bash`
+
+```
+# Get the directory where the current script is located 
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+main(){
+    local file_name="$SCRIPT_DIR/../../../inputs/scripts/multiple-line-example-1.txt"
+    local file_content=""
+    cat "$file_name"
+    
+    file_content=$(cat "$file_name")
+    echo "file content of the file named \`$file_name\`:"
+    echo "$file_content"
+
+    file_content=$(< "$file_name")
+    echo "file content of the file named \`$file_name\`:"
+    echo "$file_content"
+}
+
+main
+```
+
+inputs script:
+
+`multiple-line-example-1.txt`
+
+```
+This is a multiple line
+Hello C
+Hello C++
+Hello C#
+Hello Bash
+Hello Java
+Hello GoLang
+Hello Kotlin
+```
+
+Assuming that the script is located at `D:\workspace\Bash\Bash tutorial\examples\shell expansions\command substitution\command-substitution-example-1.bash`
+
+and inputs script is located at `D:\workspace\Bash\Bash tutorial\inputs\scripts\multiple-line-example-1.txt`
+
+Then executing this script will echo
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\shell expansions\command substitution\command-substitution-example-1.bash"
+This is a multiple line
+Hello C
+Hello C++
+Hello C#
+Hello Bash
+Hello Java
+Hello GoLang
+Hello Kotlinfile content of the file named `/d/workspace/Bash/Bash tutorial/examples/shell expansions/command substitution/../../../inputs/scripts/multiple-line-example-1.txt`:
+This is a multiple line
+Hello C
+Hello C++
+Hello C#
+Hello Bash
+Hello Java
+Hello GoLang
+Hello Kotlin
+file content of the file named `/d/workspace/Bash/Bash tutorial/examples/shell expansions/command substitution/../../../inputs/scripts/multiple-line-example-1.txt`:
+This is a multiple line
+Hello C
+Hello C++
+Hello C#
+Hello Bash
+Hello Java
+Hello GoLang
+Hello Kotlin
+
+```
+
+#### Example 2
+`command-substitution-example-2.bash`
+
+```
+function to_upper1(){
+    local name="$1"
+    local -n _perf=$2
+    local result=""
+    local start_time=$EPOCHREALTIME
+    
+    # 傳統寫法
+    # 不會開啟一個subshell，效能較佳
+    result=$(echo "${name^^}")     
+    
+    local end_time=$EPOCHREALTIME
+    _perf=$(echo "$end_time - $start_time" | bc)
+
+    echo "$_ref"
+    echo "Time: $_perf s"
+}
+
+function to_upper2(){
+    local name="$1"
+    local -n _perf=$2
+    local start_time=$EPOCHREALTIME
+    
+    # 新式寫法(僅支援Bash 5.2+，且在Unix/Linux環境下，執行時的預期結果比較穩定)
+    # 不會開啟一個subshell，效能較好
+    # NOTE：
+    # { 之後加空格，指令後加分號，最後加空格與 }
+    { echo "${name^^}"; }  
+    
+    local end_time=$EPOCHREALTIME
+    _perf=$(echo "$end_time - $start_time" | bc)
+
+    echo "Time: $_perf s"
+}
+
+function print_info(){
+    local text="$1"
+    local upper_cased_text=""
+    local performance=""
+    
+    echo "text: \`$text\`"
+    to_upper1 "$text" performance
+    to_upper2 "$text" performance
+}
+
+main(){
+    print_info "gemini"
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\shell expansions\command substitution\command-substitution-example-2.bash"
+text: `gemini`
+
+Time: .054128 s
+GEMINI
+Time: .000025 s
+
+```
+
+version info:
+
+```
+$ bash --version
+GNU bash, version 5.2.37(1)-release (x86_64-pc-msys)
+Copyright (C) 2022 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+
+This is free software; you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+```
 #### Example 10
 
 `pattern-removal-example-1.bash`
@@ -1044,13 +1515,11 @@ executing this script will echo
 
 #### Example 19
 
-main script
+utility modules:
 
 `associative-array-to-string-module.bash`
 
 ```
-
-
 ## 主要函式
 ## 目的:
 ## 將associative array組成string 
@@ -1076,6 +1545,8 @@ function associative_array_to_string(){
     echo "$result"
 }
 ```
+
+main script
 
 `variable-expansion-example-2.bash`
 
