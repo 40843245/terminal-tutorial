@@ -864,7 +864,32 @@ but the latter one runs faster since it is not needed to execute `cat.exe` file
 ### comparison
 We will ONLY compare the 1th and 2th form.
 
-Though they have the same behavior in a 
+Though they have the same behavior runs on Ubuntu kernel,
+
+their implementations are totally different.
+
+Executing
+
+```
+$({commands})
+```
+
+will create a subshell then execute it 
+
+while executing
+
+```
+{ {commands};}
+```
+
+won't create a subshell and it is executed in the current shell.
+
+| items | 1th form | 3th form |
+| :-- | :-- | :-- |
+| executed at | subshell | current shell |
+| performance | a little bit worse (since it is needed to create a subshell) | better |
+| supports | Bash 1.0+ and POSIX | ONLY Bash 5.2+ |
+| cross-platform | yes, stable for all platform | no, it is not stable. It is ONLY stable on Ubuntu kernel (see above description) |
 
 ### Examples
 #### Example 1
@@ -1021,6 +1046,215 @@ This is free software; you are free to change and redistribute it.
 There is NO WARRANTY, to the extent permitted by law.
 
 ```
+
+## CH11-5 -- arithmetic expansion
+### syntax and description
+syntax:
+
+```
+$(({arithmetic-expression}))
+```
+
+where
+
+```
+{arithmetic-expression}: an expression about numbers.
+```
+
+description:
+
+It will be expanded to its evaluated result of expression.
+
+### Examples
+#### Example 1
+`arithmetic-expansion-example-1.bash`
+
+```
+function perform_and_print_arithmetic_operation(){
+    declare -i arg1=$1
+    declare -i arg2=$2
+
+    printf "\`%d + %d\`=\`%d\`\n" $arg1 $arg2 $(($arg1 + $arg2)) 
+    printf "\`%d - %d\`=\`%d\`\n" $arg1 $arg2 $(($arg1 - $arg2)) 
+    printf "\`%d * %d\`=\`%d\`\n" $arg1 $arg2 $(($arg1 * $arg2)) 
+    printf "\`%d / %d\`=\`%d\`\n" $arg1 $arg2 $(($arg1 / $arg2)) 
+}
+
+main(){
+    declare -i x
+    declare -i y
+    x=2
+    y=5
+    perform_and_print_arithmetic_operation $x $y
+}
+
+main
+
+```
+
+executes this script will echo
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\shell expansions\arithmetic expansion\arithmetic-expansion-example-1.bash"
+`2 + 5`=`7`
+`2 - 5`=`-3`
+`2 * 5`=`10`
+`2 / 5`=`0`
+
+```
+
+## CH11-6 -- word splitting
+Explained in CH10.
+
+## CH17-7 -- process substitution
+### syntax and description
+Process substitution allows a process’s input or output to be referred to using a filename
+
+syntax:
+
++ 1th Form
+
+```
+<({list})
+```
+
+where 
+
+```
+{list}: a list of process (or command)
+```
+
+After `{list}` is completed, the Bash engine will create a temporary file and treat the resultant of `{list}` as input that can be read by a command.
+
++ 2th Form
+
+```
+>({list})
+```
+
+where 
+
+```
+{list}: a list of process (or command)
+```
+
+After `{list}` is completed, the Bash engine will create a temporary file and treat the file content of the temporary file as input that will be used in `{list}`
+
+> [!NOTE]
+> It is not allowed to leave any space between `{list}` and `()` in these two forms.
+
+### Examples
+#### Example 1
+This example illustrates how to compare the difference of entries under two specified directories.
+
+`process-expansion-example-1.bash`
+
+```
+function compare_two_directories(){
+    local directory1="$1"
+    local directory2="$2"
+    
+    echo "In directory \`$directory1\` and \`$directory2\`"
+    echo "There are these entries in \`$directory1\`"
+    ls "$directory1"
+    echo "There are these entries in \`$directory2\`"
+    ls "$directory2"
+    echo "There are these difference between \`$directory1\` and \`$directory2\`"
+    diff <(ls "$directory1") <(ls "$directory2")
+}
+
+main(){
+    declare -i index=1
+    local directory1=""
+    local directory2=""
+    echo "-------------- Part 1) compare two directories --------------"
+    echo "use case $index: --------------"
+    directory1="/d/workspace/Bash/Bash tutorial/outputs/examples/list directories/markdown"
+    directory2="/d/workspace/Bash/Bash tutorial/outputs/examples/list directories/shell script"
+    compare_two_directories "$directory1" "$directory2"
+    ((index++))
+}
+
+main
+```
+
+executing this script will echo like this
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\shell expansions\process expansion\process-expansion-example-1.bash"
+-------------- Part 1) compare two directories --------------
+use case 1: --------------
+In directory `/d/workspace/Bash/Bash tutorial/outputs/examples/list directories/markdown` and `/d/workspace/Bash/Bash tutorial/outputs/examples/list directories/shell script`
+There are these entries in `/d/workspace/Bash/Bash tutorial/outputs/examples/list directories/markdown`
+README.md  tutorial.md
+There are these entries in `/d/workspace/Bash/Bash tutorial/outputs/examples/list directories/shell script`
+version-example-2.bash  version-example-2.sh
+There are these difference between `/d/workspace/Bash/Bash tutorial/outputs/examples/list directories/markdown` and `/d/workspace/Bash/Bash tutorial/outputs/examples/list directories/shell script`
+1,2c1,2
+< README.md
+< tutorial.md
+---
+> version-example-2.bash
+> version-example-2.sh
+
+```
+
+#### Example 2
+This example will list the info of all entries under this directory `/d/workspace/Bash/Bash tutorial/inputs/scripts` 
+
+then it will filter the info (such as file name) that contains `cs` and writes the filtered results into `/d/workspace/Bash/Bash tutorial/outputs/available-scripts/csharp.txt`
+
+and filter the info (such as file name) that contains `java` and writes the filtered results into `/d/workspace/Bash/Bash tutorial/outputs/available-scripts/java.txt`
+
+`process-expansion-example-2.bash`
+
+```
+
+function subfunction(){
+    local input_script_directory="/d/workspace/Bash/Bash tutorial/inputs/scripts"
+    local output_base_directory="/d/workspace/Bash/Bash tutorial/outputs/available-scripts"
+
+    # 確保檔案存在
+    rm -f "$output_base_directory/csharp.txt" "$output_base_directory/java.txt"
+    touch "$output_base_directory/csharp.txt" "$output_base_directory/java.txt"
+
+    ls -l "$input_script_directory" | tee >(grep "cs" > "$output_base_directory/csharp.txt" ) >(grep "java" > "$output_base_directory/java.txt" )
+}
+
+main(){
+    subfunction
+}
+
+main
+```
+
+executing this script will echo like this
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\shell expansions\process expansion\process-expansion-example-2.bash"
+total 3
+-rw-r--r-- 1 userJay30 197121 113 Dec 31 14:33 fake-demo-1.cs
+-rw-r--r-- 1 userJay30 197121  94 Dec 31 15:09 fake-demo-2.java
+-rw-r--r-- 1 userJay30 197121 105 Dec 30 10:58 multiple-line-example-1.txt
+
+```
+
+after that, file content of `/d/workspace/Bash/Bash tutorial/outputs/available-scripts/csharp.txt` will be like this
+
+```
+-rw-r--r-- 1 userJay30 197121 113 Dec 31 14:33 fake-demo-1.cs
+
+```
+
+and file content of `/d/workspace/Bash/Bash tutorial/outputs/available-scripts/java.txt` will be like this
+
+```
+-rw-r--r-- 1 userJay30 197121  94 Dec 31 15:09 fake-demo-2.java
+
+```
+
+## CH11-8 -- filename expansion
+
 #### Example 10
 
 `pattern-removal-example-1.bash`
