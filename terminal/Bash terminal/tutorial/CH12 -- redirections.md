@@ -9,8 +9,18 @@ You will learn how to
 + `>>`: stream the output (of `stdout`) out to a file (append at the file rather than overwritting if it exists).
 + `<`: stream the input (of `stdin`) in from a file (overwritting if it exists).
 + `2>`: stream the error (of `stderr`)  to a file (overwritting if it exists).
++ `&> file`: shorthand of `>file 2>&1`. stream the output and error (of `stdout`,`stderr`)  to a file (overwritting if it exists).
++ `>& file`: deprecated the form of `&> file`.
++ `&>> file`: shorthand of `>>file 2>&1`. stream the output and error (of `stdout`,`stderr`)  to a file (append at the file rather than overwritting if it exists).
 + `|`: stream the output (of `stdout`) out in next command as input used in next command and stream the input (of `stdin`) in from `stdout` used in next command. 
 + `|&`: shorthand of `2>&1 | ` tream the output (of `stdout`,`stderr`) out in next command as input used in next command and stream the input (of `stdin`) in from `stdout` used in next command. 
+
+## CH12-2 -- file descriptor
+| file descriptor | stream | stream |
+| :-- | :-- | :-- |
+| fd 0 | `stdin` | standard input stream |
+| fd 1 | `stdout` | standard output stream |
+| fd 2 | `stderr` | standard error stream |
 
 ### Examples
 #### Example 1
