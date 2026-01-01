@@ -1323,7 +1323,7 @@ Case 2: Otherwise (i.e. no such matching pattern found)
 
     The word will NOT be expanded by default.
 
-| options | behavior when matching with failure |
+| enabled functonality | behavior when matching with failure |
 | :-- | :-- |
 | NULL | The word will NOT be expanded by default |
 | `nullglob` | The word will be NULL or empty string |
@@ -1339,17 +1339,17 @@ In Unix/Linux, file name always starts with `.` for a hidden file.
 
 The main purpose of NOT matching the first char `.` is to prevent to edit, modify, deleting files with incident.
 
-Case 1: If `globskipdots` option is supplied
+Case 1: If `globskipdots` functionality is enabled
 
     Then a pattern that starts with `*` will NEVER be matched.
 
-Case 2: If `globskipdots` option is NOT supplied
+Case 2: If `globskipdots` functionality is NOT enabled
 
-    Case 2.1: If `dotglob` option is NOT supplied (the default behavior if `GLOBIGNORE` is NOT set)
+    Case 2.1: If `dotglob` functionality is NOT enabled (the default behavior if `GLOBIGNORE` is NOT enabled)
 
         Then the first character `.` (if it is) MUST be matched using explicit pattern (that is, a word that starts with `.` will NOT be matched due to the effect of wildcard)
 
-    Case 2.2: If `dotglob` option is supplied
+    Case 2.2: If `dotglob` functionality is NOT enabled
 
         Then the first character `.` (if it is) can be matched using implicit pattern and explicit pattern (that is, a word that starts with `.` will be matched except for the patterns `.` and `..` since `.` means current working directory and `..` means parent of current working directory)
 
@@ -1366,9 +1366,9 @@ then the matching pattern will be removed.
 > [!WARNING]
 > Side effect of `GLOBIGNORE`
 > 
-> If `GLOBIGNORE` is set (may be NULL or empty string), then `dotglob` is always supplied (even if it is NOT specified) 
+> If `GLOBIGNORE` is set (may be NULL or empty string), then `dotglob` functionality is always automatically enabled.
 >
-> so that the first character `.` (if it is) can always be matched using implicit pattern and explicit pattern 
+> so that the first character `.` (if it is) can always be matched using implicit pattern and explicit pattern
 >
 > except for the patterns `.` and `..` since `.` means current working directory and `..` means parent of current working directory.
 
@@ -1414,6 +1414,136 @@ and
 The rulset mentioned in `globbing` section is also applied unless it is overridden (which will discussed in this section)
 
 Additionally, the wilcard mentioned in `globbing` section will have same effect.
+
+### Examples
+#### Example 1
+`filename-expansion-example-1.bash`
+
+```
+function perform_filename_expansion(){
+    local pattern_to_be_matched="$1"
+    local -n matched_pattern_list=$2
+    declare -i is_glob_ignore=$3
+    local glob_ignore_pattern="$4"
+    declare -i is_case_sensitive=$5
+    declare -i matching_mode_with_failure=$6
+    declare -i use_extended_globbing=$7
+    declare -i use_recursive_globbing=$8
+
+    local command_with_arguments_with_patten=""
+    declare -i is_extended_globbing
+    declare -i is_recursive_globbing
+    local use_recursive_globbing_option_str
+    local matching_option_with_failure
+
+    if [[ $use_extended_globbing -eq 0 ]]; then
+        is_extended_globbing=0
+    else
+        is_extended_globbing=1
+    fi
+
+    if [[ $use_recursive_globbing -eq 0 ]]; then
+        is_recursive_globbing=0
+    else
+        is_recursive_globbing=1
+    fi
+
+    if [[ $is_recursive_globbing -eq 0 ]]; then
+        is_extended_globbing=1
+    fi
+
+    if [[ $is_case_sensitive -eq 0 ]]; then
+        shopt -s nocaseglob
+    else
+        shopt -u nocaseglob
+    fi
+
+    if [[ $is_recursive_globbing -eq 0 ]]; then
+        shopt -s globstar
+    else
+        shopt -u globstar
+    fi
+
+    if [[ $is_extended_globbing -eq 0 ]]; then
+        shopt -s extglob
+    else
+        shopt -u extglob
+    fi
+    if [[ $is_glob_ignore -eq 0 ]]; then
+        # filter with the black list (matched by pattern `GLOBIGNORE`) 
+        GLOBIGNORE="$glob_ignore_pattern"
+    else
+        # NOT filter with the black list (matched by pattern `GLOBIGNORE`)  
+        unset GLOBIGNORE
+    fi
+
+    case "$matching_mode_with_failure" in 
+        0) shopt -u nullglob; shopt -u failglob; ;;
+        1) shopt -s nullglob; shopt -u failglob; ;;
+        -1) shopt -u nullglob; shopt -s failglob; ;;
+        *) shopt -u nullglob; shopt -u failglob; ;;
+    esac
+        
+    local matched_pattern_with_options="$pattern_to_be_matched"
+    # 1. 備份原始 IFS，並將目前的 IFS 設為僅換行
+    local old_ifs="$IFS"
+    IFS=$'\n'
+    # 2. 執行擴展並存入陣列 (注意：這裡變數不能加引號，否則不會執行擴展)
+    eval "$2=( $pattern_to_be_matched )"
+    # 3. 還原 IFS
+    IFS="$old_ifs"
+
+    destruct_functionalities
+}
+
+function destruct_functionalities(){
+    shopt -u nocaseglob
+    shopt -u globstar
+    shopt -u nullglob
+    shopt -u failglob
+    unset GLOBIGNORE
+}
+
+main(){
+    local command_with_arguments="" 
+    local pattern_to_be_matched=""
+    declare -a matched_patterns=()
+    declare -i is_glob_ignore=0
+    local glob_ignore_pattern=""
+    declare -i is_case_sensitive=0
+    declare -i matching_mode_with_failure=0
+    declare -i use_extended_globbing=0
+    declare -i use_recursive_globbing=1
+
+    pattern_to_be_matched="**/examples/**"
+    matched_patterns=()
+    is_glob_ignore=1
+    glob_ignore_pattern=""
+    declare -i is_case_sensitive=0
+    declare -i matching_mode_with_failure=0
+    declare -i use_extended_globbing=1
+    declare -i use_recursive_globbing=0
+
+    perform_filename_expansion "$pattern_to_be_matched" matched_patterns "$is_glob_ignore" "$glob_ignore_pattern" "$is_case_sensitive" "$matching_mode_with_failure" "$use_extended_globbing" "$use_recursive_globbing"
+    if [[ "${#matched_patterns[@]}" -eq 0 || "${#matched_patterns[0]}" -eq 0 ]]; then
+        echo "There are no such matching pattern found or there is an error occur during matching."
+    else
+        echo "There are such matching patterns found."
+        echo "${matched_patterns[@]}"
+    fi
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\shell expansions\filename expansion\filename-expansion-example-1.bash"
+There are such matching patterns found.
+**/examples/**
+
+```
 
 #### Example 10
 
