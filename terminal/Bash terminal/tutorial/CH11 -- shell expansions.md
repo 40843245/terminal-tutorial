@@ -1254,6 +1254,166 @@ and file content of `/d/workspace/Bash/Bash tutorial/outputs/available-scripts/j
 ```
 
 ## CH11-8 -- filename expansion
+In filename expansion, the word by wildcard will be expanded to a list of file names and will be used for [globbing](https://en.wikipedia.org/wiki/Glob_(programming)) (i.e. searching file with [wildcards](https://www.man7.org/linux/man-pages/man7/glob.7.html)).
+
+### globing
+After word splitting, for each word, if the word contains these following wildcards, the word will be a pattern. If there are matching patterns, the word will be expanded to these matching pattern.
+
++ `*`: search for zero or many characters
++ `?`: search for one character
++ `[`: when enclosed with `]`, it will search the characters that apears in `[` and `]`
+
+    - Inside `[` and `]`, muti-range (symbol `-`) `{char1}-{char2}` (where `{char1}` and `{char2}` are BOTH are character) will be expanded into a string joined by a sequence starts from `{char1}` to `{char2}`.   
+
+    - Inside `[` and `]`, `!` and `^` after `[` (without leaving any whitespaces) will negate the range.
+
+> [!WARNING]    
+> Inside `[` and `]`, muti-range (symbol `-`) is NOT supported which is derived from `regex` in POSIX. 
+>
+> But it is supported in Bash mode. 
+>
+> And so for negation (`!` and `^` after `[` (without leaving any whitespaces))
+
+#### predefined class
+
+| predefined character classes | description |
+| :-- | :-- |
+| `[[:alnum:]]` | alphabets and numbers |
+| `[[:alpha:]]` | alphabets |
+| `[[:digit:]]` | numbers |
+| `[[:space:]]` | one whitespace | 
+| `[[:upper:]]` | convert it to upper case | 
+| `[[:lower:]]` | convert it to lower case | 
+| `[[:xdigit:]]` | hexidecimal numbers (`0-9`,`a-f`, and `A-f`) |
+
+#### mode of matching pattern
+##### implicit pattern
+The wildcard will be expanded in implicit pattern
+
+##### explicit pattern
+The wildcard will be invalid in explicit pattern
+
+#### ruleset
+1. If a word contains wildcards (but there are exceptions, see above), the word will be pattern.
+2. Each pattern can be matched using many different patterns. But one character can be ONLY matched using exactly one matching pattern.
+3. It is categorize to implicit pattern and explicit pattern, so one can use implicit pattern or explicit pattern to match one character.
+4. case-sensitive
+
+Case 1: If `nocaseglob` functionality is NOT enabled (by default)
+
+    Then the patterns are case-sensitive, that is, Bash engine will treat `a` and `A` are different when matching.
+
+Case 1: If `nocaseglob` functionality is enabled
+
+    Then the patterns are case-insensitive, that is, Bash engine will treat `a` and `A` are same when matching.
+
+5. escape:
+
+The double quotations escape the pattern.
+
+That is all chars (including wildcards) inside double quotation will have no effect.
+
+6. Bash engine will try to match a pattern.
+
+Case 1: If matched successfully (i.e. there are greater than zero matching patterns)
+
+    The matching pattern will be sorted alphabetically in ascending order (i.e. from `a` to `z`, from `A` to `Z`),  the word will be expanded to these sorted matching patterns.
+
+Case 2: Otherwise (i.e. no such matching pattern found)
+
+    The word will NOT be expanded by default.
+
+| options | behavior when matching with failure |
+| :-- | :-- |
+| NULL | The word will NOT be expanded by default |
+| `nullglob` | The word will be NULL or empty string |
+| `failglob` | An error will be thrown and the command about the word will NOT be executed. |
+
+5. About explicit pattern,
+
++ For use case that first character is `.` 
+
+P.S. 
+
+In Unix/Linux, file name always starts with `.` for a hidden file. 
+
+The main purpose of NOT matching the first char `.` is to prevent to edit, modify, deleting files with incident.
+
+Case 1: If `globskipdots` option is supplied
+
+    Then a pattern that starts with `*` will NEVER be matched.
+
+Case 2: If `globskipdots` option is NOT supplied
+
+    Case 2.1: If `dotglob` option is NOT supplied (the default behavior if `GLOBIGNORE` is NOT set)
+
+        Then the first character `.` (if it is) MUST be matched using explicit pattern (that is, a word that starts with `.` will NOT be matched due to the effect of wildcard)
+
+    Case 2.2: If `dotglob` option is supplied
+
+        Then the first character `.` (if it is) can be matched using implicit pattern and explicit pattern (that is, a word that starts with `.` will be matched except for the patterns `.` and `..` since `.` means current working directory and `..` means parent of current working directory)
+
++ For use case that the pattern contains `/`
+
+`/` always MUST be matched using implicit pattern (that is, all `/` in a word will NOT be matched due to effect of wildcard)
+
+6. Blacklist matcher -- `GLOBIGNORE`
+
+If a matching pattern is also successfully matched by the pattern with value of `GLOBIGNORE`,
+
+then the matching pattern will be removed.
+
+> [!WARNING]
+> Side effect of `GLOBIGNORE`
+> 
+> If `GLOBIGNORE` is set (may be NULL or empty string), then `dotglob` is always supplied (even if it is NOT specified) 
+>
+> so that the first character `.` (if it is) can always be matched using implicit pattern and explicit pattern 
+>
+> except for the patterns `.` and `..` since `.` means current working directory and `..` means parent of current working directory.
+
+### extended globbing
+When `extglob` functionality is enabled, the Bash engine will use extended globbing to match a pattern. 
+
+The rulset mentioned in `globbing` section is also applied unless it is overridden (which will discussed in this section)
+
+Additionally, the wilcard mentioned in `globbing` section will have same effect.
+
+#### symbol
+| symbol | description | analogy to regex |
+| :-- | :-- |
+| `?({chars})` | match `{chars}` zero time or once | `{chars}?` |
+| `*({chars})` | match `{chars}` zero time or more times | `{chars}*` |
+| `+({chars})` | match `{chars}` once or more times | `{chars}+` |
+| `@({chars})` | **exactly** match by pattern `{chars}` | `({chars}})` |
+| `!({chars})` | **exclude** the matching pattern that are also matched by `{chars}` | `^(?!{chars}$)` |
+| `|` (used one of above symbols) | **or** | `|` |
+
+#### sorting order
+The sorting order for `[a-z]` is subject to `LC_COLLATE` special variable.
+
+In some region, `[A-Z]` may be also subject to.
+
+### recursive globbing
+If the `globstar` option is supplied, then it will glob recursively.
+
+That is, `**` in a pattern (except for `*`, and `**` itself ) means to search one or more levels in the directory.
+
+For example,
+
+`**/` in `**/bin/+([0-9])?(.bak|.[[:alpha:]]*)` means that it finds `bin` folder in all directory which matches the pattern `+([0-9])?(.bak|.[[:alpha:]]*)`. 
+
+and
+
+`**` in `solution/**/bin/+([0-9])?(.bak|.[[:alpha:]]*)` means that it finds `bin` folder under `solution/` directory recursively (can search on many levels) which matches the pattern `+([0-9])?(.bak|.[[:alpha:]]*)`. 
+
+and
+
+`**` in `solution/**` means that it finds `solution/` directory then find its descendants recursively.
+
+The rulset mentioned in `globbing` section is also applied unless it is overridden (which will discussed in this section)
+
+Additionally, the wilcard mentioned in `globbing` section will have same effect.
 
 #### Example 10
 
