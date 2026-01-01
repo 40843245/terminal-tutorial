@@ -137,7 +137,7 @@ declare -x VAR_A="Value A"
 ```
 
 ### Examples
-#### Example
+#### Example 1
 
 `declare-example-1.bash`
 
@@ -1135,5 +1135,177 @@ declare -n func_arr="associative_array_1"
 In `demo_function22` function call,
 The array `associative_array_1` is not defined or completely empty.
 declare -n func_arr="associative_array_1"
+
+```
+
+## CH2-7 -- readonly
+In Bash, readonly variable can't be re-assigned and be unset.
+
+To define a readonly variable, use the keyword `readonly`.
+
+To define a variable that can't be overwritten and be unset, also use the keyword `readonly`.
+
++ `readonly`: defines a `readonly` variable with string type.
++ `readonly -a`: defines a `readonly` variable with indexed array type.
++ `readonly -A`: defines a `readonly` variable with associative array type.
++ `readonly -F`: defines a `readonly` function.
+
+### Examples
+#### Example 1
+`readonly-variable-example-1.bash`
+
+```
+function subfunction(){
+    readonly name="gemini"
+    name="pipe"
+}
+
+main(){
+    subfunction
+}
+
+set +e
+main
+```
+
+executing this script will throw an error
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\readonly\readonly-variable-example-1.bash"
+bash: name: readonly variable
+
+```
+
+### Example 2
+`readonly-variable-example-2.bash`
+
+```
+function subfunction(){
+    name="gemini"
+    readonly name
+    name="pipe"
+}
+
+main(){
+    subfunction
+}
+
+set +e
+main
+```
+
+executing this script will throw errors.
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\readonly\readonly-variable-example-2.bash"
+bash: name: readonly variable
+
+```
+
+### Example 3
+`readonly-variable-example-3.bash`
+
+```
+function subfunction(){
+    local name="gemini"
+    readonly name
+    name="pipe"
+}
+
+main(){
+    subfunction
+}
+
+set +e
+main
+```
+
+executing this script will throw errors.
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\readonly\readonly-variable-example-3.bash"
+bash: local: name: readonly variable
+bash: name: readonly variable
+
+```
+
+### Example 4
+`readonly-variable-example-4.bash`
+
+```
+function subfunction(){
+    readonly -a indexed_array1=(1 2 3)
+    indexed_array1=(2 3 4)
+}
+
+main(){
+    subfunction
+}
+
+set +e
+main
+```
+
+executing this script will throw errors
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\readonly\readonly-variable-example-4.bash"
+bash: indexed_array1: readonly variable
+
+```
+
+### Example 5
+`readonly-variable-example-5.bash`
+
+```
+function subfunction(){
+    readonly -A associative_array1=(["key1"]="value1")
+    associative_array1=(["key1"]="value1")
+}
+
+main(){
+    subfunction
+}
+
+set +e
+main
+```
+
+executing this script will throw errors
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\readonly\readonly-variable-example-5.bash"
+bash: associative_array1: readonly variable
+
+```
+
+### Example 6
+`readonly-function-example-1.bash`
+
+```
+function subfunction(){
+    echo "First time to define a function named subfunction"
+}
+
+readonly -f subfunction
+
+function subfunction(){
+    echo "Second time to define a function named subfunction"
+}
+
+main(){
+    subfunction
+}
+
+set +e
+main
+```
+
+executing this script will throw errors and echo
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\readonly\readonly-function-example-1.bash"
+bash: subfunction: readonly function
+First time to define a function named subfunction
 
 ```
