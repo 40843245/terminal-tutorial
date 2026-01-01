@@ -678,3 +678,6 @@ Stack Trace (Total Depth exclusive to this callee function itself:`11`)
 n:`10`
 
 ```
+
+## CH9-7 -- readonly function
+See CH2-7.
