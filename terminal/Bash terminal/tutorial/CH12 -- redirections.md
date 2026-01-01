@@ -5,10 +5,11 @@ You will learn how to
     + stream out output to a file and stream the input in from a file using redirections
 
 ## CH12-1 -- syntax and description
-+ `>`: stream the output (of `stdout`) out to a file (overwritting if it exists).
-+ `>>`: stream the output (of `stdout`) out to a file (append at the file rather than overwritting if it exists).
-+ `<`: stream the input (of `stdin`) in from a file (overwritting if it exists).
-+ `2>`: stream the error (of `stderr`)  to a file (overwritting if it exists).
++ `>file`: stream the output (of `stdout`) out to a file (overwritting if it exists).
++ `>>file`: stream the output (of `stdout`) out to a file (append at the file rather than overwritting if it exists).
++ `<file`: stream the input (of `stdin`) in from a file.
++ `2>file`: stream the error (of `stderr`)  to a file (overwritting if it exists).
++ `{n}<>file`:stream the output (of fd `{n}`) out to a file (overwritting if it exists) and stream the input (of fd `{n}`) in from a file. If `{n}` is NOT specified, `{n}` defaults to zero.
 + `&> file`: shorthand of `>file 2>&1`. stream the output and error (of `stdout`,`stderr`)  to a file (overwritting if it exists).
 + `>& file`: deprecated the form of `&> file`.
 + `&>> file`: shorthand of `>>file 2>&1`. stream the output and error (of `stdout`,`stderr`)  to a file (append at the file rather than overwritting if it exists).
