@@ -44,6 +44,15 @@ and
 | `C` | report an error when overwriting an existing file |
 
 > [!IMPORTANT]
+> If `errexit` functionality is enabled,
+>
+> then when there is an error the shell will exit and be terminated.
+>
+> If the main shell on terminal, 
+>
+> when the main shell is terminated, it will close the terminal and NOT store the records into history file.
+
+> [!IMPORTANT]
 > Directly assignment into a variable will not perform brace expansion
 >
 > for example,
