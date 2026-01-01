@@ -1545,6 +1545,36 @@ There are such matching patterns found.
 
 ```
 
+## CH11-9 -- qoute removal
+### description
+After the preceding expansions, all unquoted occurrences of the characters ‘\’, ‘'’, and ‘"’ that did not result from one of the above expansions are removed.
+
+### Examples
+#### Example 1
+`qoute-removal-example-1.bash`
+
+```
+main(){
+    echo "'" # will echo `'` since `""` is removed due to parameter expansion
+    echo '"' # will echo `'` since `''` is removed due to parameter expansion
+    local str1="string1" # will be set to `string1` since `""` is removed due to variable expansion.
+    local str2='string2' # will be set to `string2` since `''` is removed due to variable expansion.
+    echo "${str1}" # will echo `'` since `""` is removed due to parameter expansion and `${}` is removed due to brace expansion.
+}
+
+main
+```
+
+executing this script will echo
+
+```
+$ source "D:\workspace\Bash\Bash tutorial\examples\shell expansions\qoute removal\qoute-removal-example-1.bash"
+'
+"
+string1
+
+```
+
 #### Example 10
 
 `pattern-removal-example-1.bash`
