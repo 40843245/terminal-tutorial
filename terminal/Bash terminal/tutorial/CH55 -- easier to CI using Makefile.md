@@ -72,7 +72,7 @@ and
 
 Additionally, you can specify that executing a target will execute another target in the 3th form. 
 
-> [!MPORTANTT]
+> [!IMPORTANTT]
 > It is needed to indent four spaces with one tab `\t` rather than four whitespace ` `.
 
 > [!NOTE]
@@ -81,6 +81,7 @@ Additionally, you can specify that executing a target will execute another targe
 > then it will execute the first target by default.
 
 ### variable
+#### define a variable
 To define a variable,
 
 like it in Ubuntu kernel
@@ -90,7 +91,8 @@ just directly simply assign a value to a variable name
 syntax:
 
 ```
-{VariableName} = ({Value}|{PredefinedValue})
+# assignment a value (can be either a constant or a value after evaluation or a predifine value (whose concepts is similar to macro in `C#`)
+{VariableName} = {Value}
 ```
 
 where
@@ -99,5 +101,68 @@ where
 
 ```
 {VariableName}:= {Identifier}
-{Identifier}:= ({Alphabet}|{Underscore}) ({Alphabet}|{Underscore}) |`
+```
 
+> [!IMPORTANT]
+> In assignment, it is needed to leave exactly one whitespace ` ` before and after assignment operator `=`.
+
+#### naming rule of valid identifier
+Like it in Ubuntu kernel,
+
+An Identifier must 
+
+    + consist if digits, alphabets, or underscores.
+    + starts with an alphabet or a underscore
+
+```
+{Identifier}:= ({Alphabet}|{Underscore}) ({Alphabet}|{Digit}|{Underscore})*
+```
+
+where
+
+```
+# an alphabet is a character that starts from `a` to `z` or from `A` to `Z`
+{Alphabet}:= ([a-z]|[A-Z])
+# an underscore is a character `_`.
+{Underscore}:= "_"
+# a digit is a characters that stars from `0` to `9`.
+{Digit}:= [0-9]
+```
+
+#### accessing a variable
+To access a variable, like in Ubuntu kernel,
+
+use a variable expansion -- `$(` enclosed with `)`.
+
+syntax:
+
+```
+$({VariableName})
+```
+
+> [!IMPORTANT]
+> In variable expansion, it is NOT to leave any whitespaces between `(` and a variable name, and so for between a variable name and `)`.
+>
+> It is the correct way to access a variable like following examples
+> 
+>> [!DO]
+>>
+>> ```
+>> $(DOTNET)
+>> ```
+>
+> While it is not correct, don't do so like following examples
+> 
+>> [!DON'T]
+>>
+>> ```
+>> $( DONTET)
+>> ```
+>>
+>> ```
+>> $(DOTNET )
+>> ```
+>>
+>> ```
+>> $( DOTNET )
+>> ```
